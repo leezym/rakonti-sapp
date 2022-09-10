@@ -2,8 +2,11 @@
  * @author Martín Vladimir Alonso Sierra Galvis 
  * @version 1.0.1
  */
+
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+
+import BackgroundImage from '../styled/BackgroundImage';
 
 function RHomeView() {
   return <div>
@@ -15,13 +18,6 @@ function RHomeView() {
     </MenuContainer>
   </div>;
 }
-
-const BackgroundImage = styled.img`
-  height: 100vh;
-  object-fit: cover;
-  vertical-align: middle;
-  width: 100%;
-`;
 
 const MenuButton = styled(Link)`
   background-color: transparent;
@@ -39,7 +35,7 @@ const MenuContainer = styled.div`
   height: 60px;
   justify-content: center;
   position: absolute;
-  top: 240px;
+  top: 35%;
   width: 95%;
 `;
 

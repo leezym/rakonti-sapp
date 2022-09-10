@@ -2,6 +2,7 @@
  * @author Martín Vladimir Alonso Sierra Galvis 
  * @version 1.0.1
  */
+
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
@@ -11,8 +12,12 @@ const initialState = {
 export const storySlice = createSlice({
   name: 'story', 
   initialState, 
-  reducers: {}
+  reducers: {
+    setMode: (state, action) => {
+      state.mode = action.payload;
+    }
+  }
 });
 
-export const {} = storySlice.actions;
+export const { setMode } = storySlice.actions;
 export default storySlice.reducer;
