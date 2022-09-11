@@ -12,7 +12,7 @@ function RNarrative({ narrative, right }) {
   const dispatch = useDispatch();
 
   const onLinkClicked = () => {
-    //dispatch(setNarrative(narrative));
+    dispatch(setNarrative(narrative));
   }
 
   const onPlusClicked = (e) => {
@@ -21,7 +21,7 @@ function RNarrative({ narrative, right }) {
     dispatch(setNarrative(narrative));
   }
   
-  return <NarrativeLink to='/' onClick={onLinkClicked} right={right}>
+  return <NarrativeLink to='/features' onClick={onLinkClicked} right={right}>
     <NarrativeImage src={narrative.url} alt='narrative-image'/>
     <PlusContainer>
       <PlusButton onClick={onPlusClicked}>
