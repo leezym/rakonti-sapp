@@ -5,8 +5,8 @@
 
 import { useSelector } from 'react-redux';
 
-import RModeDescription from '../components/RModeDescription';
-import RModes from '../components/RModes';
+import RModeInfo from '../components/mode/RModeInfo';
+import RModePanel from '../components/mode/RModePanel';
 
 function RModesView() {
   const mode = useSelector(state => state.story.mode);
@@ -14,9 +14,9 @@ function RModesView() {
   return <div>
     {
       mode === null || mode === undefined ?
-      <RModes/>
+      <RModePanel/>
       :
-      <RModeDescription mode={mode}/>
+      <RModeInfo mode={mode}/>
     }
   </div>
 }

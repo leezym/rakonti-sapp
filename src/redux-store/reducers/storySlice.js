@@ -6,7 +6,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  mode: null
+  mode: null, 
+  narrative: null, 
 };
 
 export const storySlice = createSlice({
@@ -15,9 +16,13 @@ export const storySlice = createSlice({
   reducers: {
     setMode: (state, action) => {
       state.mode = action.payload;
+    },
+
+    setNarrative: (state, action) => {
+      state.narrative = action.payload;
     }
   }
 });
 
-export const { setMode } = storySlice.actions;
+export const { setMode, setNarrative } = storySlice.actions;
 export default storySlice.reducer;

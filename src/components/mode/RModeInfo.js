@@ -7,11 +7,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setMode } from '../redux-store/reducers/storySlice';
+import { setMode } from '../../redux-store/reducers/storySlice';
 
-import BackgroundImage from '../styled/BackgroundImage';
+import BackgroundImage from '../../styled/BackgroundImage';
 
-function RModeDescription({ mode }) {
+function RModeInfo({ mode }) {
   const dispatch = useDispatch();
 
   const onBackClicked = () => {
@@ -39,7 +39,7 @@ function RModeDescription({ mode }) {
             ))
           }
         </Description>
-        <ContinueLink to='/'>
+        <ContinueLink to='/narratives'>
           <ContinueImage src='images/right-arrow.png' alt='continue-button'/>
         </ContinueLink>
       </ColumnContainer>
@@ -109,4 +109,4 @@ const Title = styled.h1`
   padding: 20px 0px 0px 25px;
 `;
 
-export default RModeDescription;
+export default RModeInfo;
