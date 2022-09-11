@@ -6,7 +6,9 @@
 const narratives = {
   journey: {
     id: 1, 
-    author: 'Christopher Vogler',
+    author: 'Christopher Vogler', 
+    backgroundUrl: 'images/the-journey-info.jpg', 
+    color: 'white', 
     description: `
       Lorem ipsum dolor sit amet consectetur adipisicing elit. 
       Ratione eligendi et neque illo repellat vero omnis temporibus 
@@ -18,6 +20,8 @@ const narratives = {
   circle: {
     id: 2, 
     author: 'Dan Harmon', 
+    backgroundUrl: 'images/the-circle-info.jpg', 
+    color: 'black', 
     description: `
       Lorem ipsum dolor sit amet consectetur adipisicing elit. 
       Ratione eligendi et neque illo repellat vero omnis temporibus 

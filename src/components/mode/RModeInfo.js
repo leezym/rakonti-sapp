@@ -97,9 +97,7 @@ const DescriptionContainer = styled.div`
 const ModeContainer= styled.div`
   align-items: center;
   display: flex;
-  height: 100vh;
   justify-content: flex-end;
-  width: 100%;
 `;
 
 const Title = styled.h1`

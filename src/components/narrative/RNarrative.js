@@ -69,6 +69,7 @@ const PlusButton = styled.button`
   border: none;
   cursor: pointer;
   margin: 15px 15px 0px 0px;
+  padding: 0;
 `;
 
 const PlusContainer = styled.div`

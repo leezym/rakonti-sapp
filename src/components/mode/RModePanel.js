@@ -10,7 +10,7 @@ import RMode from './RMode';
 import modes from '../../redux-store/data/modes';
 
 function RModePanel() {
-  return <ModesContainer>
+  return <div>
     <BackgroundImage src='images/modes-background.jpg' alt='modes-background'/>
     <RowContainer>
       <RMode mode={modes.classic}/>
@@ -18,14 +18,8 @@ function RModePanel() {
     <RowContainer bottom>
       <RMode mode={modes.creative} bottom/>
     </RowContainer>
-  </ModesContainer>
+  </div>
 }
-
-const ModesContainer = styled.div`
-  height: 100vh;
-  position: relative;
-  width: 100%;
-`;
 
 const RowContainer = styled.div`
   align-items: center;

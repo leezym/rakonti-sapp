@@ -10,22 +10,17 @@ import RNarrative from './RNarrative';
 import narratives from '../../redux-store/data/narratives';
 
 function RNarrativePanel() {
-  return <NarrativesContainer>
+  return <div>
     <BackgroundImage 
       src='images/narratives-background.jpg' 
       alt='narratives-background'/>
     <ColumnContainer>
-      <RNarrative 
-        name='journey'
-        narrative={narratives.journey}/>
+      <RNarrative narrative={narratives.journey}/>
     </ColumnContainer>
     <ColumnContainer right>
-      <RNarrative 
-        name='circle'
-        narrative={narratives.circle} 
-        right/>
+      <RNarrative narrative={narratives.circle} right/>
     </ColumnContainer>
-  </NarrativesContainer>
+  </div>
 }
 
 const ColumnContainer = styled.div`
@@ -37,11 +32,6 @@ const ColumnContainer = styled.div`
   position: absolute;
   top: 0;
   width: 50%;
-`;
-
-const NarrativesContainer = styled.div`
-  height: 100vh;
-  width: 100%;
 `;
 
 export default RNarrativePanel;
