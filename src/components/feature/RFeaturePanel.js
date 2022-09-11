@@ -4,6 +4,7 @@
  */
 
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 import BackgroundImage from '../../styled/BackgroundImage';
 import RFeature from './RFeature';
@@ -21,11 +22,16 @@ function RFeaturePanel() {
     </ColumnContainer>
     <ColumnContainer right>
       <FeaturesContainer>
-        <RFeature feature={features.gender} name='gender'/>
+        <RFeature feature={features.genre} name='gender'/>
         <RFeature feature={features.plot} name='plot'/>
         <RFeature feature={features.desire} name='desire'/>
         <RFeature feature={features.timeSpace} name='timeSpace'/>
       </FeaturesContainer>
+      <ContinueLink to='/'>
+        <ContinueImage 
+          src='images/continue.png'
+          alt='continue-image'/>
+      </ContinueLink>
     </ColumnContainer>
   </div>
 }
@@ -49,6 +55,17 @@ const ColumnContainer = styled.div`
   left: ${({ right }) => right ? '50%' : '0'};
   top: 0;
   width: 50%;
+`;
+
+const ContinueImage = styled.img`
+  height: 100px;
+  width: 100px;
+`;
+
+const ContinueLink = styled(Link)`
+  bottom: 8%;
+  position: absolute;
+  right: 9%;
 `;
 
 const FeaturesContainer = styled.div`

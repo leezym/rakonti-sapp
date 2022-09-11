@@ -8,6 +8,11 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   mode: null, 
   narrative: null, 
+  feature: null, 
+  genre: null, 
+  plot: null, 
+  desire: null, 
+  timeSpace: null
 };
 
 export const storySlice = createSlice({
@@ -20,9 +25,25 @@ export const storySlice = createSlice({
 
     setNarrative: (state, action) => {
       state.narrative = action.payload;
+    },
+
+    setFeature: (state, action) => {
+      state.feature = action.payload;
+    },
+
+    setFeatureItem: (state, action) => {
+      /** Actualiza: genre, plot, desire, timeSpace */
+      const { payload } = action;
+      state[payload.key] = payload.value;
     }
   }
 });
 
-export const { setMode, setNarrative } = storySlice.actions;
+export const { 
+  setMode, 
+  setNarrative, 
+  setFeature, 
+  setFeatureItem, 
+} = storySlice.actions;
+
 export default storySlice.reducer;

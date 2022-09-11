@@ -4,13 +4,23 @@
  */
 
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFeature } from '../../redux-store/reducers/storySlice';
 
 function RFeature({ feature }) {
-  return <FeatureButton>
+  /** Obtener el item seleccionado para la característica asociada */
+  const item = useSelector(state => state.story[feature.code]);
+  const dispatch = useDispatch();
+
+  const onFeatureClicked = () => {
+    dispatch(setFeature(feature));
+  }
+
+  return <FeatureButton onClick={onFeatureClicked}>
     { feature.name }
-    <CheckIcon 
+    {item && <CheckIcon 
       src='images/check-icon.png'
-      alt='check-icon'/>
+      alt='check-icon'/>}
   </FeatureButton>
 }
 

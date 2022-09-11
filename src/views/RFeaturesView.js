@@ -3,11 +3,21 @@
  * @version 1.0.1
  */
 
-import RFeaturePanel from "../components/feature/RFeaturePanel";
+import { useSelector } from 'react-redux';
+
+import RFeaturePanel from '../components/feature/RFeaturePanel';
+import RFeatureSelector from '../components/feature/RFeatureSelector';
 
 function RFeaturesView() {
+  const feature = useSelector(state => state.story.feature);
+
   return <div>
-    <RFeaturePanel/>
+    {
+      feature === null || feature === undefined ?
+      <RFeaturePanel/>
+      :
+      <RFeatureSelector feature={feature}/>
+    }
   </div>
 }
 

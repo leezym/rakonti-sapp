@@ -4,36 +4,41 @@
  */
 
 const features = {
-  gender: {
+  genre: {
     id: 1, 
+    code: 'genre', 
     name: 'Género', 
     options: [{
       id: 1, 
-      name: 'Acción y Aventuras', 
+      name: 'Aventuras', 
       description: `En este género las historias reflejan un mundo heroíco de 
         combates y aventuras, y en el que suele predominar la acción y valores 
         caballerescos. Se caracteriza por héroes que recorren el mundo y salvan 
-        a desvalidos de villanos.`
+        a desvalidos de villanos.`, 
+      url: 'images/genre-adventure.png'
     }, {
       id: 2, 
       name: 'Comedia', 
       description: `Son historias cercanas al género drama porque encarna situaciones 
         o conflictos de personajes pero siempre opuestas a la tragedia. Relacionado 
         casi siempre con historias con final feliz. Sátiras, situaciones cotidianas 
-        se pueden representar en este género.`
+        se pueden representar en este género.`, 
+      url: 'images/genre-comedy.png'
     }, {
       id: 3, 
       name: 'Drama', 
       description: `Se trata de historias en las que se representan episodios o 
-      conflictos de la vida de los seres humanos por medio del diálogo de los 
-      personajes.`
+        conflictos de la vida de los seres humanos por medio del diálogo de los 
+        personajes.`, 
+      url: 'images/genre-drama.png'
     }, {
       id: 4, 
-      name: 'Fantasía & Sci-Fi', 
+      name: 'Fantasía', 
       description: `Se trata de historias llenas de elementos imaginarios y 
         poco realistas. Los eventos en una fantasía operan fuera de las leyes
         del universo real y típicamenteinvolucran elementos sobrenaturales, como 
-        criaturas mágicas, extraterrestres, robots, etc.`
+        criaturas mágicas, extraterrestres, robots, etc.`, 
+      url: 'images/genre-fantasy.png'
     }, {
       id: 5, 
       name: 'Suspenso', 
@@ -41,18 +46,21 @@ const features = {
         en un estado de tensión, de lo que pueda ocurrirle a los personajes, y por 
         lo tanto atento al desarrollo del conflicto. El suspenso se puede generar 
         como resultado de un secreto que desconoce el protagonista y mantiene la 
-        tensión en el espectador.`
+        tensión en el espectador.`, 
+      url: 'images/genre-suspense.png'
     }, {
       id: 6, 
       name: 'Terror', 
       description: `Se tratan de historias que causan miedo. En el terror se incluyen 
         criaturas que trasgreden de cierta manera las reglas o convenciones del mundo 
         diegético en que es situado. Puede también tratarse de un humano responsable 
-        de los hechos que aterrorizan a la audiencia.`
+        de los hechos que aterrorizan a la audiencia.`, 
+      url: 'images/genre-terror.png'
     }]
   }, 
   plot: {
     id: 2, 
+    code: 'plot', 
     name: 'Trama', 
     options: [{
       id: 1, 
@@ -68,7 +76,7 @@ const features = {
         superar todos los obstáculos. Es el logro supremo de la emoción humana.`
     }, {
       id: 3, 
-      name: 'Ascenso & Descenso', 
+      name: 'Asc. & Desc.', 
       description: `Estas dos tramas ocupan diferentes posiciones en el mismo ciclo de 
         éxito y fracaso. Una trama trata sobre el ascenso del protagonista y la otra 
         trata sobre su caída. Algunas historias capturan el ciclo completo. Por lo 
@@ -95,7 +103,7 @@ const features = {
         de nuestra vida en algún momento del camino.`
     }, {
       id: 7, 
-      name: 'Desdicha Excesiva', 
+      name: 'Desdicha Exc.', 
       description: `La verdadera tensión inherente a esta trama proviene de convencer a los 
         lectores de que, sea cual sea el exceso, también podría sucederles. ¿Quién de nosotros 
         sabe qué maldad acecha en los corazones de quienes nos rodean? ¿Quién de nosotros 
@@ -187,111 +195,113 @@ const features = {
     }]
   },
   desire: {
-    id: 3,
+    id: 3, 
+    code: 'desire', 
     name: 'Objeto de deseo', 
     options: []
   }, 
   timeSpace: {
     id: 4, 
+    code: 'timeSpace', 
     name: 'Tiempo y Espacio', 
     options: [{
       id: 1, 
-      name: 'Edad Antigua', 
+      name: 'Antigua', 
       period: '3000 A.C - 500 A.C', 
       description: 'CIVILIZACIÓN EGIPCIA' 
     }, {
       id: 2, 
-      name: 'Edad Antigua', 
+      name: 'Antigua', 
       period: '3000 A.C - 500 A.C', 
       description: 'CIVILIZACIÓN PREHISPÁNICA' 
     }, {
       id: 3, 
-      name: 'Edad Antigua', 
+      name: 'Antigua', 
       period: '3000 A.C - 500 A.C', 
       description: 'CIVILIZACIÓN GRIEGA' 
     }, {
       id: 4, 
-      name: 'Edad Antigua', 
+      name: 'Antigua', 
       period: '3000 A.C - 500 A.C', 
       description: 'CIVILIZACIÓN ROMANA' 
     }, {
       id: 5, 
-      name: 'Edad Media', 
+      name: 'Medieval', 
       period: '500 A.C - 1453', 
       description: 'VIKINGOS'
     }, {
       id: 6, 
-      name: 'Edad Media', 
+      name: 'Medieval', 
       period: '500 A.C - 1453', 
       description: 'CRUZADAS'
     }, {
       id: 7, 
-      name: 'Edad Media', 
+      name: 'Medieval', 
       period: '500 A.C - 1453', 
       description: 'INQUISICIÓN'
     }, {
       id: 8, 
-      name: 'Edad Media', 
+      name: 'Medieval', 
       period: '500 A.C - 1453', 
       description: 'PESTE NEGRA'
     }, {
       id: 9, 
-      name: 'Edad Moderna', 
+      name: 'Moderna', 
       period: '1453 - 1789', 
       description: 'ESCLAVITUD'
     }, {
       id: 10,
-      name: 'Edad Moderna', 
+      name: 'Moderna', 
       period: '1453 - 1789', 
       description: 'COLONIZACIÓN SUDAMERICANA'
     }, {
       id: 11, 
-      name: 'Edad Moderna', 
+      name: 'Moderna', 
       period: '1453 - 1789', 
       description: 'LA ILUSTRACIÓN'
     }, {
       id: 12, 
-      name: 'Edad Moderna', 
+      name: 'Moderna', 
       period: '1453 - 1789', 
       description: 'REVOLUCIÓN FRANCESA'
     }, {
       id: 13, 
-      name: 'Edad Contemporánea', 
+      name: 'Contemp.', 
       period: '1789 - ACTUALIDAD', 
       description: 'PANDEMIAS'
     }, {
       id: 14, 
-      name: 'Edad Contemporánea', 
+      name: 'Contemp.', 
       period: '1789 - ACTUALIDAD', 
       description: 'REVOLUCIÓN INDUSTRIAL'
     }, {
       id: 15, 
-      name: 'Edad Contemporánea', 
+      name: 'Contemp.', 
       period: '1789 - ACTUALIDAD', 
       description: 'GUERRAS MUNDIALES'
     }, {
       id: 16, 
-      name: 'Edad Contemporánea', 
+      name: 'Contemp.', 
       period: '1789 - ACTUALIDAD', 
       description: 'EVOLUCIÓN DE DERECHOS SOCIALES'
     }, {
       id: 17, 
-      name: 'Edad Futurista', 
+      name: 'Futurista', 
       period: '2021 EN ADELANTE', 
       description: 'AGOTAMIENTO RECURSOS NATURALES'
     }, {
       id: 18, 
-      name: 'Edad Futurista', 
+      name: 'Futurista', 
       period: '2021 EN ADELANTE', 
       description: 'NUEVAS ECONOMÍAS'
     }, {
       id: 19, 
-      name: 'Edad Futurista', 
+      name: 'Futurista', 
       period: '2021 EN ADELANTE', 
       description: 'TECNOLOGÍA HIPERAVANZADA'
     }, {
       id: 20, 
-      name: 'Edad Futurista', 
+      name: 'Futurista', 
       period: '2021 EN ADELANTE', 
       description: 'EXPANSIÓN DE LA HUMANIDAD A OTROS PLANETAS'
     }]
