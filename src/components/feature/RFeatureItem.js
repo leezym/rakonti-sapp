@@ -57,6 +57,7 @@ const FeatureItemImage = styled.img`
   bottom: 26%;
   max-height: 350px;
   left: calc(50% - 125px);
+  object-fit: contain;
   position: absolute;
   width: 250px;
   z-index: 2;
