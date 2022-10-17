@@ -18,7 +18,7 @@ function RNarrativePanel() {
       <RNarrative narrative={narratives.journey}/>
     </ColumnContainer>
     <ColumnContainer right>
-      <RNarrative narrative={narratives.circle} right/>
+      <RNarrative narrative={narratives.circle} right='true'/>
     </ColumnContainer>
   </div>
 }

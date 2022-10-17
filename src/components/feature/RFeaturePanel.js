@@ -27,7 +27,7 @@ function RFeaturePanel() {
         <RFeature feature={features.desire} name='desire'/>
         <RFeature feature={features.timeSpace} name='timeSpace'/>
       </FeaturesContainer>
-      <ContinueLink to='/'>
+      <ContinueLink to='/editor'>
         <ContinueImage 
           src='images/continue.png'
           alt='continue-image'/>
