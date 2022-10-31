@@ -12,7 +12,8 @@ const initialState = {
   genre: null, 
   plot: null, 
   desire: null, 
-  timeSpace: null
+  timeSpace: null, 
+  character: null,
 };
 
 export const storySlice = createSlice({
@@ -35,6 +36,10 @@ export const storySlice = createSlice({
       /** Actualiza: genre, plot, desire, timeSpace */
       const { payload } = action;
       state[payload.key] = payload.value;
+    }, 
+
+    setCharacter: (state, action) => {
+      state.character = action.payload;
     }
   }
 });
@@ -44,6 +49,7 @@ export const {
   setNarrative, 
   setFeature, 
   setFeatureItem, 
+  setCharacter, 
 } = storySlice.actions;
 
 export default storySlice.reducer;

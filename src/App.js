@@ -5,6 +5,7 @@
 
 import { Route, Routes } from 'react-router-dom';
 
+import RCharactersView from './views/RCharactersView';
 import REditorView from './views/REditorView';
 import RFeaturesView from './views/RFeaturesView';
 import RHomeView from './views/RHomeView';
@@ -19,6 +20,7 @@ function App() {
         <Route path='/modes' element={<RModesView/>}/>
         <Route path='/narratives' element={<RNarrativesView/>}/>
         <Route path='/features' element={<RFeaturesView/>}/>
+        <Route path='/characters' element={<RCharactersView/>}/>
         <Route path='/editor' element={<REditorView/>}/>
       </Routes>
     </div>
