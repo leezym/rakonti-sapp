@@ -7,11 +7,17 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { setFeature, setFeatureItem } from '../../redux-store/reducers/storySlice';
 
-function RFeatureItem({ code, feature, item }) {
+function RFeatureItem({ code, feature, item, options }) {
   const dispatch = useDispatch();
 
   const onItemClicked = () => {
-    dispatch(setFeatureItem({ key: code, value: item }));
+    let itemSelected = item;
+    /** Verificar aleatorio */
+    if (item.id === 0) { 
+      itemSelected = Math.floor(Math.random() * options.length);
+    }
+
+    dispatch(setFeatureItem({ key: code, value: itemSelected }));
     /** Eliminar el Feature temporal para salir del selector */
     dispatch(setFeature(null)); 
   }

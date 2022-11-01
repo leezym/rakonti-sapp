@@ -9,6 +9,11 @@ const features = {
     code: 'genre', 
     name: 'Género', 
     options: [{
+      id: 0, 
+      name: 'Aleatorio', 
+      description: 'Género aleatorio.', 
+      url: 'images/genre-random.png'
+    }, {
       id: 1, 
       name: 'Aventuras', 
       description: `En este género las historias reflejan un mundo heroíco de 
@@ -63,6 +68,11 @@ const features = {
     code: 'plot', 
     name: 'Trama', 
     options: [{
+      id: 0, 
+      name: 'Aleatorio', 
+      description: 'Trama aleatoria.', 
+      url: 'images/plot-random.png' 
+    }, {
       id: 1, 
       name: 'Amor',
       description: `A menudo, la historia del amor es la historia de la frustración, 
@@ -218,6 +228,11 @@ const features = {
     code: 'desire', 
     name: 'Objeto de deseo', 
     options: [{
+      id: 0, 
+      name: 'Aleatorio', 
+      description: 'Objeto de deseo aleatorio.', 
+      url: 'images/desire-random.png'
+    }, {
       id: 1, 
       name: 'Bebé', 
       url: 'images/desire-baby.png'
@@ -280,6 +295,11 @@ const features = {
     code: 'timeSpace', 
     name: 'Tiempo y Espacio', 
     options: [{
+      id: 0, 
+      name: 'Aleatorio', 
+      description: 'Tiempo y Espacio aleatorio.', 
+      url: 'images/ts-random.png' 
+    }, {
       id: 1, 
       name: 'Antigua', 
       period: '3000 A.C - 500 A.C', 

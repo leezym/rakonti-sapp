@@ -26,7 +26,8 @@ function RFeatureSelector({ feature }) {
                 key={item.id} 
                 code={feature.code}
                 feature={feature.name} 
-                item={item}/>
+                item={item}
+                options={feature.options}/>
             ))
           }
         </RCarousel>}
