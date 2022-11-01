@@ -13,8 +13,9 @@ function RFeatureItem({ code, feature, item, options }) {
   const onItemClicked = () => {
     let itemSelected = item;
     /** Verificar aleatorio */
-    if (item.id === 0) { 
-      itemSelected = Math.floor(Math.random() * options.length);
+    if (itemSelected.id === 0) {
+      const opts = options.slice(1, options.length - 1); 
+      itemSelected = Math.floor(Math.random() * opts.length);
     }
 
     dispatch(setFeatureItem({ key: code, value: itemSelected }));
