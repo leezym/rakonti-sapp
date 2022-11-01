@@ -58,8 +58,8 @@ const Description = styled.p`
   color: ${({ color }) => color};
   padding: 0px 15%;
   position: absolute;
-  text-align: center;
-  top: 40%;
+  text-align: justify;
+  top: 33%;
 `;
 
 const NarrativeContainer = styled.div`

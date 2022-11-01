@@ -8,18 +8,12 @@ const modes = {
     id: 1,
     backgroundUrl: 'images/classic-background.jpg', 
     description: `
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-      Eaque illum, odit cupiditate deserunt temporibus praesentium 
-      saepe sint possimus accusamus facilis, dolorum commodi quisquam, 
-      voluptas veniam obcaecati a vero. Aliquam, deserunt?
-      %br%
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-      Eaque illum, odit cupiditate deserunt temporibus praesentium 
-      saepe sint possimus accusamus facilis, dolorum commodi quisquam.
-      %br%
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-      Eaque illum, odit cupiditate deserunt temporibus praesentium 
-      saepe sint possimus accusamus facilis.
+      En este modo serás guiado en el proceso de construcción de tu
+      historia y podrás crearla a partir de las estructuras del Viaje
+      del Héroe, por Christopher Vogler, o El Círculo, por Dan Harmon
+      Podrás jugar con las condiciones generales de la hitoria y escoger 
+      una de las opciones para construirla usando los ocho pasos de 
+      Harmon o los doce pasos de Campbell.
     `,
     title: 'MODO CLÁSICO', 
     url: 'images/classic-button.png'
@@ -28,18 +22,13 @@ const modes = {
     id: 2, 
     backgroundUrl: 'images/classic-background.jpg', 
     description: `
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-      Eaque illum, odit cupiditate deserunt temporibus praesentium 
-      saepe sint possimus accusamus facilis, dolorum commodi quisquam, 
-      voluptas veniam obcaecati a vero. Aliquam, deserunt?
-      %br%
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-      Eaque illum, odit cupiditate deserunt temporibus praesentium 
-      saepe sint possimus accusamus facilis, dolorum commodi quisquam.
-      %br%
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-      Eaque illum, odit cupiditate deserunt temporibus praesentium 
-      saepe sint possimus accusamus facilis.
+      En este modo podrás jugar con las condiciones generales de la
+      historia y dejar tu imaginación volar para construir tu relato 
+      a partir de la mezcla y fusión de las estructuras del Viaje
+      del Héroe, por hristopher Vogler, y el Círculo, por Dan Harmon. 
+      Estudia los ocho pasos de Harmon o los doce pasos de Campbell 
+      para poder mezclar, fusionar y construir tu historia a tu gusto, 
+      creando nuevos tipos de estructuras narrativas.
     `,
     title: 'MODO CREATIVO', 
     url: 'images/creative-button.png'

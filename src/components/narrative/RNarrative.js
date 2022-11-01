@@ -31,7 +31,7 @@ function RNarrative({ narrative, right }) {
       </PlusButton>
     </PlusContainer>
     <Description>
-      { narrative.description }
+      { narrative.summary }
     </Description>
   </NarrativeLink>
 }
@@ -42,7 +42,7 @@ const Description = styled.p`
   margin-left: 10px;
   position: absolute;
   top: 23%;
-  text-align: center;
+  text-align: justify;
   width: 85%;
 `;
 
