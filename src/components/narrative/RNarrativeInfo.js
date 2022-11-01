@@ -36,14 +36,13 @@ const CloseButton = styled.button`
   border: none;
   cursor: pointer;
   padding: 0;
-  margin: 20px 50px 0px 0px;
 `;
 
 const CloseContainer = styled.div`
   align-items: center;
   display: flex;
-  height: 70px;
-  justify-content: flex-end;
+  height: 60px;
+  justify-content: center;
   position: absolute;
   top: 0;
   width: 100%;

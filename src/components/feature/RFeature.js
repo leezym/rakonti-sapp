@@ -18,9 +18,9 @@ function RFeature({ feature }) {
 
   return <FeatureButton onClick={onFeatureClicked}>
     { feature.name }
-    {item && <CheckIcon 
-      src='images/check-icon.png'
-      alt='check-icon'/>}
+    { item && <CheckIcon 
+        src='images/check-icon.png'
+        alt='check-icon'/>}
   </FeatureButton>
 }
 

@@ -5,12 +5,19 @@
 
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import BackgroundImage from '../../styled/BackgroundImage';
 import RFeature from './RFeature';
 import features from '../../redux-store/data/features';
+import icons from '../../redux-store/data/icons';
 
 function RFeaturePanel() {
+  const genre = useSelector(state => state.story.genre);
+  const plot = useSelector(state => state.story.plot);
+  const desire = useSelector(state => state.story.desire);
+  const timeSpace = useSelector(state => state.story.timeSpace);
+
   return <div>
     <BackgroundImage 
       src='images/features-background.jpg' 
@@ -22,6 +29,11 @@ function RFeaturePanel() {
       <CharacterAuraImage
         src='images/character-aura.png'
         alt='character-aura'/>
+
+      { genre && <FeatureIcon src='images/genre-icon.png' alt='genre' code='genre'/> }
+      { plot && <FeatureIcon src='images/plot-icon.png' alt='plot' code='plot'/> }
+      { desire && <FeatureIcon src='images/desire-icon.png' alt='desire' code='desire'/> }
+      { timeSpace && <FeatureIcon src='images/ts-icon.png' alt='time-space' code='timeSpace'/> }
     </ColumnContainer>
     <ColumnContainer right>
       <FeaturesContainer>
@@ -41,9 +53,8 @@ function RFeaturePanel() {
 
 const CharacterAuraImage = styled.img`
   height: 54%;
-  margin-left: 20px;
   position: absolute;
-  top: 50px;
+  top: 7%;
   width: 65%;
 `;
 
@@ -85,6 +96,21 @@ const FeaturesContainer = styled.div`
   flex-direction: column;
   height: 68%;
   width: 80%;
+`;
+
+const FeatureIcon = styled.img`
+  height: ${({ code }) => icons[code].height };
+  position: absolute;
+  right: ${({ code }) => icons[code].right };
+  top: ${({ code }) => icons[code].top };
+  transform: rotate(${({ code }) => icons[code].rotation });
+  width: ${({ code }) => icons[code].width };
+
+  @media (min-width: 1524px) {
+    height: calc(${({ code }) => icons[code].height} + 16px);
+    top: calc(${({ code }) => icons[code].top} + 1%);
+    width: calc(${({ code }) => icons[code].width} + 20px);
+  }
 `;
 
 export default RFeaturePanel;
