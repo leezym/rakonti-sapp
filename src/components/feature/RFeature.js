@@ -35,8 +35,8 @@ const CheckIcon = styled.img`
 const FeatureButton = styled.button`
   background-color: transparent;
   border: none;
-  border-bottom: 1px solid white;
-  color: white;
+  border-bottom: 1px solid #484F64;
+  color: #484F64;
   cursor: pointer;
   font-size: x-large;
   font-weight: 600;

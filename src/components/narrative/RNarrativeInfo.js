@@ -7,8 +7,6 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { setNarrative } from '../../redux-store/reducers/storySlice';
 
-import BackgroundImage from '../../styled/BackgroundImage';
-
 function RNarrativeInfo({ narrative }) {
   const dispatch = useDispatch();
 
@@ -16,7 +14,7 @@ function RNarrativeInfo({ narrative }) {
     dispatch(setNarrative(null));
   }
 
-  return <div>
+  return <NarrativeContainer>
     <NarrativeImage 
       src={narrative.backgroundUrl} 
       alt='narrative-info-background'/>
@@ -30,7 +28,7 @@ function RNarrativeInfo({ narrative }) {
     <Description color={narrative.color}>
       { narrative.description }
     </Description>
-  </div>
+  </NarrativeContainer>
 }
 
 const CloseButton = styled.button`
@@ -64,8 +62,23 @@ const Description = styled.p`
   top: 40%;
 `;
 
-const NarrativeImage = styled(BackgroundImage)`
+const NarrativeContainer = styled.div`
+  height: 100vh;
+  overflow-y: auto;
+  width: 100%;
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const NarrativeImage = styled.img`
+  min-height: 100vh;
   object-position: 0 0;
+  vertical-align: middle;
+  width: 100%;
 `;
 
 export default RNarrativeInfo;

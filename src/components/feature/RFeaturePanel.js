@@ -19,6 +19,9 @@ function RFeaturePanel() {
       <CharacterImage 
         src='images/character-statue.png'
         alt='character-statue'/>
+      <CharacterAuraImage
+        src='images/character-aura.png'
+        alt='character-aura'/>
     </ColumnContainer>
     <ColumnContainer right>
       <FeaturesContainer>
@@ -36,8 +39,16 @@ function RFeaturePanel() {
   </div>
 }
 
+const CharacterAuraImage = styled.img`
+  height: 54%;
+  margin-left: 20px;
+  position: absolute;
+  top: 50px;
+  width: 65%;
+`;
+
 const CharacterImage = styled.img`
-  height: 90%;
+  height: 84%;
   vertical-align: middle;
   width: 80%;
 

@@ -55,11 +55,11 @@ const FeatureItemButton = styled.button`
 
 const FeatureItemImage = styled.img`
   bottom: 26%;
-  max-height: 350px;
-  left: calc(50% - 125px);
+  max-height: 330px;
+  left: calc(50% - 105px);
   object-fit: contain;
   position: absolute;
-  width: 250px;
+  width: 230px;
   z-index: 2;
 `;
 
