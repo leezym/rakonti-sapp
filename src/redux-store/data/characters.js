@@ -35,6 +35,7 @@ export const personalities = [{
     por sus principios; siempre encuentran una razón para sonreír. Moldeados 
     por su intuición. Creen que todos deberían tomarse el tiempo para reconocer 
     y expresar sus sentimientos.`, 
+  url: 'images/activist.png', 
   strengths: [
     'Dispuestos a salir de sus zona de confort para explorar', 
     'Observadores en detalle', 
@@ -207,6 +208,7 @@ export const personalities = [{
     a veces distraída. Inspiradores, convincentes y coloridos, son líderes de grupos 
     naturales, empujando a todos por el camino menos transitado, trayendo vida y 
     emoción a donde quiera que vayan.`, 
+  url: 'images/entrepreneur.png', 
   strengths: [
     'Pensadores rápidos, originales, enérgicos y carismáticos', 
     'Analizan problemas desde todos los ángulos', 

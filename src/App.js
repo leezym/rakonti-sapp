@@ -10,6 +10,7 @@ import RCharactersView from './views/RCharactersView';
 import REditorView from './views/REditorView';
 import RFeaturesView from './views/RFeaturesView';
 import RHomeView from './views/RHomeView';
+import RMapView from './views/RMapView';
 import RModesView from './views/RModesView';
 import RNarrativesView from './views/RNarrativesView';
 
@@ -35,6 +36,7 @@ function App() {
         <Route path='/narratives' element={<RNarrativesView/>}/>
         <Route path='/features' element={<RFeaturesView/>}/>
         <Route path='/characters' element={<RCharactersView/>}/>
+        <Route path='/map' element={<RMapView/>}/>
         <Route path='/editor' element={<REditorView/>}/>
       </Routes>
     </div>

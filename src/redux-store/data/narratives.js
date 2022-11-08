@@ -31,7 +31,8 @@ const narratives = {
       algún tesoro o enseñanza.
     `,
     title: 'VIAJE DEL HÉROE', 
-    url: 'images/the-journey.png'
+    url: 'images/the-journey.png', 
+    mapUrl: 'images/the-journey-map.png'
   }, 
   circle: {
     id: 2, 
@@ -60,7 +61,8 @@ const narratives = {
       pagado un precio muy alto por aquello que quería.
     `, 
     title: 'EL CÍRCULO', 
-    url: 'images/the-circle.png'
+    url: 'images/the-circle.png', 
+    mapUrl: 'images/the-circle-map.png'
   }
 };
 

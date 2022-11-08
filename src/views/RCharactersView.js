@@ -9,6 +9,8 @@ import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setCharacter } from '../redux-store/reducers/storySlice';
 
+import RCharacter from '../components/character/RCharacter';
+
 import { personalities } from '../redux-store/data/characters';
 
 function RCharactersView() {
@@ -49,12 +51,10 @@ function RCharactersView() {
           </Button>
         </ColumnContainer>
         <ColumnContainer right={true}>
-          <Subtitle>Personaje</Subtitle>
-          <Title>{ personalities[currentIndex].name }</Title>
-          <Description>{ personalities[currentIndex].description }</Description>
+          <RCharacter personality={personalities[currentIndex]}/>
         </ColumnContainer>
       </CharacterContainer>
-      <ContinueLink onClick={onContinueClicked} to='/'>
+      <ContinueLink onClick={onContinueClicked} to='/map'>
         <ContinueImage src='images/continue-map.png' alt='continue'/>
       </ContinueLink>
     </OverlayContainer>
@@ -108,12 +108,6 @@ const ContinueLink = styled(Link)`
   right: 5%;
 `;
 
-const Description = styled.div`
-  color: gray;
-  margin: 20px 0 0 10px;
-  text-align: justify;
-`;
-
 const OverlayContainer = styled.div`
   align-items: flex-end;
   display: flex;
@@ -123,19 +117,6 @@ const OverlayContainer = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-`;
-
-const Subtitle = styled.h3`
-  color: darkgray;
-  font-size: 1.7em;
-  font-weight: 500;
-  margin: 0;
-`;
-
-const Title = styled.h1`
-  font-size: 3.5em;
-  font-weight: 600;
-  margin: 0 0 0 10px;
 `;
 
 export default RCharactersView;
