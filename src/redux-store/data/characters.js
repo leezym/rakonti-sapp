@@ -13,6 +13,7 @@ export const personalities = [{
     creatividad, imaginación, convicción y sensibilidad para crear un 
     equilibrio.`, 
   url: 'images/lawyer.png', 
+  avatarUrl: 'images/lawyer-avatar.png',  
   strengths: [
     'Creativos para resolver desafíos humanos', 
     'Excelentes consejeros y asesores', 
@@ -36,6 +37,7 @@ export const personalities = [{
     por su intuición. Creen que todos deberían tomarse el tiempo para reconocer 
     y expresar sus sentimientos.`, 
   url: 'images/activist.png', 
+  avatarUrl: 'images/activist-avatar.png', 
   strengths: [
     'Dispuestos a salir de sus zona de confort para explorar', 
     'Observadores en detalle', 
@@ -57,7 +59,8 @@ export const personalities = [{
     buen grupo de amigos. No tienen miedo de cambiar su entorno para reflejar 
     su estilo personal. Son observadores y muy sensibles a las emociones de 
     los demás.`, 
-  url: 'images/entertainer.png',  
+  url: 'images/entertainer.png', 
+  avatarUrl: 'images/entertainer-avatar.png', 
   strengths: [
     'Audaces', 
     'Gusto por experimentar nuevos estilos', 
@@ -80,6 +83,7 @@ export const personalities = [{
     reglas, restricciones y tradiciones. Para ellos, todo debe estar sujeto 
     a preguntas y revisiones "¿Tienes sentido?" "¿Esto va a funcionar?".`, 
   url: 'images/architech.png', 
+  avatarUrl: 'images/architech-avatar.png', 
   strengths: [
     'Alta confianza en sí mismos', 
     'Independientes', 
@@ -102,6 +106,7 @@ export const personalities = [{
     por los deportes extremos y los comportamientos de riesgo. Son sensibles a los 
     sentimientos de los demás y valoran la armonía.`, 
   url: 'images/adventurer.png', 
+  avatarUrl: 'images/adventurer-avatar.png', 
   strengths: [
     'Sensibilidad frente a los demás', 
     'Actitud relajada y cálida', 
@@ -125,6 +130,7 @@ export const personalities = [{
     y racionalidad. Habilidad particular para señalar las fallas de los demás con un 
     grado de insensibilidad.`, 
   url: 'images/commander.png', 
+  avatarUrl: 'images/commander-avatar.png', 
   strengths: [
     'Carismáticos e inspiradores', 
     'No se rinden cuando la situación se torna difícil', 
@@ -147,6 +153,7 @@ export const personalities = [{
     recordando pequeños detalles y siempre listos para hablar con calidez y sensibilidad.
     Si hay tensión en el grupo, tratan de restaurar la armonía y la estabilidad.`, 
   url: 'images/consul.png', 
+  avatarUrl: 'images/consul-avatar.png', 
   strengths: [
     'Fuerte sentido del deber', 
     'Excelentes destrezas para gestionar tareas y mantener rutinas', 
@@ -167,6 +174,7 @@ export const personalities = [{
     inter personales, son receptivos al cambio y a las nuevas ideas. Procuran ir 
     más allá haciendo lo posible por superar expectativas y satisfacer a los demás.`, 
   url: 'images/defender.png', 
+  avatarUrl: 'images/defender-avatar.png', 
   strengths: [
     'Confiables y pacientes', 
     'Apoyo incondicional a otros', 
@@ -188,6 +196,7 @@ export const personalities = [{
     con el ejemplo, demostrando dedicación y honestidad decidida y un rechazo 
     total de la deshonestidad, la pereza y la trampa.`, 
   url: 'images/executive.png', 
+  avatarUrl: 'images/executive-avatar.png', 
   strengths: [
     'Dedicados y disciplinados', 
     'Facilidad para construir reglas, normas y roles claros', 
@@ -209,6 +218,7 @@ export const personalities = [{
     naturales, empujando a todos por el camino menos transitado, trayendo vida y 
     emoción a donde quiera que vayan.`, 
   url: 'images/entrepreneur.png', 
+  avatarUrl: 'images/entrepreneur-avatar.png', 
   strengths: [
     'Pensadores rápidos, originales, enérgicos y carismáticos', 
     'Analizan problemas desde todos los ángulos', 
@@ -230,6 +240,7 @@ export const personalities = [{
     debates intelectuales. Buscan conocimiento atacando y defendiendo una idea 
     desde todos los puntos de vista.`, 
   url: 'images/innovator.png', 
+  avatarUrl: 'images/innovator-avatar.png', 
   strengths: [
     'Pensadores rápidos, originales, enérgicos y carismáticos', 
     'Analizan problemas desde todos los ángulos', 
@@ -252,6 +263,7 @@ export const personalities = [{
     solución única y viable. Se preocupan por la originalidad y los resultados 
     eficientes.`, 
   url: 'images/logician.png', 
+  avatarUrl: 'images/logician-avatar.png', 
   strengths: [
     'Innovadores', 
     'Excelentes pensadores abstractos', 
@@ -274,6 +286,7 @@ export const personalities = [{
     con sus obligaciones a toda costa y tienen poca tolerancia cuando las otras 
     personas no cumplen lo que dicen.`, 
   url: 'images/logistician.png', 
+  avatarUrl: 'images/logistician-avatar.png', 
   strengths: [
     'Honestos y directos', 
     'Carácter fuerte y obediente', 
@@ -295,6 +308,7 @@ export const personalities = [{
     bien incluso en las peores personas y/o eventos, procuran encontrar diversas 
     formas para mejorar las cosas.`, 
   url: 'images/mediator.png', 
+  avatarUrl: 'images/mediator-avatar.png', 
   strengths: [
     'Idealistas y optimistas por excelencia', 
     'Armonía y democracia', 
@@ -317,6 +331,7 @@ export const personalities = [{
     y a su comunidad. Les resuta natural y fácil comunicarse con los demás. 
     Excelente capacidad autorreflexiva.`, 
   url: 'images/protagonist.png', 
+  avatarUrl: 'images/protagonist-avatar.png', 
   strengths: [
     'Tolerantes frente a opiniones dispares', 
     'Confiables y carismáticos', 
@@ -338,6 +353,7 @@ export const personalities = [{
     y la experiencia de primera mano. Las decisiones se enmarcan desde el realismo 
     práctico.`, 
   url: 'images/virtuoso.png', 
+  avatarUrl: 'images/virtuoso-avatar.png', 
   strengths: [
     'Excelentes en la gestión de dificultades o momentos de crisis', 
     'Se relajan fácilmente', 
