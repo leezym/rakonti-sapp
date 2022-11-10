@@ -3,10 +3,12 @@
  * @version 1.0.1
  */
 
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCharacter, setCharacterIndex } from '../redux-store/reducers/storySlice';
+import { setBackIcon } from '../redux-store/reducers/uiSlice';
 
 import RCharacter from '../components/character/RCharacter';
 
@@ -14,8 +16,11 @@ import { personalities } from '../redux-store/data/characters';
 
 function RCharactersView() {
   const currentIndex = useSelector(state => state.story.characterIndex);
-
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setBackIcon('back-icon.png'));
+  });
 
   const onArrowClicked = (e) => {
     const { name } = e.target;

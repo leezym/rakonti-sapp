@@ -3,13 +3,20 @@
  * @version 1.0.0
  */
 
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { setBackIcon } from '../redux-store/reducers/uiSlice';
 
 import RSummary from '../components/map/RSummary';
 
 function RMapView() {
+  const dispatch = useDispatch();
   const narrative = useSelector(state => state.story.narrative);
+
+  useEffect(() => {
+    dispatch(setBackIcon('back-icon-dark.png'));
+  });
 
   return <MapContainer>
     <MapImage src={narrative.mapUrl} alt='map'/>

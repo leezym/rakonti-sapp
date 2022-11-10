@@ -3,16 +3,21 @@
  * @version 1.0.0
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setMode, setModeInfo } from '../../redux-store/reducers/storySlice';
+import { setBackIcon } from '../../redux-store/reducers/uiSlice';
 
 import BackgroundImage from '../../styled/BackgroundImage';
 
 function RModeInfo({ mode }) {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setBackIcon(null));
+  });
 
   const onBackClicked = () => {
     dispatch(setModeInfo(null));

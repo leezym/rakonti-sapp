@@ -3,13 +3,23 @@
  * @version 1.0.0
  */
 
+import { useEffect } from 'react';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { setBackIcon, setMenuIcon } from '../../redux-store/reducers/uiSlice';
 
 import BackgroundImage from '../../styled/BackgroundImage';
 import RNarrative from './RNarrative';
 import narratives from '../../redux-store/data/narratives';
 
 function RNarrativePanel() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setBackIcon('back-icon.png'));
+    dispatch(setMenuIcon('menu-icon.png'));
+  });
+
   return <div>
     <BackgroundImage 
       src='images/narratives-background.jpg' 

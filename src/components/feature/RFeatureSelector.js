@@ -3,13 +3,22 @@
  * @version 1.0.1
  */
 
+import { useEffect } from 'react';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { setBackIcon } from '../../redux-store/reducers/uiSlice';
 
 import BackgroundImage from '../../styled/BackgroundImage';
 import RCarousel from '../other/RCarousel';
 import RFeatureItem from './RFeatureItem';
 
 function RFeatureSelector({ feature }) {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setBackIcon(null));
+  });
+
   return <div>
     <BackgroundImage 
       src='images/features-background.jpg'

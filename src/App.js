@@ -5,6 +5,7 @@
 
 import styled from 'styled-components';
 import { Route, Routes, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import RCharactersView from './views/RCharactersView';
 import REditorView from './views/REditorView';
@@ -16,6 +17,8 @@ import RNarrativesView from './views/RNarrativesView';
 
 function App() {
   const navigate = useNavigate();
+  const backIcon = useSelector(state => state.ui.backIcon);
+  const menuIcon = useSelector(state => state.ui.menuIcon);
 
   const onBackClicked = () => {
     navigate(-1);
@@ -23,11 +26,11 @@ function App() {
 
   return (
     <div>
-      <BackButton onClick={onBackClicked}>
-        <Icon src='images/back-icon.png' alt='back-icon'/>
-      </BackButton>
+      { backIcon && <BackButton onClick={onBackClicked}>
+          <Icon src={`images/${backIcon}`} alt='back-icon'/>
+        </BackButton> }
       <MenuButton>
-        <Icon src='images/menu-icon.png' alt='menu-icon'/>
+        <Icon src={`images/${menuIcon}`} alt='menu-icon'/>
       </MenuButton>
 
       <Routes>

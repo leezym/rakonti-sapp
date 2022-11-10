@@ -3,12 +3,22 @@
  * @version 1.0.1
  */
 
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setBackIcon, setMenuIcon } from '../redux-store/reducers/uiSlice';
 import styled from 'styled-components';
 
 import BackgroundImage from '../styled/BackgroundImage';
 
 function RHomeView() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setBackIcon(null));
+    dispatch(setMenuIcon('menu-icon.png'));
+  });
+
   return <div>
     <BackgroundImage src='images/rakonti-background.jpg' alt='rakonti-background'/>
     <MenuContainer>

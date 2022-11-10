@@ -3,13 +3,22 @@
  * @version 1.0.0
  */
 
+import { useEffect } from 'react';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { setBackIcon } from '../../redux-store/reducers/uiSlice';
 
 import BackgroundImage from '../../styled/BackgroundImage';
 import RMode from './RMode';
 import modes from '../../redux-store/data/modes';
 
 function RModePanel() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setBackIcon('back-icon.png'));
+  });
+
   return <div>
     <BackgroundImage src='images/modes-background.jpg' alt='modes-background'/>
     <RowContainer>

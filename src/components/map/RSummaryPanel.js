@@ -24,7 +24,7 @@ function RSummaryPanel({ onCloseClicked }) {
 
   return <SummaryContainer>
     <CloseButton onClick={onCloseClicked}>
-      Cerrar
+      <CloseImage src='images/close.png' alt='close-icon'/>
     </CloseButton>
     <AvatarImage src={character.avatarUrl} alt='avatar'/>
     <CharacterContainer>
@@ -81,6 +81,11 @@ const CloseButton = styled.button`
   right: 20px;
   top: 20px;
   min-width: 20px;
+`;
+
+const CloseImage = styled.img`
+  height: 100%;
+  width: 100%;
 `;
 
 const Description = styled.p`

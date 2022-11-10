@@ -3,12 +3,21 @@
  * @version 1.0.1
  */
 
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { setNarrativeInfo } from '../../redux-store/reducers/storySlice';
+import { setBackIcon, setMenuIcon } from '../../redux-store/reducers/uiSlice';
 
 function RNarrativeInfo({ narrative }) {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setBackIcon(null));
+    /** Dependiendo de la narrativa se configura el ícono del menú. */
+    const iconColor = narrative.id === 2 ? '-dark' : '';
+    dispatch(setMenuIcon(`menu-icon${iconColor}.png`));
+  });
 
   const onCloseClicked = () => {
     dispatch(setNarrativeInfo(null));

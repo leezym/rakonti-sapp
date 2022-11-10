@@ -3,9 +3,11 @@
  * @version 1.0.0
  */
 
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setBackIcon, setMenuIcon } from '../../redux-store/reducers/uiSlice';
 
 import BackgroundImage from '../../styled/BackgroundImage';
 import RFeature from './RFeature';
@@ -19,6 +21,12 @@ function RFeaturePanel() {
   const timeSpace = useSelector(state => state.story.timeSpace);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setBackIcon('back-icon-dark.png'));
+    dispatch(setMenuIcon('menu-icon-dark.png'));
+  });
 
   const onContinueClicked = () => {
     if (genre && plot && desire && timeSpace) {
