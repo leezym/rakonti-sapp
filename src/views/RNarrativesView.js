@@ -9,14 +9,14 @@ import RNarrativeInfo from '../components/narrative/RNarrativeInfo';
 import RNarrativePanel from '../components/narrative/RNarrativePanel';
 
 function RNarrativesView() {
-  const narrative = useSelector(state => state.story.narrative);
+  const narrativeInfo = useSelector(state => state.story.narrativeInfo);
   
   return <div>
     {
-      narrative === null || narrative === undefined ? 
+      narrativeInfo === null || narrativeInfo === undefined ? 
       <RNarrativePanel/>
       :
-      <RNarrativeInfo narrative={narrative}/>
+      <RNarrativeInfo narrative={narrativeInfo}/>
     }
   </div>
 }

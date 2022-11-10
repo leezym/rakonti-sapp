@@ -3,18 +3,17 @@
  * @version 1.0.1
  */
 
-import { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { setCharacter } from '../redux-store/reducers/storySlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCharacter, setCharacterIndex } from '../redux-store/reducers/storySlice';
 
 import RCharacter from '../components/character/RCharacter';
 
 import { personalities } from '../redux-store/data/characters';
 
 function RCharactersView() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const currentIndex = useSelector(state => state.story.characterIndex);
 
   const dispatch = useDispatch();
 
@@ -31,7 +30,7 @@ function RCharactersView() {
       newIndex = 0;
     }
 
-    setCurrentIndex(newIndex);
+    dispatch(setCharacterIndex(newIndex));
   }
 
   const onContinueClicked = () => {
@@ -55,7 +54,7 @@ function RCharactersView() {
         </ColumnContainer>
       </CharacterContainer>
       <ContinueLink onClick={onContinueClicked} to='/map'>
-        <ContinueImage src='images/continue-map.png' alt='continue'/>
+        <ContinueImage src='images/continue.png' alt='continue'/>
       </ContinueLink>
     </OverlayContainer>
   </div>

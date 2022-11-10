@@ -7,7 +7,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setMode } from '../../redux-store/reducers/storySlice';
+import { setMode, setModeInfo } from '../../redux-store/reducers/storySlice';
 
 import BackgroundImage from '../../styled/BackgroundImage';
 
@@ -15,7 +15,12 @@ function RModeInfo({ mode }) {
   const dispatch = useDispatch();
 
   const onBackClicked = () => {
-    dispatch(setMode(null));
+    dispatch(setModeInfo(null));
+  }
+
+  const onContinueClicked = () => {
+    dispatch(setMode(mode));
+    dispatch(setModeInfo(null));
   }
 
   return <ModeContainer>
@@ -39,7 +44,7 @@ function RModeInfo({ mode }) {
             ))
           }
         </Description>
-        <ContinueLink to='/narratives'>
+        <ContinueLink onClick={onContinueClicked} to='/narratives'>
           <ContinueImage src='images/right-arrow.png' alt='continue-button'/>
         </ContinueLink>
       </ColumnContainer>

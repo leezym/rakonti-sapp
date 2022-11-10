@@ -5,30 +5,30 @@
 
 const icons = {
   genre: { 
-    height: '42px', 
-    right: '21%', 
-    top: '17%', 
-    width: '42px', 
+    height: '80px', 
+    right: '23%', 
+    top: '11%', 
+    width: '55px', 
     rotation: '0deg' 
   }, 
   plot: { 
-    height: '40px', 
-    right: '17%', 
-    top: '26%', 
-    width: '50px', 
+    height: '55px', 
+    right: '16%', 
+    top: '24%', 
+    width: '65px', 
     rotation: '0deg' 
   }, 
   desire: { 
-    height: '60px', 
-    right: '17%', 
-    top: '33%', 
-    width: '20px', 
+    height: '70px', 
+    right: '14.8%', 
+    top: '31.7%', 
+    width: '55px', 
     rotation: '-90deg' 
   }, 
   timeSpace: { 
-    height: '40px', 
-    right: '14%', 
-    top: '42%', 
+    height: '55px', 
+    right: '14.5%', 
+    top: '41.8%', 
     width: '50px', 
     rotation: '0deg' 
   }

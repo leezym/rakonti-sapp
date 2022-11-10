@@ -5,13 +5,13 @@
 
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
-import { setMode } from '../../redux-store/reducers/storySlice';
+import { setModeInfo } from '../../redux-store/reducers/storySlice';
 
 function RMode({ mode, bottom }) {
   const dispatch = useDispatch();
 
   const onModeClicked = () => {
-    dispatch(setMode(mode));
+    dispatch(setModeInfo(mode));
   }
 
   return <ModeButton onClick={onModeClicked} bottom={bottom}>

@@ -7,13 +7,16 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   mode: null, 
+  modeInfo: null, 
   narrative: null, 
+  narrativeInfo: null, 
   feature: null, 
   genre: null, 
   plot: null, 
   desire: null, 
   timeSpace: null, 
-  character: null,
+  character: null, 
+  characterIndex: 0,
 };
 
 export const storySlice = createSlice({
@@ -24,8 +27,16 @@ export const storySlice = createSlice({
       state.mode = action.payload;
     },
 
+    setModeInfo: (state, action) => {
+      state.modeInfo = action.payload;
+    },
+
     setNarrative: (state, action) => {
       state.narrative = action.payload;
+    },
+
+    setNarrativeInfo: (state, action) => {
+      state.narrativeInfo = action.payload;
     },
 
     setFeature: (state, action) => {
@@ -40,16 +51,23 @@ export const storySlice = createSlice({
 
     setCharacter: (state, action) => {
       state.character = action.payload;
+    }, 
+
+    setCharacterIndex: (state, action) => {
+      state.characterIndex = action.payload;
     }
   }
 });
 
 export const { 
   setMode, 
+  setModeInfo, 
   setNarrative, 
+  setNarrativeInfo, 
   setFeature, 
   setFeatureItem, 
   setCharacter, 
+  setCharacterIndex, 
 } = storySlice.actions;
 
 export default storySlice.reducer;

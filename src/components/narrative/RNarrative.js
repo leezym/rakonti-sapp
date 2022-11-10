@@ -6,19 +6,20 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setNarrative } from '../../redux-store/reducers/storySlice';
+import { setNarrative, setNarrativeInfo } from '../../redux-store/reducers/storySlice';
 
 function RNarrative({ narrative, right }) {
   const dispatch = useDispatch();
 
   const onLinkClicked = () => {
     dispatch(setNarrative(narrative));
+    dispatch(setNarrativeInfo(null));
   }
 
   const onPlusClicked = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    dispatch(setNarrative(narrative));
+    dispatch(setNarrativeInfo(narrative));
   }
   
   return <NarrativeLink to='/features' onClick={onLinkClicked} right={right}>

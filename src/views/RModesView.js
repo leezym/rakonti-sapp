@@ -9,14 +9,14 @@ import RModeInfo from '../components/mode/RModeInfo';
 import RModePanel from '../components/mode/RModePanel';
 
 function RModesView() {
-  const mode = useSelector(state => state.story.mode);
+  const modeInfo = useSelector(state => state.story.modeInfo);
 
   return <div>
     {
-      mode === null || mode === undefined ?
+      modeInfo === null || modeInfo === undefined ?
       <RModePanel/>
       :
-      <RModeInfo mode={mode}/>
+      <RModeInfo mode={modeInfo}/>
     }
   </div>
 }

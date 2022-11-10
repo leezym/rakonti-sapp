@@ -34,17 +34,9 @@ function RFeatureItem({ code, feature, item, options }) {
       <Subtitle>{ feature }</Subtitle>
       <Title>{ item.name }</Title>
     </TitleContainer>
+    { item.period && <Period>{ item.description }</Period>}
   </FeatureItemButton>
 }
-
-const Subtitle = styled.h4`
-  color: #4C4C4C;
-  font-size: 1em;
-  font-weight: 700;
-  margin: 0;
-  padding: 0;
-  text-align: left;
-`;
 
 const FeatureItemBackground = styled.img`
   height: 350px;
@@ -68,6 +60,26 @@ const FeatureItemImage = styled.img`
   position: absolute;
   width: 230px;
   z-index: 2;
+`;
+
+const Period = styled.h3`
+  bottom: 5.8%;
+  color: #4c4c4c;
+  font-size: 0.75em;
+  font-weight: 500;
+  position: absolute;
+  right: 12%;
+  text-align: right;
+  width: 71%;
+`;
+
+const Subtitle = styled.h4`
+  color: #4C4C4C;
+  font-size: 1em;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+  text-align: left;
 `;
 
 const Title = styled.h3`

@@ -417,7 +417,7 @@ const features = {
       id: 20, 
       name: 'Futurista', 
       period: '2021 EN ADELANTE', 
-      description: 'EXPANSIÓN DE LA HUMANIDAD A OTROS PLANETAS', 
+      description: 'EXPANSIÓN A OTROS PLANETAS', 
       url: 'images/ts-expansion.png'
     }]
   }

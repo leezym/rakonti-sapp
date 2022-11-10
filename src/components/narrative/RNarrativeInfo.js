@@ -5,13 +5,13 @@
 
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
-import { setNarrative } from '../../redux-store/reducers/storySlice';
+import { setNarrativeInfo } from '../../redux-store/reducers/storySlice';
 
 function RNarrativeInfo({ narrative }) {
   const dispatch = useDispatch();
 
   const onCloseClicked = () => {
-    dispatch(setNarrative(null));
+    dispatch(setNarrativeInfo(null));
   }
 
   return <NarrativeContainer>

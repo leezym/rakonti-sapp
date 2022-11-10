@@ -4,7 +4,7 @@
  */
 
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import BackgroundImage from '../../styled/BackgroundImage';
@@ -18,6 +18,14 @@ function RFeaturePanel() {
   const desire = useSelector(state => state.story.desire);
   const timeSpace = useSelector(state => state.story.timeSpace);
 
+  const navigate = useNavigate();
+
+  const onContinueClicked = () => {
+    if (genre && plot && desire && timeSpace) {
+      navigate('/characters');
+    }
+  }
+
   return <div>
     <BackgroundImage 
       src='images/features-background.jpg' 
@@ -30,10 +38,10 @@ function RFeaturePanel() {
         src='images/character-aura.png'
         alt='character-aura'/>
 
-      { genre && <FeatureIcon src='images/genre-icon.png' alt='genre' code='genre'/> }
-      { plot && <FeatureIcon src='images/plot-icon.png' alt='plot' code='plot'/> }
-      { desire && <FeatureIcon src='images/desire-icon.png' alt='desire' code='desire'/> }
-      { timeSpace && <FeatureIcon src='images/ts-icon.png' alt='time-space' code='timeSpace'/> }
+      { genre && <FeatureIcon src={genre.url} alt='genre' code='genre'/> }
+      { plot && <FeatureIcon src={plot.url} alt='plot' code='plot'/> }
+      { desire && <FeatureIcon src={desire.url} alt='desire' code='desire'/> }
+      { timeSpace && <FeatureIcon src={timeSpace.url} alt='time-space' code='timeSpace'/> }
     </ColumnContainer>
     <ColumnContainer right>
       <FeaturesContainer>
@@ -42,11 +50,11 @@ function RFeaturePanel() {
         <RFeature feature={features.desire} name='desire'/>
         <RFeature feature={features.timeSpace} name='timeSpace'/>
       </FeaturesContainer>
-      <ContinueLink to='/characters'>
+      <ContinueButton onClick={onContinueClicked}>
         <ContinueImage 
-          src='images/continue.png'
+          src={`images/continue${genre && plot && desire && timeSpace ? '' : '-block'}.png`}
           alt='continue-image'/>
-      </ContinueLink>
+      </ContinueButton>
     </ColumnContainer>
   </div>
 }
@@ -79,15 +87,18 @@ const ColumnContainer = styled.div`
   width: 50%;
 `;
 
-const ContinueImage = styled.img`
-  height: 100px;
-  width: 100px;
-`;
-
-const ContinueLink = styled(Link)`
+const ContinueButton = styled.button`
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
   bottom: 8%;
   position: absolute;
   right: 9%;
+`;
+
+const ContinueImage = styled.img`
+  height: 100px;
+  width: 100px;
 `;
 
 const FeaturesContainer = styled.div`
@@ -101,15 +112,16 @@ const FeaturesContainer = styled.div`
 const FeatureIcon = styled.img`
   height: ${({ code }) => icons[code].height };
   position: absolute;
+  object-fit: contain;
   right: ${({ code }) => icons[code].right };
   top: ${({ code }) => icons[code].top };
   transform: rotate(${({ code }) => icons[code].rotation });
   width: ${({ code }) => icons[code].width };
 
   @media (min-width: 1524px) {
-    height: calc(${({ code }) => icons[code].height} + 16px);
+    height: calc(${({ code }) => icons[code].height} + 18px);
     top: calc(${({ code }) => icons[code].top} + 1%);
-    width: calc(${({ code }) => icons[code].width} + 20px);
+    width: calc(${({ code }) => icons[code].width} + 22px);
   }
 `;
 
