@@ -34,7 +34,9 @@ function RMapView() {
         vertical={true}/>
     </Pagination>
     <ContinueButton>
-      <ContinueImage src={`images/continue.png`} alt='continue-button'/>
+      <ContinueImage 
+        src={`images/continue-block.png`} 
+        alt='continue-button'/>
     </ContinueButton>
   </MapContainer>
 }

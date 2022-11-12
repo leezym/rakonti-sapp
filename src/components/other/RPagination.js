@@ -12,7 +12,6 @@ import React from 'react';
 import styled from 'styled-components';
 
 function RPagination({ items, label, stage, vertical }) {
-  console.log('stages: ', items);
   return <PaginationContainer vertical={vertical}>
     {
       items.map((item, i) => (
@@ -64,8 +63,8 @@ const Label = styled.h3`
 
 const Line = styled.span`
   background-color: darkgray;
-  height: ${({ vertical }) => vertical ? '28px' : '1px'}; 
-  width: ${({ vertical }) => vertical ? '1px' : '28px'};
+  height: ${({ vertical }) => vertical ? '34px' : '1px'}; 
+  width: ${({ vertical }) => vertical ? '1px' : '34px'};
 `;
 
 const PaginationContainer = styled.div`
