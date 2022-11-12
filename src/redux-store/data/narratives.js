@@ -169,7 +169,7 @@ const narratives = {
       ]
     }, {
       id: 7, 
-      name: 'LA APROXIMACIÓN A LA CUEVA MAS PROFUNDA', 
+      name: 'LA APROXIMACIÓN A LA CUEVA MÁS PROFUNDA', 
       description: `
         Aquí el héroe se aproxima al lugar con el máximo peligro, que es generalmente el 
         cuartel donde se esconde el villano y donde se encuentra el objeto de búsqueda. 

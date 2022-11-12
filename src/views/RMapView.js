@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { setBackIcon } from '../redux-store/reducers/uiSlice';
 
+import RPagination from '../components/other/RPagination';
 import RSummary from '../components/map/RSummary';
 
 function RMapView() {
@@ -25,6 +26,16 @@ function RMapView() {
       <Author>{narrative.author}</Author>
     </Title>
     <RSummary/>
+    <Pagination>
+      <RPagination 
+        items={narrative.stages} 
+        label={true} 
+        stage={6}
+        vertical={true}/>
+    </Pagination>
+    <ContinueButton>
+      <ContinueImage src={`images/continue.png`} alt='continue-button'/>
+    </ContinueButton>
   </MapContainer>
 }
 
@@ -33,6 +44,20 @@ const Author = styled.h1`
   font-style: italic;
   font-weight: 400;
   margin: 0 0 0 10px;
+`;
+
+const ContinueButton = styled.button`
+  background-color: transparent;
+  border: none; 
+  bottom: 4%;
+  cursor: pointer; 
+  position: absolute;
+  right: 4.5%;
+`;
+
+const ContinueImage = styled.img`
+  height: 100px;
+  width: 100px;
 `;
 
 const MapContainer = styled.div`
@@ -52,6 +77,13 @@ const MapImage = styled.img`
 const Narrative = styled.h1`
   font-size: 1.5em;
   margin: 0;
+`;
+
+const Pagination = styled.div`
+  height: calc(100vh - 95px);
+  position: absolute; 
+  right: 26px;
+  top: 0;
 `;
 
 const Title = styled.div`
