@@ -31,7 +31,7 @@ function RMapView() {
       <RPagination 
         items={narrative.stages} 
         label={true} 
-        stage={6}
+        stage={0}
         vertical={true}/>
     </Pagination>
     <RMapZones stages={narrative.stages}/>

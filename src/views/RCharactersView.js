@@ -45,7 +45,7 @@ function RCharactersView() {
   return <div>
     <CharacterImage src={personalities[currentIndex].url} alt='character-image'/>
     <OverlayContainer>
-      <CharacterContainer>
+      <PanelContainer>
         <ColumnContainer>
           <Button onClick={onArrowClicked} top={true}>
             <ArrowImage src='images/up-arrow.png' alt='up-arrow' name='up'/>
@@ -57,7 +57,7 @@ function RCharactersView() {
         <ColumnContainer right={true}>
           <RCharacter personality={personalities[currentIndex]}/>
         </ColumnContainer>
-      </CharacterContainer>
+      </PanelContainer>
       <ContinueLink onClick={onContinueClicked} to='/map'>
         <ContinueImage src='images/continue.png' alt='continue'/>
       </ContinueLink>
@@ -80,7 +80,7 @@ const Button = styled.button`
   width: 35px;
 `;
 
-const CharacterContainer = styled.div`
+const PanelContainer = styled.div`
   display: flex;
   height: 40vh;
   margin-bottom: 150px;
@@ -99,6 +99,7 @@ const ColumnContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: ${({ right }) => right ? '30px': '0px'};
+  width: ${({ right }) => right ? '100%' : '35px'};
 `;
 
 const ContinueImage = styled.img`
