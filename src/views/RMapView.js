@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { setBackIcon } from '../redux-store/reducers/uiSlice';
 
+import RMapZones from '../components/map/RMapZones';
 import RPagination from '../components/other/RPagination';
 import RSummary from '../components/map/RSummary';
 
@@ -33,6 +34,8 @@ function RMapView() {
         stage={6}
         vertical={true}/>
     </Pagination>
+    <RMapZones stages={narrative.stages}/>
+
     <ContinueButton>
       <ContinueImage 
         src={`images/continue-block.png`} 

@@ -54,7 +54,13 @@ const narratives = {
         `Se debe mostrar el tono y el estado de ánimo que se va a experimentar.`, 
         `Debe contener una gran cantidad de información, una descripción  de la 
         vida cotidiana del protagonista y de su personalidad.`
-      ]
+      ], 
+      zone: {
+        height: '43%', 
+        marginLeft: '10.5%', 
+        marginTop: '26.7%', 
+        mask: 'journeyStage1' 
+      }
     }, {
       id: 2, 
       name: 'LA LLAMADA A LA AVENTURA', 
