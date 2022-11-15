@@ -7,14 +7,16 @@
  * correspondiente a la estructura narrativa.
  */
 
-import { useState } from 'react';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFigurePos } from '../../redux-store/reducers/uiSlice';
 
 import RCharacterFigure from './RCharacterFigure';
 import RMapZone from './RMapZone';
 
 function RMapZones({ stages }) {
-  const [figurePos, setFigurePos] = useState({ left: '6%', top: '58%' });
+  const dispatch = useDispatch();
+  const figurePos = useSelector(state => state.ui.figurePos);
 
   const onZoneClicked = (zoneRect) => {
     /**
@@ -23,7 +25,7 @@ function RMapZones({ stages }) {
      * cularse la nueva posición de la figura.
      */
     const { left, top } = calculateFigurePos(zoneRect);
-    setFigurePos({ left, top });
+    dispatch(setFigurePos({ left, top }));
   }
 
   const calculateFigurePos  = (zoneRect) => {

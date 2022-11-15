@@ -8,6 +8,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   backIcon: null,
   menuIcon: null, 
+  figurePos: { left: '6%', top: '58%' },
 };
 
 export const uiSlice = createSlice({
@@ -20,6 +21,10 @@ export const uiSlice = createSlice({
 
     setMenuIcon: (state, action) => {
       state.menuIcon = action.payload;
+    }, 
+    
+    setFigurePos: (state, action) => {
+      state.figurePos = action.payload;
     }
   }
 });
@@ -27,6 +32,7 @@ export const uiSlice = createSlice({
 export const {
   setBackIcon, 
   setMenuIcon, 
+  setFigurePos, 
 } = uiSlice.actions;
 
 export default uiSlice.reducer;
