@@ -14,30 +14,33 @@ const masks = {
   journeyStage1: journeyMask1,
 };
 
-function RMapZone({ stage: { zone } }) {
-  return <ZoneContainer
+function RMapZone({ onZoneClicked, stage: { zone } }) {
+
+  const onZoneButtonClicked = (e) => {
+    /** 
+     * Obtener información de ubicación y tamaño de ZoneButton
+     * con respecto al Viewport.
+     */
+    const zoneRect = e.target.getBoundingClientRect();     
+    onZoneClicked(zoneRect);
+  }
+
+  return <ZoneButton onClick={onZoneButtonClicked}
     height={zone.height}
     marginLeft={zone.marginLeft}
     marginTop={zone.marginTop}>
-    <ZoneButton>
-      <ZoneShadow 
-        src='images/shadow.png' 
-        alt='shadow'
-        mask={zone.mask}/>
-    </ZoneButton>
-  </ZoneContainer>
+    <ZoneShadow 
+      src='images/shadow.png' 
+      alt='shadow'
+      mask={zone.mask}/>
+  </ZoneButton>
 }
 
 const ZoneButton = styled.button` 
   background-color: transparent;
   border: none;
   cursor: pointer;
-  height: 100%;
-  width: 100%;
-`;
-
-const ZoneContainer = styled.div`
-  height: ${({ height }) => height}; 
+  height: ${({ height }) => height};
   margin-left: ${({ marginLeft }) => marginLeft};
   margin-top: ${({ marginTop }) => marginTop};
   width: fit-content;
