@@ -35,8 +35,36 @@ function RFeatureItem({ code, feature, item, options }) {
       <Title>{ item.name }</Title>
     </TitleContainer>
     { item.period && <Period>{ item.description }</Period>}
+    { item.description && <DescriptionContainer>
+      <Description>
+        { item.description } 
+        { item.period ? ` (${item.period})` : '' }
+      </Description>
+    </DescriptionContainer> }
   </FeatureItemButton>
 }
+
+const Description = styled.p`
+  color: white;
+  font-size: 1.1em;
+  padding: 15px;
+  text-align: justify;
+`;
+
+const DescriptionContainer = styled.div`
+  align-items: flex-end;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 55px 45px 55px 45px;
+  bottom: 0;
+  display: flex;
+  height: 350px;
+  justify-content: center;
+  position: absolute;
+  right: 0;
+  visibility: hidden;
+  width: 287px; 
+  z-index: 3;
+`;
 
 const FeatureItemBackground = styled.img`
   height: 350px;
@@ -50,6 +78,10 @@ const FeatureItemButton = styled.button`
   margin: 0px 20px;
   padding: 0;
   position: relative;
+
+  &:hover ${DescriptionContainer} {
+    visibility: visible;
+  }
 `;
 
 const FeatureItemImage = styled.img`
