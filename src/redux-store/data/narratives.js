@@ -33,6 +33,10 @@ const narratives = {
     title: 'VIAJE DEL HÉROE', 
     url: 'images/the-journey.png', 
     mapUrl: 'images/the-journey-map.png', 
+    figurePos: {
+      left: '6%', 
+      top: '58%', 
+    },
     stages: [{
       id: 1, 
       name: 'EL MUNDO ORDINARIO', 
@@ -318,6 +322,10 @@ const narratives = {
     title: 'EL CÍRCULO', 
     url: 'images/the-circle.png', 
     mapUrl: 'images/the-circle-map.png', 
+    figurePos: {
+      left: '4%', 
+      top: '63%', 
+    }, 
     stages: [{
       id: 1, 
       name: 'TÚ', 

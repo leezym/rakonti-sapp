@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setNarrative, setNarrativeInfo } from '../../redux-store/reducers/storySlice';
+import { setFigurePos } from '../../redux-store/reducers/uiSlice';
 
 function RNarrative({ narrative, right }) {
   const dispatch = useDispatch();
@@ -14,6 +15,8 @@ function RNarrative({ narrative, right }) {
   const onLinkClicked = () => {
     dispatch(setNarrative(narrative));
     dispatch(setNarrativeInfo(null));
+
+    dispatch(setFigurePos(narrative.figurePos));
   }
 
   const onPlusClicked = (e) => {

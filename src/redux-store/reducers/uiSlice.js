@@ -8,7 +8,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   backIcon: null,
   menuIcon: null, 
-  figurePos: { left: '6%', top: '58%' },
+  figurePos: null,
 };
 
 export const uiSlice = createSlice({

@@ -52,7 +52,7 @@ const Description = styled.p`
 `;
 
 const DescriptionContainer = styled.div`
-  align-items: flex-end;
+  align-items: center;
   background-color: rgba(0, 0, 0, 0.7);
   border-radius: 55px 45px 55px 45px;
   bottom: 0;
