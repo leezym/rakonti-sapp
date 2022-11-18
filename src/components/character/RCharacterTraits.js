@@ -16,7 +16,7 @@ function RCharacterTraits({ onClose, traitName, traits }) {
         { traitName === 'strengths' ? 'FORTALEZAS' : 'DEBILIDADES' }
       </TraitsTitle>
       <CloseButton onClick={onClose}>
-        <CloseImage src='images/close.png' alt='close-traits'/>
+        <CloseImage src='images/close-cross.PNG' alt='close-traits'/>
       </CloseButton>
     </TraitsHeader>
     <TraitsList>
