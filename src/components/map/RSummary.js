@@ -40,6 +40,7 @@ const FloatingContainer = styled.div`
   left: 0;
   position: absolute;
   top: 0;
+  z-index: 999;
 `;
 
 const SummaryImage = styled.img`

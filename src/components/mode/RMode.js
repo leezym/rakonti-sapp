@@ -21,6 +21,7 @@ function RMode({ mode, bottom }) {
 
 const ModeButton = styled.button`
   background-color: transparent;
+  border: none;
   cursor: pointer;
   height: 95%;
   padding: 0;
