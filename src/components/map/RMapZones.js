@@ -49,8 +49,9 @@ function RMapZones({ stages }) {
 
   return <ZonesContainer id='zones-container'>
     <RMapZone 
-      onZoneClicked={onZoneClicked}
-      stage={stages[0]}/>
+      onZoneClicked={onZoneClicked} 
+      stage={stages[0]}
+      stageIndex={0}/>
     <RCharacterFigure position={figurePos}/>
   </ZonesContainer>
 }

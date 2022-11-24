@@ -8,13 +8,17 @@
  */
 
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { setCurrentStage, setCurrentStageIndex } from '../../redux-store/reducers/storySlice';
+
 import journeyMask1 from '../../images/journey-stage1.png';
 
 const masks = {
   journeyStage1: journeyMask1,
 };
 
-function RMapZone({ onZoneClicked, stage: { zone } }) {
+function RMapZone({ onZoneClicked, stage, stageIndex }) {
+  const dispatch = useDispatch();
 
   const onZoneButtonClicked = (e) => {
     /** 
@@ -23,16 +27,18 @@ function RMapZone({ onZoneClicked, stage: { zone } }) {
      */
     const zoneRect = e.target.getBoundingClientRect();     
     onZoneClicked(zoneRect);
+    dispatch(setCurrentStage(stage));
+    dispatch(setCurrentStageIndex(stageIndex));
   }
 
   return <ZoneButton onClick={onZoneButtonClicked}
-    height={zone.height}
-    marginLeft={zone.marginLeft}
-    marginTop={zone.marginTop}>
+    height={stage.zone.height}
+    marginLeft={stage.zone.marginLeft}
+    marginTop={stage.zone.marginTop}>
     <ZoneShadow 
       src='images/shadow.png' 
       alt='shadow'
-      mask={zone.mask}/>
+      mask={stage.zone.mask}/>
   </ZoneButton>
 }
 

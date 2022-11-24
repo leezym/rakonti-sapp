@@ -40,6 +40,7 @@ const narratives = {
     stages: [{
       id: 1, 
       name: 'EL MUNDO ORDINARIO', 
+      backgroundUrl: 'images/common-world.jpg', 
       description: `
         Es la presentación del protagonista y su vida cotidiana. Aquí se 
         introduce al personaje principal, su día a día, las situaciones y 
@@ -68,6 +69,7 @@ const narratives = {
     }, {
       id: 2, 
       name: 'LA LLAMADA A LA AVENTURA', 
+      backgroundUrl: 'images/adventure-call.jpg', 
       description: `
         Aquí el héroe se enfrenta a un problema, un desafío o una aventura que 
         debe superar y que no le permitirá permanecer con tranquilidad en su 
@@ -89,6 +91,7 @@ const narratives = {
     }, {
       id: 3, 
       name: 'EL RECHAZO DE LA LLAMADA', 
+      backgroundUrl: 'images/call-rejection.jpg', 
       description: `
         En este punto el héroe aún no se ha comprometido con el viaje y está 
         pensando en negarse. El protagonista tiene miedo a lo desconocido y 
@@ -111,6 +114,7 @@ const narratives = {
     }, {
       id: 4, 
       name: 'EL ENCUENTRO CON EL MENTOR', 
+      backgroundUrl: 'images/master-meeting.jpg', 
       description: `
         Se introduce a la figura del mentor, el cual cumple la función de preparar 
         al héroe para que este pueda enfrentarse a lo desconocido. Para esto el 
@@ -133,6 +137,7 @@ const narratives = {
     }, {
       id: 5, 
       name: 'LA TRAVESÍA DEL PRIMER UMBRAL', 
+      backgroundUrl: 'images/threshold-cross.jpg', 
       description: `
         Este es el momento en el que el héroe accede a interesarse por la aventura y 
         entrar a ese nuevo mundo desconocido. A esto se le conoce como atravesar el 
@@ -153,6 +158,7 @@ const narratives = {
     }, {
       id: 6, 
       name: 'LAS PRUEBAS, LOS ALIADOS, LOS ENEMIGOS', 
+      backgroundUrl: 'images/allies-enemies.jpg', 
       description: `
         Una vez el héroe ya emprendió su aventura, se irá encontrando progresivamente 
         con nuevas pruebas, a la vez que, poco a poco, irá asimilando las normas que 
@@ -180,6 +186,7 @@ const narratives = {
     }, {
       id: 7, 
       name: 'LA APROXIMACIÓN A LA CUEVA MÁS PROFUNDA', 
+      backgroundUrl: 'images/darkest-cave.jpg', 
       description: `
         Aquí el héroe se aproxima al lugar con el máximo peligro, que es generalmente el 
         cuartel donde se esconde el villano y donde se encuentra el objeto de búsqueda. 
@@ -199,6 +206,7 @@ const narratives = {
     }, {
       id: 8, 
       name: 'LA ODISEA', 
+      backgroundUrl: 'images/odissey.jpg', 
       description: `
         Es el momento del gran enfrentamiento. El héroe se enfrenta directamente con
         quién más teme. Se enfrenta a una posible muerte y da inicio a la batalla. 
@@ -219,6 +227,7 @@ const narratives = {
     }, {
       id: 9, 
       name: 'LA RECOMPENSA', 
+      backgroundUrl: 'images/reward.jpg', 
       description: `
         Después de sobrevivir a la muerte, el héroe toma posesión de tesoro y, 
         finalmente, obtiene su recompensa. En este momento el protagonista 
@@ -238,6 +247,7 @@ const narratives = {
     }, {
       id: 10, 
       name: 'EL CAMINO DE REGRESO', 
+      backgroundUrl: 'images/return-path.jpg', 
       description: `
         Aquí nos encontramos a principios del tercer acto y es donde el protagonista 
         comienza a enfrentar las consecuencias de su enfrentamiento. Puede ser que 
@@ -256,6 +266,7 @@ const narratives = {
     }, {
       id: 11, 
       name: 'LA RESURRECCIÓN', 
+      backgroundUrl: 'images/resurrection.jpg', 
       description: `
         Este es el último desafío que debe enfrentar el héroe para poder volver a 
         su mundo, donde deberá sacar a relucir todas las lecciones que aprendió 
@@ -274,6 +285,7 @@ const narratives = {
     }, {
       id: 12, 
       name: 'EL REGRESO CON EL ELIXIR', 
+      backgroundUrl: 'images/elixir.jpg', 
       description: `
         El héroe regresa a su mundo ordinario, pero trayendo consigo un tesoro o 
         enseñanza que adquirió durante su viaje, dándole así un sentido a la 
@@ -329,6 +341,7 @@ const narratives = {
     stages: [{
       id: 1, 
       name: 'TÚ', 
+      backgroundUrl: 'images/common-world.jpg', 
       description: `
         Es la presentación del protagonista y su vida cotidiana. Aquí se 
         introduce al personaje principal, su día a día, las situaciones y 
@@ -351,6 +364,7 @@ const narratives = {
     }, {
       id: 2, 
       name: 'NECESITAR', 
+      backgroundUrl: 'images/adventure-call.jpg', 
       description: `
         Aquí el héroe se enfrenta a un problema, un desafío o una aventura que 
         debe superar y que no le permitirá permanecer con tranquilidad en su 
@@ -372,6 +386,7 @@ const narratives = {
     }, {
       id: 3, 
       name: 'IR', 
+      backgroundUrl: 'images/threshold-call.jpg', 
       description: `
         Este es el momento en el que el héroe accede a interesarse por la aventura y 
         entrar a ese nuevo mundo desconocido. A esto se le conoce como atravesar el 
@@ -392,6 +407,7 @@ const narratives = {
     }, {
       id: 4, 
       name: 'BUSCAR', 
+      backgroundUrl: 'images/allies-images.jpg', 
       description: `
         Una vez el héroe ya emprendió su aventura, se irá encontrando progresivamente 
         con nuevas pruebas, a la vez que, poco a poco, irá asimilando las normas que 
@@ -419,6 +435,7 @@ const narratives = {
     }, {
       id: 5, 
       name: 'ENCONTRAR', 
+      backgroundUrl: 'images/odissey.jpg', 
       description: `
         Es el momento del gran enfrentamiento. El héroe se enfrenta directamente con
         quién más teme. Se enfrenta a una posible muerte y da inicio a la batalla. 
@@ -439,6 +456,7 @@ const narratives = {
     }, {
       id: 6, 
       name: 'TOMAR', 
+      backgroundUrl: 'images/reward.jpg', 
       description: `
         Después de sobrevivir a la muerte, el héroe toma posesión de tesoro y, 
         finalmente, obtiene su recompensa. En este momento el protagonista 
@@ -458,6 +476,7 @@ const narratives = {
     }, {
       id: 7, 
       name: 'REGRESAR', 
+      backgroundUrl: 'images/return-path.jpg', 
       description: `
         Aquí nos encontramos a principios del tercer acto y es donde el protagonista 
         comienza a enfrentar las consecuencias de su enfrentamiento. Puede ser que 
@@ -476,6 +495,7 @@ const narratives = {
     }, {
       id: 8, 
       name: 'CAMBIAR', 
+      backgroundUrl: 'images/elixir.jpg', 
       description: `
         El héroe regresa a su mundo ordinario, pero trayendo consigo un tesoro o 
         enseñanza que adquirió durante su viaje, dándole así un sentido a la 

@@ -5,10 +5,10 @@
 
 import REditorCell from '../components/editor/REditorCell';
 
-function REditorView() {
+function REditor() {
   return <div>
     <REditorCell/>
   </div>
 }
 
-export default REditorView;
+export default REditor;

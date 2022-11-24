@@ -5,6 +5,7 @@
 
 import { useEffect } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setBackIcon } from '../redux-store/reducers/uiSlice';
 
@@ -13,12 +14,21 @@ import RPagination from '../components/other/RPagination';
 import RSummary from '../components/map/RSummary';
 
 function RMapView() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const narrative = useSelector(state => state.story.narrative);
+  const currentStage = useSelector(state => state.story.currentStage);
+  const currentStageIndex = useSelector(state => state.story.currentStageIndex);
 
   useEffect(() => {
     dispatch(setBackIcon('back-icon-dark.png'));
   });
+
+  const onContinueClicked = () => {
+    if (currentStage != null) {
+      navigate('/stage');
+    }
+  }
 
   return <MapContainer>
     <MapImage src={narrative.mapUrl} alt='map'/>
@@ -31,14 +41,14 @@ function RMapView() {
       <RPagination 
         items={narrative.stages} 
         label={true} 
-        stage={0}
+        stage={currentStageIndex}
         vertical={true}/>
     </Pagination>
     <RMapZones stages={narrative.stages}/>
 
-    <ContinueButton>
+    <ContinueButton onClick={onContinueClicked}>
       <ContinueImage 
-        src={`images/continue-block.png`} 
+        src={`images/continue${currentStage ? '' : '-block'}.png`} 
         alt='continue-button'/>
     </ContinueButton>
   </MapContainer>
