@@ -11,6 +11,14 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { setCurrentStage, setCurrentStageIndex } from '../../redux-store/reducers/storySlice';
 
+import circleMask1 from '../../images/circle-stage1.png';
+import circleMask2 from '../../images/circle-stage2.png';
+import circleMask3 from '../../images/circle-stage3.png';
+import circleMask4 from '../../images/circle-stage4.png';
+import circleMask5 from '../../images/circle-stage5.png';
+import circleMask6 from '../../images/circle-stage6.png';
+import circleMask7 from '../../images/circle-stage7.png';
+import circleMask8 from '../../images/circle-stage8.png';
 import journeyMask1 from '../../images/journey-stage1.png';
 import journeyMask2 from '../../images/journey-stage2.png';
 import journeyMask3 from '../../images/journey-stage3.png'; 
@@ -24,7 +32,15 @@ import journeyMask10 from '../../images/journey-stage10.png';
 import journeyMask11 from '../../images/journey-stage11.png';
 import journeyMask12 from '../../images/journey-stage12.png';
 
-const masks = {
+const masks = { 
+  circleStage1: circleMask1, 
+  circleStage2: circleMask2, 
+  circleStage3: circleMask3, 
+  circleStage4: circleMask4, 
+  circleStage5: circleMask5, 
+  circleStage6: circleMask6, 
+  circleStage7: circleMask7, 
+  circleStage8: circleMask8,  
   journeyStage1: journeyMask1, 
   journeyStage2: journeyMask2, 
   journeyStage3: journeyMask3, 
@@ -67,7 +83,7 @@ function RMapZone({ onZoneClicked, enabled, stage, stageIndex }) {
 
 const ZoneButton = styled.button` 
   background-color: transparent;
-  border: none;
+  border: 1px solid white;
   border-radius: 50%;
   cursor: pointer;
   height: 90px;

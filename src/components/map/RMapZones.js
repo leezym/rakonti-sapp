@@ -64,7 +64,6 @@ function RMapZones({ stages }) {
 }
 
 const ZonesContainer = styled.div`
-  -background-color: rgba(0, 0, 0, 0.7);
   height: 85vh;
   position: absolute;
   top: 0;

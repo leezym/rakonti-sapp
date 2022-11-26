@@ -6,7 +6,12 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setNarrative, setNarrativeInfo } from '../../redux-store/reducers/storySlice';
+import { 
+  setCurrentStage, 
+  setCurrentStageIndex, 
+  setNarrative, 
+  setNarrativeInfo 
+} from '../../redux-store/reducers/storySlice';
 import { setFigurePos } from '../../redux-store/reducers/uiSlice';
 
 function RNarrative({ narrative, right }) {
@@ -16,6 +21,8 @@ function RNarrative({ narrative, right }) {
     dispatch(setNarrative(narrative));
     dispatch(setNarrativeInfo(null));
 
+    dispatch(setCurrentStage(null));
+    dispatch(setCurrentStageIndex(-1));
     dispatch(setFigurePos(narrative.figurePos));
   }
 

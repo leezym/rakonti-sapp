@@ -401,8 +401,8 @@ const narratives = {
     url: 'images/the-circle.png', 
     mapUrl: 'images/the-circle-map.png', 
     figurePos: {
-      left: '4%', 
-      top: '63%', 
+      left: '-10%', 
+      top: '53%', 
     }, 
     stages: [{
       id: 1, 
@@ -426,7 +426,13 @@ const narratives = {
         `Se debe mostrar el tono y el estado de ánimo que se va a experimentar.`, 
         `Debe contener una gran cantidad de información, una descripción  de la 
         vida cotidiana del protagonista y de su personalidad.`
-      ]
+      ], 
+      zone: {
+        height: '34%', 
+        marginLeft: '-4%', 
+        marginTop: '44%', 
+        mask: 'circleStage1'
+      }
     }, {
       id: 2, 
       name: 'NECESITAR', 
@@ -448,7 +454,13 @@ const narratives = {
         `Pasar por el reto debe implicar una ganancia para el protagonista. Debe 
         haber unos objetivos y unas metas que motiven al personaje principal a pasar 
         por todos los problemas a pesar de sus limitaciones.` 
-      ]
+      ], 
+      zone: {
+        height: '42%', 
+        marginLeft: '17%', 
+        marginTop: '40%', 
+        mask: 'circleStage2'
+      }
     }, {
       id: 3, 
       name: 'IR', 
@@ -469,7 +481,13 @@ const narratives = {
         traiga graves consecuencias.`, 
         `El primer umbral es el paso que conecta el acto del héroe de decidir actuar 
         con las consecuencias que derivan de esta acción.`
-      ]
+      ], 
+      zone: {
+        height: '42%', 
+        marginLeft: '3.2%', 
+        marginTop: '6.5%', 
+        mask: 'circleStage3'
+      }
     }, {
       id: 4, 
       name: 'BUSCAR', 
@@ -497,7 +515,13 @@ const narratives = {
         `Las enemistades que consiga el protagonista pueden estar relacionadas o ser el 
         antagonista principal, pueden ser rivales que el héroe superará en algún 
         momento o pueden ser enemistades que evolucionarán a alianzas.`
-      ]
+      ], 
+      zone: {
+        height: '27.4%', 
+        marginLeft: '42%', 
+        marginTop: '5%', 
+        mask: 'circleStage4'
+      }
     }, {
       id: 5, 
       name: 'ENCONTRAR', 
@@ -518,7 +542,13 @@ const narratives = {
         héroe pierda.`, 
         `El héroe debe estar al borde de perderlo todo y en su punto más bajo.`, 
         `El héroe debe vencer de una forma creíble pero inesperada.`
-      ]
+      ], 
+      zone: {
+        height: '35.8%', 
+        marginLeft: '29.7%', 
+        marginTop: '25.8%', 
+        mask: 'circleStage5'
+      }
     }, {
       id: 6, 
       name: 'TOMAR', 
@@ -538,7 +568,13 @@ const narratives = {
         necesitaba. La transformación es evidente.`, 
         `Las demás personas que rodean al héroe también se tienen que dar cuenta 
         que este ha cambiado.`
-      ]
+      ], 
+      zone: {
+        height: '38%', 
+        marginLeft: '55%', 
+        marginTop: '36%', 
+        mask: 'circleStage6'
+      }
     }, {
       id: 7, 
       name: 'REGRESAR', 
@@ -557,7 +593,13 @@ const narratives = {
         `En medio de la persecución o enfrentamiento puede suceder la caída 
         definitiva del villano o antagonista.`, 
         `Se nota en las acciones del héroe el cambio que ha tenido.`
-      ]
+      ], 
+      zone: {
+        height: '34%', 
+        marginLeft: '62%', 
+        marginTop: '16%', 
+        mask: 'circleStage7'
+      }
     }, {
       id: 8, 
       name: 'CAMBIAR', 
@@ -578,7 +620,13 @@ const narratives = {
         `El "elixir" puede ser desde un objeto mágico hasta una historia que el 
         héroe pueda contar`, 
         `Al ser el cierre de la historia, el ritmo de esta puede ir en descenso.`
-      ]
+      ], 
+      zone: {
+        height: '54%', 
+        marginLeft: '62%', 
+        marginTop: '0%', 
+        mask: 'circleStage8'
+      }
     }]
   }
 };
