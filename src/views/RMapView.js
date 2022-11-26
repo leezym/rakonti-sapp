@@ -31,7 +31,11 @@ function RMapView() {
   }
 
   return <MapContainer>
-    <MapImage src={narrative.mapUrl} alt='map'/>
+    <MapImageContainer>
+      <MapImage src={narrative.mapUrl} alt='map'/>
+      <RMapZones stages={narrative.stages}/>
+    </MapImageContainer>
+
     <Title>
       <Narrative>{narrative.title}</Narrative>
       <Author>{narrative.author}</Author>
@@ -44,8 +48,6 @@ function RMapView() {
         stage={currentStageIndex}
         vertical={true}/>
     </Pagination>
-    <RMapZones stages={narrative.stages}/>
-
     <ContinueButton onClick={onContinueClicked}>
       <ContinueImage 
         src={`images/continue${currentStage ? '' : '-block'}.png`} 
@@ -84,8 +86,18 @@ const MapContainer = styled.div`
 `;
 
 const MapImage = styled.img`
+  height: 100%;
+  object-fit: contain;
+  width: 100%;
+`;
+
+const MapImageContainer = styled.div`
+  align-items: center; 
+  display: flex;
   height: 85vh;
+  justify-content: center;
   margin-right: 70px;
+  position: relative;
   width: 62%;
 `;
 

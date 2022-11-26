@@ -34,8 +34,8 @@ const narratives = {
     url: 'images/the-journey.png', 
     mapUrl: 'images/the-journey-map.png', 
     figurePos: {
-      left: '6%', 
-      top: '58%', 
+      left: '-6%', 
+      top: '49%', 
     },
     stages: [{
       id: 1, 
@@ -61,9 +61,9 @@ const narratives = {
         vida cotidiana del protagonista y de su personalidad.`
       ], 
       zone: {
-        height: '43%', 
-        marginLeft: '10.5%', 
-        marginTop: '26.7%', 
+        height: '31.5%',  
+        marginLeft: '-1.3%',  
+        marginTop: '42%',  
         mask: 'journeyStage1' 
       }
     }, {
@@ -87,7 +87,13 @@ const narratives = {
         `Pasar por el reto debe implicar una ganancia para el protagonista. Debe 
         haber unos objetivos y unas metas que motiven al personaje principal a pasar 
         por todos los problemas a pesar de sus limitaciones.` 
-      ]
+      ], 
+      zone: {
+        height: '55%', 
+        marginLeft: '-24.5%', 
+        marginTop: '3%', 
+        mask: 'journeyStage2'
+      }
     }, {
       id: 3, 
       name: 'EL RECHAZO DE LA LLAMADA', 
@@ -110,7 +116,13 @@ const narratives = {
         `Las emociones del héroe sobre la aventura deben ser claras. El espectador 
         debe poder entender qué está sintiendo el peronaje principal frente al 
         conflicto y cómo afronta el miedo.`
-      ]
+      ], 
+      zone: {
+        height: '38%', 
+        marginLeft: '9.8%', 
+        marginTop: '5%', 
+        mask: 'journeyStage3'
+      }
     }, {
       id: 4, 
       name: 'EL ENCUENTRO CON EL MENTOR', 
@@ -133,7 +145,13 @@ const narratives = {
         de la cual el protagonista carece.`, 
         `Un mago poderoso y sabio, un guerrero experimentado o un entrenador retirado, 
         son algunos ejemplos de figuras que suelen ser mentores.`
-      ]
+      ], 
+      zone: {
+        height: '27%', 
+        marginLeft: '41%', 
+        marginTop: '3.3%', 
+        mask: 'journeyStage4'
+      }
     }, {
       id: 5, 
       name: 'LA TRAVESÍA DEL PRIMER UMBRAL', 
@@ -154,7 +172,13 @@ const narratives = {
         traiga graves consecuencias.`, 
         `El primer umbral es el paso que conecta el acto del héroe de decidir actuar 
         con las consecuencias que derivan de esta acción.`
-      ]
+      ], 
+      zone: {
+        height: '32.2%', 
+        marginLeft: '30.3%', 
+        marginTop: '23.5%', 
+        mask: 'journeyStage5'
+      }
     }, {
       id: 6, 
       name: 'LAS PRUEBAS, LOS ALIADOS, LOS ENEMIGOS', 
@@ -182,7 +206,13 @@ const narratives = {
         `Las enemistades que consiga el protagonista pueden estar relacionadas o ser el 
         antagonista principal, pueden ser rivales que el héroe superará en algún 
         momento o pueden ser enemistades que evolucionarán a alianzas.`
-      ]
+      ], 
+      zone: {
+        height: '36%', 
+        marginLeft: '51.5%', 
+        marginTop: '31.5%', 
+        mask: 'journeyStage6'
+      }
     }, {
       id: 7, 
       name: 'LA APROXIMACIÓN A LA CUEVA MÁS PROFUNDA', 
@@ -202,7 +232,13 @@ const narratives = {
         ha tenido hasta el momento.`, 
         `La preparación debe ser entretenida y mantener al espectador a la espera de 
         la gran batalla, tal vez con un encuentro amoroso.`
-      ]
+      ], 
+      zone: {
+        height: '39%', 
+        marginLeft: '17%', 
+        marginTop: '39.5%', 
+        mask: 'journeyStage7'
+      }
     }, {
       id: 8, 
       name: 'LA ODISEA', 
@@ -223,7 +259,13 @@ const narratives = {
         héroe pierda.`, 
         `El héroe debe estar al borde de perderlo todo y en su punto más bajo.`, 
         `El héroe debe vencer de una forma creíble pero inesperada.`
-      ]
+      ], 
+      zone: {
+        height: '38%', 
+        marginLeft: '34%', 
+        marginTop: '48%', 
+        mask: 'journeyStage8' 
+      }
     }, {
       id: 9, 
       name: 'LA RECOMPENSA', 
@@ -243,7 +285,13 @@ const narratives = {
         necesitaba. La transformación es evidente.`, 
         `Las demás personas que rodean al héroe también se tienen que dar cuenta 
         que este ha cambiado.`
-      ]
+      ], 
+      zone: {
+        height: '36.5%', 
+        marginLeft: '68%', 
+        marginTop: '35.2%', 
+        mask: 'journeyStage9'
+      }
     }, {
       id: 10, 
       name: 'EL CAMINO DE REGRESO', 
@@ -262,7 +310,13 @@ const narratives = {
         `En medio de la persecución o enfrentamiento puede suceder la caída 
         definitiva del villano o antagonista.`, 
         `Se nota en las acciones del héroe el cambio que ha tenido.`
-      ]
+      ], 
+      zone: {
+        height: '59.5%', 
+        marginLeft: '78%', 
+        marginTop: '-1%', 
+        mask: 'journeyStage10'
+      }
     }, {
       id: 11, 
       name: 'LA RESURRECCIÓN', 
@@ -281,7 +335,13 @@ const narratives = {
         `Esto marca el fin de la aventura.`, 
         `Los aliados pueden acompañar al protagonista o separarse y volver a sus 
         propios mundos ordinarios.`
-      ]
+      ], 
+      zone: {
+        height: '43.5%', 
+        marginLeft: '58.8%', 
+        marginTop: '11.5%', 
+        mask: 'journeyStage11' 
+      }
     }, {
       id: 12, 
       name: 'EL REGRESO CON EL ELIXIR', 
@@ -302,7 +362,13 @@ const narratives = {
         `El "elixir" puede ser desde un objeto mágico hasta una historia que el 
         héroe pueda contar`, 
         `Al ser el cierre de la historia, el ritmo de esta puede ir en descenso.`
-      ]
+      ], 
+      zone: {
+        height: '42%', 
+        marginLeft: '61.5%', 
+        marginTop: '-1%', 
+        mask: 'journeyStage12' 
+      }
     }]
   }, 
   circle: {

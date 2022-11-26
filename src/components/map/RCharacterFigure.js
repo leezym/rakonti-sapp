@@ -21,7 +21,7 @@ function RCharacterFigure({ position: { left, top }}) {
 }
 
 const FigureContainer = styled.div`
-  height: 14%;
+  height: 10%;
   left: ${({ left }) => left};
   position: absolute;
   top: ${({ top }) => top};

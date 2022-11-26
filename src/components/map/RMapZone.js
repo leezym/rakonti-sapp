@@ -12,12 +12,34 @@ import { useDispatch } from 'react-redux';
 import { setCurrentStage, setCurrentStageIndex } from '../../redux-store/reducers/storySlice';
 
 import journeyMask1 from '../../images/journey-stage1.png';
+import journeyMask2 from '../../images/journey-stage2.png';
+import journeyMask3 from '../../images/journey-stage3.png'; 
+import journeyMask4 from '../../images/journey-stage4.png'; 
+import journeyMask5 from '../../images/journey-stage5.png';
+import journeyMask6 from '../../images/journey-stage6.png';
+import journeyMask7 from '../../images/journey-stage7.png';
+import journeyMask8 from '../../images/journey-stage8.png';
+import journeyMask9 from '../../images/journey-stage9.png';
+import journeyMask10 from '../../images/journey-stage10.png';
+import journeyMask11 from '../../images/journey-stage11.png';
+import journeyMask12 from '../../images/journey-stage12.png';
 
 const masks = {
-  journeyStage1: journeyMask1,
+  journeyStage1: journeyMask1, 
+  journeyStage2: journeyMask2, 
+  journeyStage3: journeyMask3, 
+  journeyStage4: journeyMask4, 
+  journeyStage5: journeyMask5, 
+  journeyStage6: journeyMask6, 
+  journeyStage7: journeyMask7, 
+  journeyStage8: journeyMask8, 
+  journeyStage9: journeyMask9, 
+  journeyStage10: journeyMask10, 
+  journeyStage11: journeyMask11, 
+  journeyStage12: journeyMask12, 
 };
 
-function RMapZone({ onZoneClicked, stage, stageIndex }) {
+function RMapZone({ onZoneClicked, enabled, stage, stageIndex }) {
   const dispatch = useDispatch();
 
   const onZoneButtonClicked = (e) => {
@@ -31,41 +53,58 @@ function RMapZone({ onZoneClicked, stage, stageIndex }) {
     dispatch(setCurrentStageIndex(stageIndex));
   }
 
-  return <ZoneButton onClick={onZoneButtonClicked}
-    height={stage.zone.height}
-    marginLeft={stage.zone.marginLeft}
+  return <ZoneContainer
+    height={stage.zone.height} 
+    marginLeft={stage.zone.marginLeft} 
     marginTop={stage.zone.marginTop}>
-    <ZoneShadow 
-      src='images/shadow.png' 
+    <ZoneShadow
+      src={`images/${enabled ? 'transparency' : 'shadow'}.png`} 
       alt='shadow'
       mask={stage.zone.mask}/>
-  </ZoneButton>
+    <ZoneButton enabled={enabled} onClick={onZoneButtonClicked}/>
+  </ZoneContainer>
 }
 
 const ZoneButton = styled.button` 
   background-color: transparent;
   border: none;
+  border-radius: 50%;
   cursor: pointer;
+  height: 90px;
+  left: calc(50% - 45px); 
+  pointer-events: ${({ enabled }) => enabled ? 'auto' : 'none'};
+  position: absolute;
+  top: calc(50% - 45px);
+  width: 90px;
+  z-index: 99;
+`;
+
+const ZoneContainer = styled.div`
+  background-color: transparent;
   height: ${({ height }) => height};
   margin-left: ${({ marginLeft }) => marginLeft};
   margin-top: ${({ marginTop }) => marginTop};
+  padding: 0;
+  position: absolute;
   width: fit-content;
 
   @media (min-width: 1524px) {
-    height: calc(${({ height }) => height} + 1.8%);
-    margin-left: calc(${({ marginLeft }) => marginLeft} + 0.7%);
-    margin-top: calc(${({ marginTop }) => marginTop} - 2%);
+    height: calc(${({ height }) => height});
+    margin-left: calc(${({ marginLeft }) => marginLeft});
+    margin-top: calc(${({ marginTop }) => marginTop});
   }
 `;
 
 const ZoneShadow = styled.img`
+  background-color: transparent;
   height: 100%;
   mask: url(${({ mask }) => masks[mask]});
   mask-position: center;
   mask-repeat: no-repeat;
   mask-size: contain;
   object-fit: contain;
-  width: auto;
+  position: relative;
+  width: fit-content;
 `;
 
 export default RMapZone;

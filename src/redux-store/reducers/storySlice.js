@@ -19,6 +19,7 @@ const initialState = {
   characterIndex: 0, 
   currentStage: null, 
   currentStageIndex: -1, 
+  text: [], 
 };
 
 export const storySlice = createSlice({
@@ -65,6 +66,10 @@ export const storySlice = createSlice({
 
     setCurrentStageIndex: (state, action) => {
       state.currentStageIndex = action.payload;
+    }, 
+
+    setText: (state, action) => {
+      state.text.push(action.payload);
     }
   }
 });
@@ -80,6 +85,7 @@ export const {
   setCharacterIndex, 
   setCurrentStage, 
   setCurrentStageIndex, 
+  setText, 
 } = storySlice.actions;
 
 export default storySlice.reducer;
