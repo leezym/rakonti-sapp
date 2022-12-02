@@ -3,7 +3,8 @@
  * @version 1.0.1
  * 
  * @description 
- * 
+ * Componente que representa la vista de la etapa actual 
+ * en la estructura narrativa seleccionada.
  */
 
 import { useState } from 'react';
@@ -12,40 +13,59 @@ import { useSelector } from 'react-redux';
 
 import BackgroundImage from '../styled/BackgroundImage';
 import RModalStage from '../components/other/RModalStage';
+import RModalTip from '../components/other/RModalTip';
 import RTip from '../components/stage/RTip';
 
 function RStageView() {
+  const [tipSelected, setTipSelected] = useState(null);
   const [showStageInfo, setShowStageInfo] = useState(false);
-  const currentStage = useSelector(state => state.story.currentStage); 
+  const { 
+    backgroundUrl, 
+    description, 
+    name, 
+    title, 
+    tips 
+  } = useSelector(state => state.story.currentStage); 
 
   const onStageInfoClicked = (show = true) => {
     setShowStageInfo(show);
   }
 
+  const onTipClicked = (tip) => {
+    if (tip !== null) {
+      tip.name = name;
+    }
+
+    setTipSelected(tip);
+  }
+
   return <div>
-    <BackgroundImage 
-      src={currentStage.backgroundUrl} 
-      alt='stage-background'/>
+    <BackgroundImage src={backgroundUrl} alt='stage-background'/>
     <TitleButton 
       onClick={onStageInfoClicked}
-      left={currentStage.title.left}
-      top={currentStage.title.top}
-      width={currentStage.title.width}>
-      <Title 
-        color={currentStage.title.color}
-        size={currentStage.title.size}>
-        { currentStage.name }
+      left={title.left}
+      top={title.top}
+      width={title.width}>
+      <Title color={title.color} size={title.size}>
+        { name }
       </Title>
     </TitleButton>
     {
-      currentStage.tips.map(tip => (
-        <RTip key={tip.id} tip={tip}/> 
+      tips.map(tip => (
+        <RTip 
+          onClicked={onTipClicked} 
+          key={tip.id} 
+          tip={tip}/> 
       ))
     }
 
     { showStageInfo && <RModalStage 
         onClose={onStageInfoClicked} 
-        item={currentStage}/> }
+        item={{ name, description }}/> }
+    
+    { tipSelected && <RModalTip
+        onClose={onTipClicked}
+        item={tipSelected}/> }
   </div>
 }
 

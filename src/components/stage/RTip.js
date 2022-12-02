@@ -9,8 +9,13 @@
 
 import styled from 'styled-components';
 
-function RTip({ tip }) {
-  return <TipButton
+function RTip({ onClicked, tip }) {
+  const onTipClicked = () => {
+    onClicked({ description: tip.description });
+  }
+
+  return <TipButton 
+    onClick={onTipClicked}
     height={tip.height}
     left={tip.left}
     top={tip.top}

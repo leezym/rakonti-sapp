@@ -17,7 +17,7 @@ import RMapZone from './RMapZone';
 function RMapZones({ stages }) {
   const dispatch = useDispatch();
   const figurePos = useSelector(state => state.ui.figurePos);
-  //const text = useSelector(state => state.story.text);
+  const text = useSelector(state => state.story.text);
 
   const onZoneClicked = (zoneRect) => {
     /**
@@ -54,7 +54,7 @@ function RMapZones({ stages }) {
         <RMapZone
           key={stage.id}
           onZoneClicked={onZoneClicked} 
-          enabled={/*i <= text.length*/true}
+          enabled={i <= text.length}
           stage={stage}
           stageIndex={i}/>
       ))
