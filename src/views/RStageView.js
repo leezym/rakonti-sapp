@@ -23,7 +23,9 @@ function RStageView() {
       left={currentStage.title.left}
       top={currentStage.title.top}
       width={currentStage.title.width}>
-      <Title color={currentStage.title.color}>
+      <Title 
+        color={currentStage.title.color}
+        size={currentStage.title.size}>
         { currentStage.name }
       </Title>
     </TitleButton>
@@ -37,7 +39,7 @@ function RStageView() {
 
 const Title = styled.h1` 
   color: ${({ color }) => color}; 
-  font-size: 2.8em; 
+  font-size: ${({ size }) => size}; 
   font-weight: 450; 
   height: 100%;
   margin: 0;
@@ -45,7 +47,7 @@ const Title = styled.h1`
   width: 100%; 
 
   @media (min-width: 1524px) {
-    font-size: 4em;
+    font-size: ${({ size }) => `calc(${size} + 1.2em)`};
   }
 `;
 

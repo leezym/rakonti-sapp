@@ -99,7 +99,8 @@ const narratives = {
         color: '#728275', 
         left: '41%', 
         top: '6%', 
-        width: '20%'
+        width: '20%', 
+        size: '2.8em'
       }, 
       zone: {
         height: '31.5%',  
@@ -160,7 +161,8 @@ const narratives = {
         color: '#7C838B', 
         left: '35%', 
         top: '14%', 
-        width: '32%' 
+        width: '32%', 
+        size: '2.8em'
       }, 
       zone: {
         height: '55%', 
@@ -223,6 +225,7 @@ const narratives = {
         left: '35%', 
         top: '78%', 
         width: '32%', 
+        size: '2.8em'
       }, 
       zone: {
         height: '38%', 
@@ -291,7 +294,8 @@ const narratives = {
         color: '#595D66', 
         left: '6%', 
         top: '5%', 
-        width: '25%' 
+        width: '25%', 
+        size: '2.8em' 
       }, 
       zone: {
         height: '27%', 
@@ -351,7 +355,8 @@ const narratives = {
         color: '#545254', 
         left: '60%', 
         top: '15%', 
-        width: '30%'
+        width: '30%', 
+        size: '2.8em'
       }, 
       zone: {
         height: '32.2%', 
@@ -425,7 +430,8 @@ const narratives = {
         color: '#898991', 
         left: '40%', 
         top: '7%', 
-        width: '40%'
+        width: '40%', 
+        size: '2.8em'
       }, 
       zone: {
         height: '36%', 
@@ -484,7 +490,8 @@ const narratives = {
         color: '#FFFFFF', 
         left: '56%', 
         top: '9%', 
-        width: '40%'
+        width: '40%', 
+        size: '2.8em'
       }, 
       zone: {
         height: '39%', 
@@ -544,7 +551,8 @@ const narratives = {
         color: '#6B7576', 
         left: '10%', 
         top: '45%', 
-        width: '18%'
+        width: '18%', 
+        size: '2.8em'
       }, 
       zone: {
         height: '38%', 
@@ -603,7 +611,8 @@ const narratives = {
         color: '#8A7C7B', 
         left: '34%', 
         top: '42%', 
-        width: '28%'
+        width: '28%', 
+        size: '2.8em'
       }, 
       zone: {
         height: '36.5%', 
@@ -661,7 +670,8 @@ const narratives = {
         color: '#FFFFFF', 
         left: '37%', 
         top: '80%', 
-        width: '25%'
+        width: '25%', 
+        size: '2.8em'
       }, 
       zone: {
         height: '59.5%', 
@@ -719,7 +729,8 @@ const narratives = {
         color: '#FFFFFF', 
         left: '15%', 
         top: '18%', 
-        width: '25%'
+        width: '25%', 
+        size: '2.8em'
       }, 
       zone: {
         height: '43.5%', 
@@ -779,7 +790,8 @@ const narratives = {
         color: '#677075', 
         left: '66%', 
         top: '10%', 
-        width: '30%'
+        width: '30%', 
+        size: '2.8em'
       }, 
       zone: {
         height: '42%', 
@@ -884,7 +896,8 @@ const narratives = {
         color: '#728275', 
         left: '41%', 
         top: '6%', 
-        width: '20%'
+        width: '20%',
+        size: '4em'
       }, 
       zone: {
         height: '34%', 
@@ -945,7 +958,8 @@ const narratives = {
         color: '#FFFFFF', 
         left: '56%', 
         top: '9%', 
-        width: '40%' 
+        width: '40%',
+        size: '4em' 
       }, 
       zone: {
         height: '42%', 
@@ -1005,7 +1019,8 @@ const narratives = {
         color: '#444E4F', 
         left: '35%', 
         top: '78%', 
-        width: '32%'
+        width: '32%',
+        size: '4em'
       }, 
       zone: {
         height: '42%', 
@@ -1079,7 +1094,8 @@ const narratives = {
         color: '#595D66', 
         left: '6%', 
         top: '5%', 
-        width: '25%'
+        width: '25%',
+        size: '4em'
       }, 
       zone: {
         height: '27.4%', 
@@ -1139,7 +1155,8 @@ const narratives = {
         color: '#545254', 
         left: '60%', 
         top: '15%', 
-        width: '30%'
+        width: '30%',
+        size: '4em'
       }, 
       zone: {
         height: '35.8%', 
@@ -1198,7 +1215,8 @@ const narratives = {
         color: '#898991', 
         left: '40%', 
         top: '7%', 
-        width: '40%'
+        width: '40%',
+        size: '4em'
       },  
       zone: {
         height: '38%', 
@@ -1256,7 +1274,8 @@ const narratives = {
         color: '#FFFFFF', 
         left: '15%', 
         top: '18%', 
-        width: '25%'
+        width: '25%',
+        size: '4em'
       }, 
       zone: {
         height: '34%', 
@@ -1316,7 +1335,8 @@ const narratives = {
         color: '#677075', 
         left: '66%', 
         top: '10%', 
-        width: '30%'
+        width: '30%',
+        size: '4em'
       }, 
       zone: {
         height: '54%', 
