@@ -834,17 +834,58 @@ const narratives = {
         situación poco convencional que el curso de todo, hay que mostrar su 
         mundo habitual para generar un constraste con ese mundo nuevo y extraño.
       `, 
-      tips: [
-        `Se debe presentar una cotidianidad que dé la sensación de una rutina
-        habitual para el protagonista.`, 
-        `Se debe atrapar al espectador a través de la introducción de los 
-        personajes y sus situaciones cotidianas, que pueden generar una 
-        sensación de familiaridad o ser poco convencionales.`, 
-        `Se debe sugerir hacia dónde se dirige la historia.`, 
-        `Se debe mostrar el tono y el estado de ánimo que se va a experimentar.`, 
-        `Debe contener una gran cantidad de información, una descripción  de la 
-        vida cotidiana del protagonista y de su personalidad.`
-      ], 
+      tips: [{
+        id: 1,
+        description: `Se debe presentar una cotidianidad que dé la sensación de 
+          una rutina habitual para el protagonista.`, 
+        iconUrl: 'images/common-world-tip.png', 
+        height: '32%', 
+        left: '25%', 
+        top: '9%', 
+        rotate: '0deg'
+      }, {
+        id: 2,
+        description: `Se debe atrapar al espectador a través de la introducción 
+          de los personajes y sus situaciones cotidianas, que pueden generar una 
+          sensación de familiaridad o ser poco convencionales.`, 
+        iconUrl: 'images/common-world-tip.png', 
+        height: '32%', 
+        left: '70%', 
+        top: '8%', 
+        rotate: '0deg' 
+      }, { 
+        id: 3,
+        description: `Se debe sugerir hacia dónde se dirige la historia.`, 
+        iconUrl: 'images/common-world-tip.png', 
+        height: '32%', 
+        left: '26%', 
+        top: '67.5%', 
+        rotate: '0deg' 
+      }, {
+        id: 4,
+        description: `Se debe mostrar el tono y el estado de ánimo que se va a 
+          experimentar.`, 
+        iconUrl: 'images/common-world-tip.png', 
+        height: '32%', 
+        left: '68%', 
+        top: '67.5%', 
+        rotate: '0deg' 
+      }, {
+        id: 5,
+        description: `Debe contener una gran cantidad de información, una descripción 
+          de la vida cotidiana del protagonista y de su personalidad.`, 
+        iconUrl: 'images/common-world-tip.png', 
+        height: '32%', 
+        left: '47.5%', 
+        top: '61%', 
+        rotate: '0deg'
+      }], 
+      title: {
+        color: '#728275', 
+        left: '41%', 
+        top: '6%', 
+        width: '20%'
+      }, 
       zone: {
         height: '34%', 
         marginLeft: '-4%', 
@@ -854,7 +895,7 @@ const narratives = {
     }, {
       id: 2, 
       name: 'NECESITAR', 
-      backgroundUrl: 'images/adventure-call.jpg', 
+      backgroundUrl: 'images/darkest-cave.jpg', 
       description: `
         Aquí el héroe se enfrenta a un problema, un desafío o una aventura que 
         debe superar y que no le permitirá permanecer con tranquilidad en su 
@@ -862,17 +903,50 @@ const narratives = {
         plantea el reto y define el objetivo del héroe. Todo esto suele expresarse 
         en la forma de una pregunta que formula dicho llamado.
       `, 
-      tips: [
-        `La situación que provoque el cambio debe ser creíble y clara.`, 
-        `La situación que provoque el cambio debe implicar un sacrificio y un reto 
-        real para el protagonista.`,
-        `La situación que provoque el cambio no puede permitir que se vuelva a la 
-        normalidad con tranquilidad porque, a pesar de que el protagonista no lo 
-        crea, no hay vuelta atrás.`, 
-        `Pasar por el reto debe implicar una ganancia para el protagonista. Debe 
-        haber unos objetivos y unas metas que motiven al personaje principal a pasar 
-        por todos los problemas a pesar de sus limitaciones.` 
-      ], 
+      tips: [{
+        id: 1,
+        description: `La situación que provoque el cambio debe ser creíble y clara.`, 
+        iconUrl: 'images/darkest-cave-tip.png', 
+        height: '20%', 
+        left: '28%', 
+        top: '-2%', 
+        rotate: '0deg'
+      }, { 
+        id: 2,
+        description: `La situación que provoque el cambio debe implicar un sacrificio 
+          y un reto real para el protagonista.`, 
+        iconUrl: 'images/darkest-cave-tip.png', 
+        height: '20%', 
+        left: '15%', 
+        top: '31%', 
+        rotate: '0deg'
+      }, {
+        id: 3,
+        description: `La situación que provoque el cambio no puede permitir que se 
+          vuelva a la normalidad con tranquilidad porque, a pesar de que el 
+          protagonista no lo crea, no hay vuelta atrás.`, 
+        iconUrl: 'images/darkest-cave-tip.png', 
+        height: '20%', 
+        left: '65%', 
+        top: '27%', 
+        rotate: '0deg'
+      }, { 
+        id: 4,
+        description: `Pasar por el reto debe implicar una ganancia para el protagonista. 
+          Debe haber unos objetivos y unas metas que motiven al personaje principal a 
+          pasar por todos los problemas a pesar de sus limitaciones.`, 
+        iconUrl: 'images/darkest-cave-tip.png', 
+        height: '20%', 
+        left: '55%', 
+        top: '74%', 
+        rotate: '0deg'
+      }], 
+      title: {
+        color: '#FFFFFF', 
+        left: '56%', 
+        top: '9%', 
+        width: '40%' 
+      }, 
       zone: {
         height: '42%', 
         marginLeft: '17%', 
@@ -882,7 +956,7 @@ const narratives = {
     }, {
       id: 3, 
       name: 'IR', 
-      backgroundUrl: 'images/threshold-call.jpg', 
+      backgroundUrl: 'images/call-rejection.jpg', 
       description: `
         Este es el momento en el que el héroe accede a interesarse por la aventura y 
         entrar a ese nuevo mundo desconocido. A esto se le conoce como atravesar el 
@@ -890,16 +964,49 @@ const narratives = {
         acepta las consecuencias de lo que está por venir, dando inicio a la historia 
         sin poder dar marcha atrás.
       `, 
-      tips: [
-        `Este es el momento donde empieza a suceder la aventura.`, 
-        `Una de las razones de la decisión del héroe puede ser que este es capaz de 
-        superar sus miedos iniciales para así comprometerse con la aventura.`, 
-        `Otra razón para que el héroe tome esta decisión puede ser que se vea 
-        arrinconado a iniciar el viaje al no poseer otra opción  o qué decir que no 
-        traiga graves consecuencias.`, 
-        `El primer umbral es el paso que conecta el acto del héroe de decidir actuar 
-        con las consecuencias que derivan de esta acción.`
-      ], 
+      tips: [{
+        id: 1,
+        description: `Este es el momento donde empieza a suceder la aventura.`,
+        iconUrl: 'images/call-rejection-tip.png', 
+        height: '20%', 
+        left: '40%', 
+        top: '0%', 
+        rotate: '0deg' 
+      }, {
+        id: 2,
+        description: `Una de las razones de la decisión del héroe puede ser que este es 
+          capaz de superar sus miedos iniciales para así comprometerse con la aventura.`,
+        iconUrl: 'images/call-rejection-tip.png', 
+        height: '15%', 
+        left: '45%', 
+        top: '26%', 
+        rotate: '0deg' 
+      }, {
+        id: 3,
+        description: `Otra razón para que el héroe tome esta decisión puede ser que se vea 
+          arrinconado a iniciar el viaje al no poseer otra opción  o qué decir que no 
+          traiga graves consecuencias.`,
+        iconUrl: 'images/call-rejection-tip.png', 
+        height: '15%', 
+        left: '57%', 
+        top: '36%', 
+        rotate: '0deg' 
+      }, {
+        id: 4,
+        description: `El primer umbral es el paso que conecta el acto del héroe de decidir 
+          actuar con las consecuencias que derivan de esta acción.`,
+        iconUrl: 'images/call-rejection-tip.png', 
+        height: '28%', 
+        left: '48%', 
+        top: '45%', 
+        rotate: '0deg'
+      }], 
+      title: {
+        color: '#444E4F', 
+        left: '35%', 
+        top: '78%', 
+        width: '32%'
+      }, 
       zone: {
         height: '42%', 
         marginLeft: '3.2%', 
@@ -909,7 +1016,7 @@ const narratives = {
     }, {
       id: 4, 
       name: 'BUSCAR', 
-      backgroundUrl: 'images/allies-images.jpg', 
+      backgroundUrl: 'images/master-meeting.jpg', 
       description: `
         Una vez el héroe ya emprendió su aventura, se irá encontrando progresivamente 
         con nuevas pruebas, a la vez que, poco a poco, irá asimilando las normas que 
@@ -919,21 +1026,61 @@ const narratives = {
         pueden llegar a convertirse en acompañantes que seguirán con el protagonista 
         durante gran parte del viaje. 
       `, 
-      tips: [
-        `Establecimientos sociales como bares o cafés suelen ser los lugares donde el 
-        protagonista podrá conocer a sus aliados.`, 
-        `El protagonista suele generar una gran impresión, ya sea por su agresividad, 
-        honestidad o dominio de alguna técnica, lo cual llamara la atención de posibles 
-        aliados o enemigos sobre él.`, 
-        `El lugar donde se conoce el protagonista con sus aliados puede ser el escenario 
-        donde suceda el primer gran reto que ayudará a formar su vínculo. De igual 
-        manera, este momento puede llegar más adelante.`, 
-        `Los aliados pueden compartir objetivos similares al héroe, o puede que ayudando 
-        a este puedan alcanzar sus propios objetivos.`, 
-        `Las enemistades que consiga el protagonista pueden estar relacionadas o ser el 
-        antagonista principal, pueden ser rivales que el héroe superará en algún 
-        momento o pueden ser enemistades que evolucionarán a alianzas.`
-      ], 
+      tips: [{
+        id: 1, 
+        description: `Establecimientos sociales como bares o cafés suelen ser los lugares 
+          donde el protagonista podrá conocer a sus aliados.`,
+        iconUrl: 'images/master-meeting-tip.png', 
+        height: '27%', 
+        left: '63%', 
+        top: '0%', 
+        rotate: '180deg' 
+      }, {
+        id: 2, 
+        description: `El protagonista suele generar una gran impresión, ya sea por su agresividad, 
+          honestidad o dominio de alguna técnica, lo cual llamara la atención de posibles 
+          aliados o enemigos sobre él.`,
+        iconUrl: 'images/master-meeting-tip.png', 
+        height: '18%', 
+        left: '26.5%', 
+        top: '42%', 
+        rotate: '0deg' 
+      }, {
+        id: 3, 
+        description: `El lugar donde se conoce el protagonista con sus aliados puede ser el 
+          escenario donde suceda el primer gran reto que ayudará a formar su vínculo. De igual 
+          manera, este momento puede llegar más adelante.`,
+        iconUrl: 'images/master-meeting-tip.png', 
+        height: '18%', 
+        left: '32.5%', 
+        top: '45.5%', 
+        rotate: '0deg' 
+      }, {
+        id: 4, 
+        description: `Los aliados pueden compartir objetivos similares al héroe, o puede que 
+          ayudando a este puedan alcanzar sus propios objetivos.`,
+        iconUrl: 'images/master-meeting-tip.png', 
+        height: '18%', 
+        left: '68.8%', 
+        top: '40%', 
+        rotate: '0deg' 
+      }, {
+        id: 5, 
+        description: `Las enemistades que consiga el protagonista pueden estar relacionadas o 
+          ser el antagonista principal, pueden ser rivales que el héroe superará en algún 
+          momento o pueden ser enemistades que evolucionarán a alianzas.`, 
+        iconUrl: 'images/master-meeting-tip.png', 
+        height: '18%', 
+        left: '80.3%', 
+        top: '35%', 
+        rotate: '0deg'
+      }], 
+      title: {
+        color: '#595D66', 
+        left: '6%', 
+        top: '5%', 
+        width: '25%'
+      }, 
       zone: {
         height: '27.4%', 
         marginLeft: '42%', 
@@ -943,7 +1090,7 @@ const narratives = {
     }, {
       id: 5, 
       name: 'ENCONTRAR', 
-      backgroundUrl: 'images/odissey.jpg', 
+      backgroundUrl: 'images/threshold-cross.jpg', 
       description: `
         Es el momento del gran enfrentamiento. El héroe se enfrenta directamente con
         quién más teme. Se enfrenta a una posible muerte y da inicio a la batalla. 
@@ -953,14 +1100,47 @@ const narratives = {
         objeto de deseo parecen estar en su punto más bajo y sombrío. El protagonista 
         sobrevive a esta odisea, negándose a abandonar, y el sufrimiento lo cambia.
       `, 
-      tips: [
-        `El héroe debe enfrentarse a una complicación, que debe ser creíble y estar 
-        a un nivel mucho mayor que él.`, 
-        `La audiencia debe estar tensionada y considerar la posibilidad de que el 
-        héroe pierda.`, 
-        `El héroe debe estar al borde de perderlo todo y en su punto más bajo.`, 
-        `El héroe debe vencer de una forma creíble pero inesperada.`
-      ], 
+      tips: [{
+        id: 1, 
+        description: `El héroe debe enfrentarse a una complicación, que debe ser creíble y 
+          estar a un nivel mucho mayor que él.`,
+        iconUrl: 'images/threshold-cross-tip.png', 
+        height: '33%', 
+        left: '4%', 
+        top: '-9%', 
+        rotate: '0deg'
+      }, {
+        id: 2,  
+        description: `La audiencia debe estar tensionada y considerar la posibilidad de que el 
+          héroe pierda.`,
+        iconUrl: 'images/threshold-cross-tip.png', 
+        height: '33%', 
+        left: '27%', 
+        top: '16%', 
+        rotate: '0deg' 
+      }, {
+        id: 3,  
+        description: `El héroe debe estar al borde de perderlo todo y en su punto más bajo.`,
+        iconUrl: 'images/threshold-cross-tip.png', 
+        height: '33%', 
+        left: '24%', 
+        top: '50%', 
+        rotate: '0deg' 
+      }, {
+        id: 4,  
+        description: `El héroe debe vencer de una forma creíble pero inesperada.`, 
+        iconUrl: 'images/threshold-cross-tip.png', 
+        height: '33%', 
+        left: '61%', 
+        top: '56%', 
+        rotate: '0deg'
+      }], 
+      title: {
+        color: '#545254', 
+        left: '60%', 
+        top: '15%', 
+        width: '30%'
+      }, 
       zone: {
         height: '35.8%', 
         marginLeft: '29.7%', 
@@ -970,7 +1150,7 @@ const narratives = {
     }, {
       id: 6, 
       name: 'TOMAR', 
-      backgroundUrl: 'images/reward.jpg', 
+      backgroundUrl: 'images/allies-enemies.jpg', 
       description: `
         Después de sobrevivir a la muerte, el héroe toma posesión de tesoro y, 
         finalmente, obtiene su recompensa. En este momento el protagonista 
@@ -978,15 +1158,48 @@ const narratives = {
         humana, más completa, con más experiencia y entendimiento. Es el momento 
         de la celebración y el amor.
       `, 
-      tips: [
-        `El cambio del héroe, para bien o para mal, debe ser evidente.`, 
-        `Puede volver a introducirse la idea del amor como parte de la nueva vida 
-        del protagonista.`, 
-        `En ocasiones, el héroe no consigue lo que buscaba pero sí lo que 
-        necesitaba. La transformación es evidente.`, 
-        `Las demás personas que rodean al héroe también se tienen que dar cuenta 
-        que este ha cambiado.`
-      ], 
+      tips: [{
+        id: 1, 
+        description: `El cambio del héroe, para bien o para mal, debe ser evidente.`, 
+        iconUrl: 'images/allies-enemies-tip.png', 
+        height: '24%', 
+        left: '20%', 
+        top: '60%', 
+        rotate: '0deg' 
+      }, {
+        id: 2,  
+        description: `Puede volver a introducirse la idea del amor como parte de la nueva 
+          vida del protagonista.`, 
+        iconUrl: 'images/allies-enemies-tip.png', 
+        height: '30%', 
+        left: '42%', 
+        top: '32%', 
+        rotate: '0deg' 
+      }, {
+        id: 3, 
+        description: `En ocasiones, el héroe no consigue lo que buscaba pero sí lo que 
+          necesitaba. La transformación es evidente.`, 
+        iconUrl: 'images/allies-enemies-tip.png', 
+        height: '24%', 
+        left: '70%', 
+        top: '58%', 
+        rotate: '0deg' 
+      }, {
+        id: 4, 
+        description: `Las demás personas que rodean al héroe también se tienen que dar 
+          cuenta que este ha cambiado.`, 
+        iconUrl: 'images/allies-enemies-tip.png', 
+        height: '24%', 
+        left: '82%', 
+        top: '75%', 
+        rotate: '0deg' 
+      }], 
+      title: {
+        color: '#898991', 
+        left: '40%', 
+        top: '7%', 
+        width: '40%'
+      },  
       zone: {
         height: '38%', 
         marginLeft: '55%', 
@@ -996,7 +1209,7 @@ const narratives = {
     }, {
       id: 7, 
       name: 'REGRESAR', 
-      backgroundUrl: 'images/return-path.jpg', 
+      backgroundUrl: 'images/resurrection.jpg', 
       description: `
         Aquí nos encontramos a principios del tercer acto y es donde el protagonista 
         comienza a enfrentar las consecuencias de su enfrentamiento. Puede ser que 
@@ -1004,14 +1217,47 @@ const narratives = {
         caso contrario, estás enfurecerán y darán inicio a una persecución contra 
         el héroe mientras este busca volver a casa.
       `, 
-      tips: [
-        `Aquí se pone énfasis en la decisión o necesidad de regresar a aquel mundo 
-        al que pertenecía el protagonista al inicio de la historia.`, 
-        `Este viaje de regreso aún contiene pruebas y tentaciones para el héroe.`, 
-        `En medio de la persecución o enfrentamiento puede suceder la caída 
-        definitiva del villano o antagonista.`, 
-        `Se nota en las acciones del héroe el cambio que ha tenido.`
-      ], 
+      tips: [{
+        id: 1, 
+        description: `Aquí se pone énfasis en la decisión o necesidad de regresar a aquel 
+          mundo al que pertenecía el protagonista al inicio de la historia.`, 
+        iconUrl: 'images/resurrection-tip.png', 
+        height: '15%' ,
+        left: '72%', 
+        top: '-6%', 
+        rotate: '0deg'
+      }, {
+        id: 2, 
+        description: `Este viaje de regreso aún contiene pruebas y tentaciones para el héroe.`, 
+        iconUrl: 'images/resurrection-tip.png', 
+        height: '25%' ,
+        left: '82%', 
+        top: '0%', 
+        rotate: '0deg'
+      }, {
+        id: 3, 
+        description: `En medio de la persecución o enfrentamiento puede suceder la caída 
+          definitiva del villano o antagonista.`, 
+        iconUrl: 'images/resurrection-tip.png', 
+        height: '25%' ,
+        left: '75%', 
+        top: '20%', 
+        rotate: '0deg'
+      }, {
+        id: 4, 
+        description: `Se nota en las acciones del héroe el cambio que ha tenido.`, 
+        iconUrl: 'images/resurrection-tip.png', 
+        height: '25%' ,
+        left: '63%', 
+        top: '44%', 
+        rotate: '0deg'
+      }], 
+      title: {
+        color: '#FFFFFF', 
+        left: '15%', 
+        top: '18%', 
+        width: '25%'
+      }, 
       zone: {
         height: '34%', 
         marginLeft: '62%', 
@@ -1029,16 +1275,49 @@ const narratives = {
         con dicho "elixir", estará condenado a embarcarse en una nueva aventura  
         para cumplir con este propósito.
       `, 
-      tips: [
-        `Hacer que el protagonista regrese sin aquel tesoro y aprendizaje es un 
-        recurso que algunas historias utilizan, dejando abierto el final o 
-        proporcionando una historia cíclica.`, 
-        `Este "elixir" con el que regresa el protagonista genera cambios en su 
-        mundo ordinario.`, 
-        `El "elixir" puede ser desde un objeto mágico hasta una historia que el 
-        héroe pueda contar`, 
-        `Al ser el cierre de la historia, el ritmo de esta puede ir en descenso.`
-      ], 
+      tips: [{
+        id: 1, 
+        description: `Hacer que el protagonista regrese sin aquel tesoro y aprendizaje 
+          es un recurso que algunas historias utilizan, dejando abierto el final o 
+          proporcionando una historia cíclica.`, 
+        iconUrl: 'images/elixir-tip.png', 
+        height: '45%', 
+        left: '43%', 
+        top: '11%', 
+        rotate: '0deg'
+      }, {
+        id: 2, 
+        description: `Este "elixir" con el que regresa el protagonista genera cambios 
+          en su mundo ordinario.`, 
+        iconUrl: 'images/elixir-tip.png', 
+        height: '40%', 
+        left: '60%', 
+        top: '58%', 
+        rotate: '0deg'
+      }, {
+        id: 3, 
+        description: `El "elixir" puede ser desde un objeto mágico hasta una historia 
+          que el héroe pueda contar`, 
+        iconUrl: 'images/elixir-tip.png', 
+        height: '45%', 
+        left: '0%', 
+        top: '54%', 
+        rotate: '0deg'
+      }, {
+        id: 4,  
+        description: `Al ser el cierre de la historia, el ritmo de esta puede ir en descenso.`, 
+        iconUrl: 'images/elixir-tip2.png', 
+        height: '40%', 
+        left: '23%', 
+        top: '27%', 
+        rotate: '0deg'
+      }], 
+      title: {
+        color: '#677075', 
+        left: '66%', 
+        top: '10%', 
+        width: '30%'
+      }, 
       zone: {
         height: '54%', 
         marginLeft: '62%', 
