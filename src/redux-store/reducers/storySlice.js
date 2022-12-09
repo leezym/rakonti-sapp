@@ -69,7 +69,8 @@ export const storySlice = createSlice({
     }, 
 
     setText: (state, action) => {
-      state.text.push(action.payload);
+      const { newText } = action.payload;
+      state.text.push(newText);
     }
   }
 });

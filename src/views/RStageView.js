@@ -12,12 +12,14 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 
 import BackgroundImage from '../styled/BackgroundImage';
+import REditor from '../components/stage/REditor';
 import RModalStage from '../components/other/RModalStage';
 import RModalTip from '../components/other/RModalTip';
 import RTip from '../components/stage/RTip';
 
 function RStageView() {
   const [tipSelected, setTipSelected] = useState(null);
+  const [showEditor, setShowEeditor] = useState(false);
   const [showStageInfo, setShowStageInfo] = useState(false);
   const { 
     backgroundUrl, 
@@ -26,6 +28,10 @@ function RStageView() {
     title, 
     tips 
   } = useSelector(state => state.story.currentStage); 
+
+  const onChevronClicked = () => {
+    setShowEeditor(!showEditor);
+  }
 
   const onStageInfoClicked = (show = true) => {
     setShowStageInfo(show);
@@ -66,8 +72,29 @@ function RStageView() {
     { tipSelected && <RModalTip
         onClose={onTipClicked}
         item={tipSelected}/> }
+    
+    <ChevronButton onClick={onChevronClicked}>
+      <ChevronImage src='images/up-chevron.png' alt='chevron'/>
+    </ChevronButton>
+    { showEditor && <REditor onClose={onChevronClicked}/> }
   </div>
 }
+
+const ChevronButton = styled.button`
+  background-color: transparent; 
+  border: none; 
+  bottom: 20px;
+  cursor: pointer;
+  height: 20px;
+  position: absolute;
+  left: calc(50% - 15px);
+  width: 40px;
+`;
+
+const ChevronImage = styled.img`
+  height: 100%;
+  width: 100%;
+`;
 
 const Title = styled.h1` 
   color: ${({ color }) => color}; 
