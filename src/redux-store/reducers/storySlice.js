@@ -69,8 +69,13 @@ export const storySlice = createSlice({
     }, 
 
     setText: (state, action) => {
-      const { newText } = action.payload;
-      state.text.push(newText);
+      const { index, newText } = action.payload;
+      if (state.text[index] === null || state.text[index] === undefined) {
+        state.text.push(newText);
+      }
+      else {
+        state.text[index] = newText;
+      }
     }
   }
 });

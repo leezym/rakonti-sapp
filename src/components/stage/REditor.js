@@ -22,7 +22,7 @@ function REditor({ onClose }) {
   }
 
   const onTextSaved = () => {
-    if (text.length === narrative.length - 1) {
+    if (text.length === narrative.stages.length) {
       navigate('/');
     }
     else {
@@ -49,16 +49,17 @@ function REditor({ onClose }) {
         {
           text.map((subtext, i) => (
             <REditorCell 
+              key={i}
               onSaved={onTextSaved}
               index={i + 1} 
               isEditing={currentStageIndex === i} 
               text={subtext}/>
           ))
         }
-        <REditorCell 
-          onSaved={onTextSaved} 
-          index={text.length + 1}
-          isEditing={currentStageIndex === text.length}/>
+        { text.length < narrative.stages.length && <REditorCell 
+            onSaved={onTextSaved} 
+            index={text.length + 1}
+            isEditing={currentStageIndex === text.length}/> }
       </ScrollableContainer>
     </InnerContainer>
   </EditorContainer>

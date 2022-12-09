@@ -11,7 +11,7 @@ import { setText } from '../../redux-store/reducers/storySlice';
 //import REditorAudio from './REditorAudio';
 
 function REditorCell({ onSaved, index, isEditing, text }) {
-  const [newText, setNewText] = useState('');
+  const [newText, setNewText] = useState(text ? text : '');
   const dispatch = useDispatch();
 
   const onTextChange = (e) => {
@@ -25,7 +25,7 @@ function REditorCell({ onSaved, index, isEditing, text }) {
   const onSaveClicked = (e) => {
     e.preventDefault();
     if (newText !== '') {
-      dispatch(setText({ index, newText }));
+      dispatch(setText({ index: index - 1, newText }));
       onSaved();
     }
   }
@@ -41,7 +41,7 @@ function REditorCell({ onSaved, index, isEditing, text }) {
             cols='40' 
             rows='10' 
             placeholder='Ingresa tu historia aquí'
-            value={text ? text : newText}/>
+            value={newText}/>
           <SaveButton onClick={onSaveClicked}>
             Guardar
           </SaveButton>
