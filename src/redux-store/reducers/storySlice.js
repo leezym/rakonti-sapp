@@ -16,7 +16,10 @@ const initialState = {
   desire: null, 
   timeSpace: null, 
   character: null, 
-  characterIndex: 0,
+  characterIndex: 0, 
+  currentStage: null, 
+  currentStageIndex: -1, 
+  text: [], 
 };
 
 export const storySlice = createSlice({
@@ -55,6 +58,24 @@ export const storySlice = createSlice({
 
     setCharacterIndex: (state, action) => {
       state.characterIndex = action.payload;
+    }, 
+
+    setCurrentStage: (state, action) => {
+      state.currentStage = action.payload;
+    }, 
+
+    setCurrentStageIndex: (state, action) => {
+      state.currentStageIndex = action.payload;
+    }, 
+
+    setText: (state, action) => {
+      const { index, newText } = action.payload;
+      if (state.text[index] === null || state.text[index] === undefined) {
+        state.text.push(newText);
+      }
+      else {
+        state.text[index] = newText;
+      }
     }
   }
 });
@@ -68,6 +89,9 @@ export const {
   setFeatureItem, 
   setCharacter, 
   setCharacterIndex, 
+  setCurrentStage, 
+  setCurrentStageIndex, 
+  setText, 
 } = storySlice.actions;
 
 export default storySlice.reducer;

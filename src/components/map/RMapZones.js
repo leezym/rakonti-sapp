@@ -17,6 +17,7 @@ import RMapZone from './RMapZone';
 function RMapZones({ stages }) {
   const dispatch = useDispatch();
   const figurePos = useSelector(state => state.ui.figurePos);
+  const text = useSelector(state => state.story.text);
 
   const onZoneClicked = (zoneRect) => {
     /**
@@ -48,19 +49,25 @@ function RMapZones({ stages }) {
   }
 
   return <ZonesContainer id='zones-container'>
-    <RMapZone 
-      onZoneClicked={onZoneClicked}
-      stage={stages[0]}/>
+    {
+      stages.map((stage, i) => (
+        <RMapZone
+          key={stage.id}
+          onZoneClicked={onZoneClicked} 
+          enabled={i <= text.length}
+          stage={stage}
+          stageIndex={i}/>
+      ))
+    }
     <RCharacterFigure position={figurePos}/>
   </ZonesContainer>
 }
 
 const ZonesContainer = styled.div`
-  height: 62vh;
-  margin-bottom: 6%;
-  margin-right: 70px;
+  height: 85vh;
   position: absolute;
-  width: 62%;
+  top: 0;
+  width: 85vh;
 `;
 
 export default RMapZones;

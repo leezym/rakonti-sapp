@@ -25,7 +25,6 @@ function RPagination({ items, label, stage, vertical }) {
         </React.Fragment>
       ))
     }
-
   </PaginationContainer>
 }
 

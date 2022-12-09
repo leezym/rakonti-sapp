@@ -8,12 +8,12 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import RCharactersView from './views/RCharactersView';
-import REditorView from './views/REditorView';
 import RFeaturesView from './views/RFeaturesView';
 import RHomeView from './views/RHomeView';
 import RMapView from './views/RMapView';
 import RModesView from './views/RModesView';
 import RNarrativesView from './views/RNarrativesView';
+import RStageView from './views/RStageView';
 
 function App() {
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ function App() {
         <Route path='/features' element={<RFeaturesView/>}/>
         <Route path='/characters' element={<RCharactersView/>}/>
         <Route path='/map' element={<RMapView/>}/>
-        <Route path='/editor' element={<REditorView/>}/>
+        <Route path='/stage' element={<RStageView/>}/>
       </Routes>
     </div>
   );
