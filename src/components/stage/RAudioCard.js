@@ -9,6 +9,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { base64ToAudioBlob } from '../../utils';
 
 function RAudioCard({ audioURL, index }) {
   const [audioBlob, setAudioBlob] = useState(null);
@@ -20,23 +21,6 @@ function RAudioCard({ audioURL, index }) {
     const blob = new Blob([chunks], { type: 'audio/webm' });
     setAudioBlob(blob);
   }, [audioURL]);
-
-  /** Función encargada de transformar un string base 64 en audio blob */
-  const base64ToAudioBlob = (audioURL) => {
-    const rawData = window.atob(audioURL);
-    const dataLen = rawData.length;
-    /** 
-     * El arreglo Uint8Array y ArrayBuffer es muy IMPORTANTE para que funcione
-     * correctamente la transformación.
-     */
-    let chunks = new Uint8Array(new ArrayBuffer(dataLen));
-    
-    for (let i = 0; i < dataLen; i++) {
-      chunks[i] = rawData.charCodeAt(i);
-    }
-
-    return chunks;
-  }
 
   const onAudioEnded = () => {
     setIsPlaying(false);

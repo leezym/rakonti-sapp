@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addAudio } from '../../redux-store/reducers/storySlice';
+import { audioBlobToBase64 } from '../../utils';
 
 import RAudioCard from './RAudioCard';
 
@@ -42,17 +43,6 @@ function REditorAudio({ onClose }) {
       });
     }
   }, [dispatch]);
-
-  /** Función encargada de transformar un audio blob a un string base 64 */
-  const audioBlobToBase64 = (audioBlob, callback) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const { result } = reader;
-      const base64 = result.split(',')[1];
-      callback(base64);
-    }
-    reader.readAsDataURL(audioBlob);
-  }
 
   const onCloseClicked = () => {
     onClose();

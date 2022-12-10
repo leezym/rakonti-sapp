@@ -22,12 +22,7 @@ function REditor({ onClose }) {
   }
 
   const onTextSaved = () => {
-    if (text.length === narrative.stages.length) {
-      navigate('/');
-    }
-    else {
-      navigate(-1);
-    }
+    navigate(-1);
   }
 
   return <EditorContainer>
