@@ -25,7 +25,6 @@ function RMapView() {
   const editingMode = useSelector(state => state.ui.editingMode);
 
   useEffect(() => {
-    console.log(editingMode);
     setShowExport(!editingMode && text.length === narrative.stages.length);
   }, [editingMode, text.length, narrative.stages.length]);
 

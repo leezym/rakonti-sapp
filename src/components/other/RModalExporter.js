@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { saveAs } from 'file-saver';
+import JSZip from 'jszip';
 import { base64ToAudioBlob } from '../../utils';
 
 import RModal from './RModal';
@@ -30,8 +31,21 @@ function RModalExporter({ onClose }) {
   const onExportAudiosClicked = () => {
     if (message === null) {
       if (audios.length > 0) {
-        audios.forEach(audio64  => {
+        setMessage('Exportando tus audios...');
+        const zip = new JSZip();
+        const audioZip = zip.folder('audios');
+
+        audios.forEach((audio64, i)  => {
           const chunks = base64ToAudioBlob(audio64);
+          const audioName = `grabación_${i + 1}.wav`;
+          const blob = new Blob([ chunks ], { type: 'audio' });
+          const file = new File([ blob ], audioName, { type: 'audio/wav' });
+          audioZip.file(audioName, file);
+        });
+
+        zip.generateAsync({ type: 'blob' }).then(content => {
+          saveAs(content, 'audios');
+          showMessage('¡Tus audios se han exportado exitosamente!');
         });
       }
       else {
@@ -50,6 +64,7 @@ function RModalExporter({ onClose }) {
 
         const blob = new Blob([ storyText ], { type: 'text/plain;charset=utf-8' });
         saveAs(blob, 'historia.txt');
+        showMessage('¡Tu historia se ha exportado exitosamente!');
       }
       else {
         showMessage('Aún no has escrito ningún texto.');
