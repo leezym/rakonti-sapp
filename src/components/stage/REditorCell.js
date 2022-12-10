@@ -8,10 +8,11 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { setText } from '../../redux-store/reducers/storySlice';
 
-//import REditorAudio from './REditorAudio';
+import REditorAudio from './REditorAudio';
 
 function REditorCell({ onSaved, index, isEditing, text }) {
   const [newText, setNewText] = useState(text ? text : '');
+  const [showAudioRecorder, setShowAudioRecorder] = useState(false);
   const dispatch = useDispatch();
 
   const onTextChange = (e) => {
@@ -19,7 +20,11 @@ function REditorCell({ onSaved, index, isEditing, text }) {
   }
 
   const onRecordClicked = () => {
+    setShowAudioRecorder(true);
+  }
 
+  const onCloseRecorder = () => {
+    setShowAudioRecorder(false);
   }
 
   const onSaveClicked = (e) => {
@@ -58,6 +63,7 @@ function REditorCell({ onSaved, index, isEditing, text }) {
       { isEditing && <RecordButton onClick={onRecordClicked}>
           <RecordImage src='images/record-button.png' alt='record-button'/>
         </RecordButton> }
+      { showAudioRecorder && <REditorAudio onClose={onCloseRecorder}/> }
     </ScriptContainer>
   </CellContainer>
 }
@@ -68,6 +74,7 @@ const CellContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   margin: 10px 0px 15px 15px;
+  position: relative;
   width: calc(100% - 15px);
 `;
 
@@ -91,7 +98,7 @@ const RecordButton = styled.button`
   height: 90px;
   margin-bottom: 80px;
   margin-left: 30px;
-  width: 90px;
+  width: 95px;
 `;
 
 const RecordImage = styled.img`
@@ -130,7 +137,7 @@ const TextAreaForm = styled.form`
   align-items: flex-end;
   display: flex;
   flex-direction: column;
-  margin-left: 150px;
+  margin-left: 155px;
 `;
 
 export default REditorCell;

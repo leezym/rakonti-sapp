@@ -20,6 +20,7 @@ const initialState = {
   currentStage: null, 
   currentStageIndex: -1, 
   text: [], 
+  audios: [], 
 };
 
 export const storySlice = createSlice({
@@ -76,6 +77,10 @@ export const storySlice = createSlice({
       else {
         state.text[index] = newText;
       }
+    }, 
+
+    addAudio: (state, action) => {
+      state.audios.push(action.payload);
     }
   }
 });
@@ -92,6 +97,7 @@ export const {
   setCurrentStage, 
   setCurrentStageIndex, 
   setText, 
+  addAudio, 
 } = storySlice.actions;
 
 export default storySlice.reducer;
