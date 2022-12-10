@@ -91,7 +91,7 @@ function REditorAudio({ onClose }) {
     <ScrollerContainer>
       {
         audios.map((audio64, i) => (
-          <RAudioCard key={i} audioURL={audio64}/>
+          <RAudioCard key={i} audioURL={audio64} index={i}/>
         ))
       }
     </ScrollerContainer>
@@ -154,10 +154,17 @@ const ScrollerContainer = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
-  height: 225px;
+  height: 220px;
   justify-content: flex-start;
   margin-top: 30px;
+  overflow-y: auto;
   width: 100%;
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export default REditorAudio;
