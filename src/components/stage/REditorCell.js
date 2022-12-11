@@ -6,7 +6,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
-import { setText } from '../../redux-store/reducers/storySlice';
+import { addText } from '../../redux-store/reducers/storySlice';
 
 import REditorAudio from './REditorAudio';
 
@@ -30,7 +30,7 @@ function REditorCell({ onSaved, index, isEditing, text }) {
   const onSaveClicked = (e) => {
     e.preventDefault();
     if (newText !== '') {
-      dispatch(setText({ index: index - 1, newText }));
+      dispatch(addText({ index: index - 1, newText }));
       onSaved();
     }
   }

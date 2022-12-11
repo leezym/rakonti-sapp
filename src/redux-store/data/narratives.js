@@ -160,7 +160,7 @@ const narratives = {
       title: {
         color: '#7C838B', 
         left: '35%', 
-        top: '14%', 
+        top: '16%', 
         width: '32%', 
         size: '2.8em'
       }, 
@@ -222,7 +222,7 @@ const narratives = {
       }], 
       title: {
         color: '#444E4F', 
-        left: '35%', 
+        left: '37%', 
         top: '78%', 
         width: '32%', 
         size: '2.8em'
@@ -292,8 +292,8 @@ const narratives = {
       }], 
       title: {
         color: '#595D66', 
-        left: '6%', 
-        top: '5%', 
+        left: '10%', 
+        top: '9%', 
         width: '25%', 
         size: '2.8em' 
       }, 
@@ -353,7 +353,7 @@ const narratives = {
       }], 
       title: {
         color: '#545254', 
-        left: '60%', 
+        left: '62%', 
         top: '15%', 
         width: '30%', 
         size: '2.8em'
@@ -489,7 +489,7 @@ const narratives = {
       title: {
         color: '#FFFFFF', 
         left: '56%', 
-        top: '9%', 
+        top: '8%', 
         width: '40%', 
         size: '2.8em'
       }, 
@@ -549,8 +549,8 @@ const narratives = {
       }], 
       title: {
         color: '#6B7576', 
-        left: '10%', 
-        top: '45%', 
+        left: '13%', 
+        top: '47%', 
         width: '18%', 
         size: '2.8em'
       }, 
@@ -610,7 +610,7 @@ const narratives = {
       title: {
         color: '#8A7C7B', 
         left: '34%', 
-        top: '42%', 
+        top: '38%', 
         width: '28%', 
         size: '2.8em'
       }, 
@@ -669,7 +669,7 @@ const narratives = {
       title: {
         color: '#FFFFFF', 
         left: '37%', 
-        top: '80%', 
+        top: '82%', 
         width: '25%', 
         size: '2.8em'
       }, 
@@ -789,7 +789,7 @@ const narratives = {
       title: {
         color: '#677075', 
         left: '66%', 
-        top: '10%', 
+        top: '12%', 
         width: '30%', 
         size: '2.8em'
       }, 
@@ -895,7 +895,7 @@ const narratives = {
       title: {
         color: '#728275', 
         left: '41%', 
-        top: '6%', 
+        top: '9%', 
         width: '20%',
         size: '4em'
       }, 
@@ -1092,8 +1092,8 @@ const narratives = {
       }], 
       title: {
         color: '#595D66', 
-        left: '6%', 
-        top: '5%', 
+        left: '10%', 
+        top: '11%', 
         width: '25%',
         size: '4em'
       }, 
@@ -1153,7 +1153,7 @@ const narratives = {
       }], 
       title: {
         color: '#545254', 
-        left: '60%', 
+        left: '62%', 
         top: '15%', 
         width: '30%',
         size: '4em'
@@ -1214,7 +1214,7 @@ const narratives = {
       title: {
         color: '#898991', 
         left: '40%', 
-        top: '7%', 
+        top: '9%', 
         width: '40%',
         size: '4em'
       },  
@@ -1273,7 +1273,7 @@ const narratives = {
       title: {
         color: '#FFFFFF', 
         left: '15%', 
-        top: '18%', 
+        top: '20%', 
         width: '25%',
         size: '4em'
       }, 
@@ -1334,7 +1334,7 @@ const narratives = {
       title: {
         color: '#677075', 
         left: '66%', 
-        top: '10%', 
+        top: '13%', 
         width: '30%',
         size: '4em'
       }, 

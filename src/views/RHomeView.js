@@ -6,7 +6,24 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setBackIcon, setMenuIcon } from '../redux-store/reducers/uiSlice';
+import { 
+  setBackIcon, 
+  setMenuIcon, 
+  setFigurePos, 
+  setEditingMode  
+} from '../redux-store/reducers/uiSlice';
+import { 
+  setMode, 
+  setNarrative, 
+  setFeature, 
+  setFeatureItem, 
+  setCharacter, 
+  setCharacterIndex, 
+  setCurrentStage, 
+  setCurrentStageIndex, 
+  setText, 
+  setAudios 
+} from '../redux-store/reducers/storySlice';
 import styled from 'styled-components';
 
 import BackgroundImage from '../styled/BackgroundImage';
@@ -17,6 +34,24 @@ function RHomeView() {
   useEffect(() => {
     dispatch(setBackIcon(null));
     dispatch(setMenuIcon('menu-icon.png'));
+
+    /** Hard reset de todos los estados */
+    dispatch(setFigurePos(null));
+    dispatch(setEditingMode(false));
+
+    dispatch(setMode(null));
+    dispatch(setNarrative(null));
+    dispatch(setFeature(null));
+    dispatch(setFeatureItem({ key: 'genre', value: null }));
+    dispatch(setFeatureItem({ key: 'plot', value: null }));
+    dispatch(setFeatureItem({ key: 'desire', value: null }));
+    dispatch(setFeatureItem({ key: 'timeSpace', value: null }));
+    dispatch(setCharacter(null));
+    dispatch(setCharacterIndex(0));
+    dispatch(setCurrentStage(null));
+    dispatch(setCurrentStageIndex(-1));
+    dispatch(setText([]));
+    dispatch(setAudios([]));
   });
 
   return <div>

@@ -80,9 +80,14 @@ function REditorAudio({ onClose }) {
     </RecorderContainer>
     <ScrollerContainer>
       {
+        audios.length > 0 ?
         audios.map((audio64, i) => (
           <RAudioCard key={i} audioURL={audio64} index={i}/>
         ))
+        :
+        <Message>
+          Aún no has grabado ningún audio.
+        </Message>
       }
     </ScrollerContainer>
   </AudioContainer>
@@ -125,6 +130,14 @@ const ButtonContainer = styled.div`
   justify-content: space-between;
   margin-top: 20px;
   width: 30%;
+`;
+
+const Message = styled.p`
+  color: gray;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  width: 100%;
 `;
 
 const MusicImage = styled.img`

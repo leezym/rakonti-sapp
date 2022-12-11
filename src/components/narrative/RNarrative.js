@@ -10,9 +10,11 @@ import {
   setCurrentStage, 
   setCurrentStageIndex, 
   setNarrative, 
-  setNarrativeInfo 
+  setNarrativeInfo, 
+  setText, 
+  setAudios 
 } from '../../redux-store/reducers/storySlice';
-import { setFigurePos } from '../../redux-store/reducers/uiSlice';
+import { setFigurePos, setEditingMode } from '../../redux-store/reducers/uiSlice';
 
 function RNarrative({ narrative, right }) {
   const dispatch = useDispatch();
@@ -24,6 +26,9 @@ function RNarrative({ narrative, right }) {
     dispatch(setCurrentStage(null));
     dispatch(setCurrentStageIndex(-1));
     dispatch(setFigurePos(narrative.figurePos));
+    dispatch(setText([]));
+    dispatch(setAudios([]));
+    dispatch(setEditingMode(false));
   }
 
   const onPlusClicked = (e) => {
