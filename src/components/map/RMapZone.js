@@ -83,7 +83,7 @@ function RMapZone({ onZoneClicked, enabled, stage, stageIndex }) {
 
 const ZoneButton = styled.button` 
   background-color: transparent;
-  border: 1px solid white;
+  border: none;
   border-radius: 50%;
   cursor: pointer;
   height: 90px;
