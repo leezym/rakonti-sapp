@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setBackIcon, setMenuIcon } from '../../redux-store/reducers/uiSlice';
 
-import BackgroundImage from '../../styled/BackgroundImage';
 import RFeature from './RFeature';
 import features from '../../redux-store/data/features';
 import icons from '../../redux-store/data/icons';
@@ -66,6 +65,14 @@ function RFeaturePanel() {
     </ColumnContainer>
   </div>
 }
+
+const BackgroundImage = styled.img`
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
+  vertical-align: middle;
+  horizontal-align: middle;
+`;
 
 const CharacterAuraImage = styled.img`
   height: 54%;

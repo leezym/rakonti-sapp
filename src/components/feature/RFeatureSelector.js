@@ -8,7 +8,6 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { setBackIcon } from '../../redux-store/reducers/uiSlice';
 
-import BackgroundImage from '../../styled/BackgroundImage';
 import RCarousel from '../other/RCarousel';
 import RFeatureItem from './RFeatureItem';
 
@@ -44,6 +43,14 @@ function RFeatureSelector({ feature }) {
     </OverlayContainer>
   </div>
 }
+
+const BackgroundImage = styled.img`
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
+  vertical-align: middle;
+  horizontal-align: middle;
+`;
 
 const CarouselContainer = styled.div`
   width: 100%;

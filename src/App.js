@@ -9,6 +9,8 @@ import { useSelector } from 'react-redux';
 
 import RCharactersView from './views/RCharactersView';
 import RFeaturesView from './views/RFeaturesView';
+import RLoginView from './views/RLoginView';
+import RRegisterView from './views/RRegisterView';
 import RHomeView from './views/RHomeView';
 import RMapView from './views/RMapView';
 import RModesView from './views/RModesView';
@@ -26,16 +28,18 @@ function App() {
 
   return (
     <div>
-      { backIcon && <BackButton onClick={onBackClicked}>
+      {/* backIcon && <BackButton onClick={onBackClicked}>
           <Icon src={`images/${backIcon}`} alt='back-icon'/>
-        </BackButton> }
-      <MenuButton>
+        </BackButton> */}
+      {/*<MenuButton>
         <Icon src={`images/${menuIcon}`} alt='menu-icon'/>
-      </MenuButton>
+      </MenuButton>*/}
 
       <Routes>
-        <Route path='/' element={<RHomeView/>}/>
-        <Route path='/modes' element={<RModesView/>}/>
+        <Route path='/' element={<RLoginView/>}/>
+        <Route path='/register' element={<RRegisterView/>}/>
+        <Route path='/home' element={<RHomeView/>}/>
+        {/*<Route path='/modes' element={<RModesView/>}/>*/}
         <Route path='/narratives' element={<RNarrativesView/>}/>
         <Route path='/features' element={<RFeaturesView/>}/>
         <Route path='/characters' element={<RCharactersView/>}/>

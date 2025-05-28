@@ -10,8 +10,6 @@ import { useDispatch } from 'react-redux';
 import { setMode, setModeInfo } from '../../redux-store/reducers/storySlice';
 import { setBackIcon } from '../../redux-store/reducers/uiSlice';
 
-import BackgroundImage from '../../styled/BackgroundImage';
-
 function RModeInfo({ mode }) {
   const dispatch = useDispatch();
 
@@ -56,6 +54,14 @@ function RModeInfo({ mode }) {
     </DescriptionContainer>
   </ModeContainer>
 }
+
+const BackgroundImage = styled.img`
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
+  vertical-align: middle;
+  horizontal-align: middle;
+`;
 
 const BackButton = styled.button`
   background-color: transparent;

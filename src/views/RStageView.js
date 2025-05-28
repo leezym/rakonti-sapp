@@ -11,7 +11,6 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 
-import BackgroundImage from '../styled/BackgroundImage';
 import REditor from '../components/stage/REditor';
 import RModalStage from '../components/other/RModalStage';
 import RModalTip from '../components/other/RModalTip';
@@ -79,6 +78,14 @@ function RStageView() {
     { showEditor && <REditor onClose={onChevronClicked}/> }
   </div>
 }
+
+const BackgroundImage = styled.img`
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
+  vertical-align: middle;
+  horizontal-align: middle;
+`;
 
 const ChevronButton = styled.button`
   background-color: transparent; 

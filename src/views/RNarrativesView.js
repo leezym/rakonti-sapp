@@ -16,7 +16,7 @@ function RNarrativesView() {
       narrativeInfo === null || narrativeInfo === undefined ? 
       <RNarrativePanel/>
       :
-      <RNarrativeInfo narrative={narrativeInfo}/>
+      <RNarrativeInfo estructura={narrativeInfo}/>
     }
   </div>
 }

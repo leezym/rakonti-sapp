@@ -7,7 +7,6 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-import BackgroundImage from '../../styled/BackgroundImage';
 import REditorCell from './REditorCell';
 import RPagination from '../other/RPagination';
 
@@ -59,6 +58,14 @@ function REditor({ onClose }) {
     </InnerContainer>
   </EditorContainer>
 }
+
+const BackgroundImage = styled.img`
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
+  vertical-align: middle;
+  horizontal-align: middle;
+`;
 
 const ChevronButton = styled.button`
   background-color: transparent;

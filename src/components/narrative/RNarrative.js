@@ -14,18 +14,18 @@ import {
   setText, 
   setAudios 
 } from '../../redux-store/reducers/storySlice';
-import { setFigurePos, setEditingMode } from '../../redux-store/reducers/uiSlice';
+import { setEditingMode } from '../../redux-store/reducers/uiSlice';
 
-function RNarrative({ narrative, right }) {
+function RNarrative({ estructura }) {
   const dispatch = useDispatch();
 
   const onLinkClicked = () => {
-    dispatch(setNarrative(narrative));
+    dispatch(setNarrative(estructura));
     dispatch(setNarrativeInfo(null));
 
     dispatch(setCurrentStage(null));
     dispatch(setCurrentStageIndex(-1));
-    dispatch(setFigurePos(narrative.figurePos));
+    //dispatch(setFigurePos(estructura.figurePos));
     dispatch(setText([]));
     dispatch(setAudios([]));
     dispatch(setEditingMode(false));
@@ -34,27 +34,31 @@ function RNarrative({ narrative, right }) {
   const onPlusClicked = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    dispatch(setNarrativeInfo(narrative));
+    dispatch(setNarrativeInfo(estructura));
+  }
+
+  if (!estructura) {
+    return null; 
   }
   
-  return <NarrativeLink to='/features' onClick={onLinkClicked} right={right}>
-    <NarrativeImage src={narrative.url} alt='narrative-image'/>
-    <PlusContainer>
+  return <NarrativeLink to='/features' onClick={onLinkClicked}>
+    {/*<NarrativeImage src={estructura.imagen} alt='estructura-image'/>*/}
+    {<PlusContainer>
       <PlusButton onClick={onPlusClicked}>
         <PlusImage 
           src='images/plus-icon.png' 
           alt='plus'/>
       </PlusButton>
-    </PlusContainer>
+    </PlusContainer>}
     <Description>
-      { narrative.summary }
+      { estructura.resumen }
     </Description>
   </NarrativeLink>
 }
 
 const Description = styled.p`
   color: white;
-  font-size: 0.7em;
+  font-size: 0.9em;
   margin-left: 10px;
   position: absolute;
   top: 23%;

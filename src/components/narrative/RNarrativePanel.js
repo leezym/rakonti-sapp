@@ -3,14 +3,33 @@
  * @version 1.0.0
  */
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { setBackIcon, setMenuIcon } from '../../redux-store/reducers/uiSlice';
-
-import BackgroundImage from '../../styled/BackgroundImage';
 import RNarrative from './RNarrative';
-import narratives from '../../redux-store/data/narratives';
+
+function NarrativesSelected() {
+  const [estructuras, setEstructuras] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:5001/rakonti/estructuras-narrativas')
+      .then(res => setEstructuras(res.data))
+      .catch(err => console.error('Error al cargar las estructuras narrativas:', err));
+  }, []);
+
+  return (
+    <Wrapper>
+      {estructuras.map(estructura => (
+        <ItemContainer key={estructura.id_estructura}>
+          <RNarrative estructura={estructura} />
+        </ItemContainer>
+      ))}
+    </Wrapper>
+  );
+}
 
 function RNarrativePanel() {
   const dispatch = useDispatch();
@@ -18,30 +37,66 @@ function RNarrativePanel() {
   useEffect(() => {
     dispatch(setBackIcon('back-icon.png'));
     dispatch(setMenuIcon('menu-icon.png'));
-  });
+  }, []);
 
-  return <div>
-    <BackgroundImage 
-      src='images/narratives-background.jpg' 
-      alt='narratives-background'/>
-    <ColumnContainer>
-      <RNarrative narrative={narratives.journey}/>
-    </ColumnContainer>
-    <ColumnContainer right>
-      <RNarrative narrative={narratives.circle} right='true'/>
-    </ColumnContainer>
-  </div>
+  return (
+    <div>
+      <BackgroundImage 
+        src='images/narratives-background.jpg' 
+        alt='narratives-background'
+      />
+      
+      <NarrativesSelected />
+    </div>
+  );
 }
 
-const ColumnContainer = styled.div`
-  align-items: center;
-  display: flex;
-  height: 100%;
-  justify-content: ${({ right }) => right ? 'flex-start' : 'flex-end'};
-  left: ${({ right }) => right ? '50%': '0'};
-  position: absolute;
+const BackgroundImage = styled.img`
+  position: fixed;
   top: 0;
-  width: 50%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-repeat: repeat-y;
+  background-size: cover;
+  z-index: -1;
 `;
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 50px 0;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+  }
+`;
+
+const ItemContainer = styled.div`
+  width: 48%; /* para dejar espacio entre dos columnas */
+
+  @media (max-width: 768px) {
+    width: 90%; /* se ensancha al hacer fila */
+    margin-bottom: 20px;
+  }
+`;
+
+
+const Container = styled.div`
+  width: 48%;
+  display: flex;
+  justify-content: center;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+
 
 export default RNarrativePanel;

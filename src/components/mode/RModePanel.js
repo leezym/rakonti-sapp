@@ -8,7 +8,6 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { setBackIcon } from '../../redux-store/reducers/uiSlice';
 
-import BackgroundImage from '../../styled/BackgroundImage';
 import RMode from './RMode';
 import modes from '../../redux-store/data/modes';
 
@@ -29,6 +28,14 @@ function RModePanel() {
     </RowContainer>
   </div>
 }
+
+const BackgroundImage = styled.img`
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
+  vertical-align: middle;
+  horizontal-align: middle;
+`;
 
 const RowContainer = styled.div`
   align-items: center;

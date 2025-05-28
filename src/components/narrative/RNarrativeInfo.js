@@ -9,24 +9,23 @@ import { useDispatch } from 'react-redux';
 import { setNarrativeInfo } from '../../redux-store/reducers/storySlice';
 import { setBackIcon, setMenuIcon } from '../../redux-store/reducers/uiSlice';
 
-function RNarrativeInfo({ narrative }) {
+function RNarrativeInfo({ estructura }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(setBackIcon(null));
-    /** Dependiendo de la narrativa se configura el ícono del menú. */
-    const iconColor = narrative.id === 2 ? '-dark' : '';
-    dispatch(setMenuIcon(`menu-icon${iconColor}.png`));
   });
 
   const onCloseClicked = () => {
     dispatch(setNarrativeInfo(null));
   }
 
+  if (!estructura) {
+    return null; 
+  }
+  
   return <NarrativeContainer>
-    <NarrativeImage 
-      src={narrative.backgroundUrl} 
-      alt='narrative-info-background'/>
+    <NarrativeImage src={estructura.imagen_background} alt='estructura-info-background'/>
     <CloseContainer>
       <CloseButton onClick={onCloseClicked}>
         <CloseImage
@@ -34,8 +33,8 @@ function RNarrativeInfo({ narrative }) {
           alt='close-icon'/>
       </CloseButton>
     </CloseContainer>
-    <Description color={narrative.color}>
-      { narrative.description }
+    <Description>
+      { estructura.descripcion }
     </Description>
   </NarrativeContainer>
 }
@@ -63,7 +62,8 @@ const CloseImage = styled.img`
 `;
 
 const Description = styled.p`
-  color: ${({ color }) => color};
+  color: #43474f;
+  font-size:25px;
   padding: 0px 15%;
   position: absolute;
   text-align: justify;
