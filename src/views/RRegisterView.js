@@ -1,8 +1,3 @@
-/**
- * @author Elizabeth Moncada
- * @version 1.0.1
- */
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -319,10 +314,10 @@ function RRegisterView() {
         contrasena: formData.contrasena
       });
 
-      const { token, usuario } = loginResponse.data;
+      const { token, id_usuario } = loginResponse.data;
 
       localStorage.setItem('token', token);
-      localStorage.setItem('usuario', JSON.stringify(usuario));
+      localStorage.setItem('id_usuario', id_usuario);
 
       navigate('/home');
 
@@ -330,7 +325,6 @@ function RRegisterView() {
       console.error('Error al iniciar sesión:', error);
       alert('Ocurrió un error. Revisa los datos e intenta de nuevo.');
     }
-    navigate('/home');
   };  
 
   return <div>
@@ -455,9 +449,9 @@ const Step = styled.div`
         case 1:
           return "url('images/first-selected-progress-bar.png')";
         case 2:
-          return "url('images/second-selected-progress-bar.png')";
+          return "url('images/middle-selected-progress-bar.png')";
         case 3:
-          return "url('images/third-selected-progress-bar.png')";
+          return "url('images/last-selected-progress-bar.png')";
         default:
           return 'none';
       }
@@ -466,9 +460,9 @@ const Step = styled.div`
         case 1:
           return "url('images/first-progress-bar.png')";
         case 2:
-          return "url('images/second-progress-bar.png')";
+          return "url('images/middle-progress-bar.png')";
         case 3:
-          return "url('images/third-progress-bar.png')";
+          return "url('images/last-progress-bar.png')";
         default:
           return 'none';
       }
@@ -499,12 +493,10 @@ const FormContainer = styled.form`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  border-radius: 12px;
   width: 60%;
   box-sizing: border-box;
   border-radius: 45px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
+  
   @media (max-width: 768px) {
     width: 90%;
     padding: 35px;

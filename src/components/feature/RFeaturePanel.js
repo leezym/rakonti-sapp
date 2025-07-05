@@ -29,7 +29,7 @@ function RFeaturePanel() {
 
   const onContinueClicked = () => {
     if (genre && plot && desire && timeSpace) {
-      navigate('/characters');
+      navigate('/character');
     }
   }
 

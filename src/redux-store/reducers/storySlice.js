@@ -1,24 +1,11 @@
-/**
- * @author Martín Vladimir Alonso Sierra Galvis 
- * @version 1.0.1
- */
-
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  mode: null, 
-  modeInfo: null, 
-  narrative: null, 
-  narrativeInfo: null, 
-  feature: null, 
-  genre: null, 
-  plot: null, 
-  desire: null, 
-  timeSpace: null, 
-  character: null, 
-  characterIndex: 0, 
-  currentStage: null, 
-  currentStageIndex: -1, 
+  mode: null,
+  narrative: null,
+  feature: null,
+  characters: [],
+  currentStage: 0,
   text: [], 
   audios: [], 
 };
@@ -31,43 +18,37 @@ export const storySlice = createSlice({
       state.mode = action.payload;
     },
 
-    setModeInfo: (state, action) => {
-      state.modeInfo = action.payload;
-    },
-
     setNarrative: (state, action) => {
       state.narrative = action.payload;
-    },
-
-    setNarrativeInfo: (state, action) => {
-      state.narrativeInfo = action.payload;
     },
 
     setFeature: (state, action) => {
       state.feature = action.payload;
     },
-
-    setFeatureItem: (state, action) => {
-      /** Actualiza: genre, plot, desire, timeSpace */
-      const { payload } = action;
-      state[payload.key] = payload.value;
-    }, 
+    
+    setCharacters: (state, action) => {
+      if (Array.isArray(action.payload)) {
+        // Si el payload es un arreglo, reemplaza toda la lista
+        state.characters = action.payload;
+      } else {
+        // Si el payload es un solo objeto (JSON), agrega al array
+        if (!Array.isArray(state.characters)) {
+          state.characters = [];
+        }
+        state.characters.push(action.payload);
+      }
+    },
 
     setCharacter: (state, action) => {
-      state.character = action.payload;
-    }, 
-
-    setCharacterIndex: (state, action) => {
-      state.characterIndex = action.payload;
-    }, 
+      const index = state.characters.findIndex(c => c.id_personaje === action.payload.id_personaje);
+      if (index !== -1) {
+        state.characters[index] = action.payload;
+      }
+    },
 
     setCurrentStage: (state, action) => {
       state.currentStage = action.payload;
-    }, 
-
-    setCurrentStageIndex: (state, action) => {
-      state.currentStageIndex = action.payload;
-    }, 
+    },
 
     addText: (state, action) => {
       const { index, newText } = action.payload;
@@ -94,14 +75,12 @@ export const storySlice = createSlice({
 });
 
 export const { 
-  setMode, 
+  setMode,
   setModeInfo, 
-  setNarrative, 
-  setNarrativeInfo, 
-  setFeature, 
-  setFeatureItem, 
-  setCharacter, 
-  setCharacterIndex, 
+  setNarrative,
+  setFeature,
+  setCharacters, 
+  setCharacter,
   setCurrentStage, 
   setCurrentStageIndex, 
   addText, 

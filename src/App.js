@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
+import RCharacterView from './views/RCharacterView';
 import RCharactersView from './views/RCharactersView';
 import RFeaturesView from './views/RFeaturesView';
 import RLoginView from './views/RLoginView';
@@ -42,9 +43,12 @@ function App() {
         {/*<Route path='/modes' element={<RModesView/>}/>*/}
         <Route path='/narratives' element={<RNarrativesView/>}/>
         <Route path='/features' element={<RFeaturesView/>}/>
-        <Route path='/characters' element={<RCharactersView/>}/>
-        <Route path='/map' element={<RMapView/>}/>
-        <Route path='/stage' element={<RStageView/>}/>
+        <Route path='/features/:id_historia' element={<RFeaturesView/>}/>
+        <Route path='/character' element={<RCharacterView/>}/>
+        <Route path='/character/:id_personaje' element={<RCharacterView />} /> 
+        <Route path='/characters/:id_historia' element={<RCharactersView/>}/>
+        <Route path='/map/:id_historia' element={<RMapView/>}/>
+        {/*<Route path='/stage' element={<RStageView/>}/>*/}
       </Routes>
     </div>
   );

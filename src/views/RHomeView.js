@@ -1,69 +1,67 @@
-/**
- * @author Martín Vladimir Alonso Sierra Galvis 
- * @version 1.0.1
- */
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
+import axios from 'axios';
 import { 
   setBackIcon, 
   setMenuIcon, 
   setFigurePos, 
   setEditingMode  
 } from '../redux-store/reducers/uiSlice';
-import { 
-  setMode, 
+import {
   setNarrative, 
-  setFeature, 
-  setFeatureItem, 
-  setCharacter, 
-  setCharacterIndex, 
-  setCurrentStage, 
-  setCurrentStageIndex, 
-  setText, 
-  setAudios 
+  setFeature,
+  setCharacters,
+  setCurrentStage
 } from '../redux-store/reducers/storySlice';
 import styled from 'styled-components';
 
-function LoadStory({ formData, handleChange }) {
-  const historias = [
-    {
-      id_historia: 1,
-      titulo: "Inicio",
-      estructura: "Pantalla principal",
-      fecha_edicion: "2024-05-16T10:23:00Z"
-    },
-    {
-      id_historia: 2,
-      titulo: "FIN",
-      estructura: "Pantalla final",
-      fecha_edicion: "2025-05-16T10:23:00Z"
-    }
-  ];
+function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usuario }) {
+  const [estructuras, setEstructuras] = useState({});
+  const [filaSeleccionada, setFilaSeleccionada] = useState(null);
 
-  /*const [historias, setHistorias] = useState([]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  const historiasPaginadas = historias
+    .sort((a, b) => new Date(b.fecha_edicion) - new Date(a.fecha_edicion))
+    .slice(startIndex, endIndex);
 
   useEffect(() => {
-    const fetchHistorias = async () => {
-      try {
-        const response = await axios.get(`/rakonti/historias/${idUsuario}`);
-        setHistorias(response.data);
-      } catch (error) {
-        console.error('Error al obtener historias:', error);
-      }
+    axios.get(`http://localhost:5001/rakonti/historias/${id_usuario}`)
+      .then(res => setHistorias(res.data))
+      .catch(err => console.error('Error al cargar las historias del usuario:', err));
+  }, []);
+
+  useEffect(() => {
+    if (historias.length === 0) return;
+
+    const fetchEstructuras = async () => {
+      const peticiones = historias.map(historia =>
+        axios.get(`http://localhost:5001/rakonti/estructuras-narrativas/${historia.id_estructura}`)
+          .then(res => ({ id_historia: historia.id_historia, estructura: res.data }))
+          .catch(() => ({ id_historia: historia.id_historia, estructura: { nombre: 'Desconocida' } }))
+      );
+
+      const resultados = await axios.all(peticiones);
+      const mapEstructuras = {};
+
+      resultados.forEach(({ id_historia, estructura }) => {
+        mapEstructuras[id_historia] = estructura;
+      });
+
+      setEstructuras(mapEstructuras);
     };
 
-    if (idUsuario) {
-      fetchHistorias();
-    }
-  }, [idUsuario]);*/
+    fetchEstructuras();
+  }, [historias]);
 
   const formatearFecha = (fechaString) => {
     const fecha = new Date(fechaString);
     const hoy = new Date();
-
     const msPorDia = 1000 * 60 * 60 * 24;
     const diferenciaDias = Math.floor((hoy - fecha) / msPorDia);
 
@@ -75,6 +73,32 @@ function LoadStory({ formData, handleChange }) {
     return fecha.toLocaleDateString('es-CO');
   };
 
+  const handleSeleccionarFila = async (historia) => {
+    setFilaSeleccionada(historia.id_historia);
+
+    const estructuraCompleta = estructuras[historia.id_historia];
+
+    if (!estructuraCompleta) {
+      console.warn('Estructura no encontrada para la historia:', historia.id_historia);
+      return;
+    }
+
+    try {
+      const response = await axios.get(`http://localhost:5001/rakonti/personajes/historia/${historia.id_historia}`);
+
+      dispatch(setNarrative(estructuraCompleta));
+      dispatch(setFeature(historia));
+      dispatch(setCharacters(response.data));
+      dispatch(setCurrentStage(historia.paso_actual));
+
+      // pdte
+
+      navigate(`/map/${historia.id_historia}`);
+    } catch (error) {
+      console.error('Error al obtener personajes de la historia:', error);
+    }  
+  };
+
   return (
     <>
       <Subtitle>Tus Historias</Subtitle>
@@ -82,7 +106,8 @@ function LoadStory({ formData, handleChange }) {
         <table style={{
           width: '100%',
           height: '100%',
-          borderCollapse: 'collapse'
+          borderCollapse: 'collapse',
+          borderSpacing: 0
         }}>
           <thead>
             <tr>
@@ -104,15 +129,19 @@ function LoadStory({ formData, handleChange }) {
                 border: 'none'
               }} />
             </tr>
-            {historias
-              .sort((a, b) => new Date(b.fecha_edicion) - new Date(a.fecha_edicion))
-              .map((historia) => (
-                <tr key={historia.id_historia}>
-                  <td style={{ padding: '8px', textAlign: 'center' }}>{historia.titulo}</td>
-                  <td style={{ padding: '8px', textAlign: 'center' }}>{formatearFecha(historia.fecha_edicion)}</td>
-                  <td style={{ padding: '8px', textAlign: 'center' }}>{historia.descripcion}</td>
-                </tr>
-            ))}
+            {historiasPaginadas.map(historia => {
+              return (
+                <TableRow
+                  key={historia.id_historia}
+                  selected={filaSeleccionada === historia.id_historia}
+                  onClick={() => handleSeleccionarFila(historia)}
+                >
+                  <TableCell selected={filaSeleccionada === historia.id_historia}>{historia.titulo}</TableCell>
+                  <TableCell selected={filaSeleccionada === historia.id_historia}>{formatearFecha(historia.fecha_edicion)}</TableCell>
+                  <TableCell selected={filaSeleccionada === historia.id_historia}>{estructuras[historia.id_historia]?.nombre || 'Desconocida'}</TableCell>
+                </TableRow>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -123,29 +152,20 @@ function LoadStory({ formData, handleChange }) {
 function RHomeView() {  
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const [vistaActiva, setVistaActiva] = useState('');
+  const [historias, setHistorias] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(historias.length / itemsPerPage);
+  const id_usuario = localStorage.getItem('id_usuario');
 
   useEffect(() => {
-    dispatch(setBackIcon(null));
-    dispatch(setMenuIcon('menu-icon.png'));
-
-    /** Hard reset de todos los estados */
-    dispatch(setFigurePos(null));
-    dispatch(setEditingMode(false));
-
-    dispatch(setMode(null));
     dispatch(setNarrative(null));
     dispatch(setFeature(null));
-    dispatch(setFeatureItem({ key: 'genre', value: null }));
-    dispatch(setFeatureItem({ key: 'plot', value: null }));
-    dispatch(setFeatureItem({ key: 'desire', value: null }));
-    dispatch(setFeatureItem({ key: 'timeSpace', value: null }));
-    dispatch(setCharacter(null));
-    dispatch(setCharacterIndex(0));
-    dispatch(setCurrentStage(null));
-    dispatch(setCurrentStageIndex(-1));
-    dispatch(setText([]));
-    dispatch(setAudios([]));
+    dispatch(setCharacters([]));
+    dispatch(setCurrentStage(0));
   }, [dispatch]);
 
   return <div>
@@ -159,8 +179,36 @@ function RHomeView() {
       </LeftColumn>
       <RightColumn>  
         <MenuContainer>
-          {vistaActiva === 'cargarHistoria' && <LoadStory />}
+          {
+            vistaActiva === 'cargarHistoria' && 
+            <LoadStory 
+              currentPage={currentPage} 
+              itemsPerPage={itemsPerPage} 
+              historias={historias} 
+              setHistorias={setHistorias}
+              id_usuario={id_usuario}
+            />
+          }
         </MenuContainer>
+        <div style={{ marginTop: '10px', textAlign: 'center' }}>
+          <ButtonPagination
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            Anterior
+          </ButtonPagination>
+
+          <span style={{ margin: '0 10px', fontSize: '12px', color: 'white' }}>
+            Página {currentPage} de {totalPages}
+          </span>
+
+          <ButtonPagination
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          >
+            Siguiente
+          </ButtonPagination>
+        </div>
       </RightColumn>
     </Container>
   </div>;
@@ -195,6 +243,7 @@ const Container = styled.div`
 `;
 
 const LeftColumn = styled.div`
+  margin-top:50px;
   flex: 0 0 20%;
   display: flex;
   flex-direction: column;
@@ -203,70 +252,95 @@ const LeftColumn = styled.div`
   height: 100%;
 
   @media (max-width: 768px) {
+    margin-top:0px;
     flex: none;
     flex-direction: row;
     width: 100%;
     justify-content: center;
+    align-items: center;
   }
 `;
-
+    
 const RightColumn = styled.div`
   flex: 0 0 80%;
   display: flex;
   flex-direction: column;
   height: 100%;
-
+  
   @media (max-width: 768px) {
     flex: none;
     width: 100%;
-    margin-top: 20px;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
 const MenuContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  background-image: url('images/big-section.png');
+  padding: 40px 10px 50px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url('images/section.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  border-radius: 40px;
-  padding: 20px;
+  width: 100%;
   box-sizing: border-box;
-  margin-bottom:30px;
-  
+  border-radius: 45px;
+
   @media (max-width: 768px) {
-    border-radius: 30px;
+    width: 100%;
+    padding: 35px;
+    border-radius: 80px;
   }
 `;
 
-const Title = styled.h1`
-  font-size:40x;
-  font-weight: 800;
-  color: #43474f;
+const TableRow = styled.tr`
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.08); /* hover suave */
+  }
+
+  &:active {
+    background-color: rgba(0, 0, 0, 0.18); /* click visible */
+  }
+
+  ${({ selected }) =>
+    selected &&
+    `
+      background-color: rgba(0, 0, 0, 0.18); /* fila seleccionada */
+    `}
+`;
+
+const TableCell = styled.td`
+  padding: 15px 8px;
   text-align: center;
-  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease;
+
+  ${TableRow}:hover & {
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+
+  ${TableRow}:active & {
+    background-color: rgba(0, 0, 0, 0.18);
+  }
+
+  ${({ selected }) =>
+    selected &&
+    `
+      background-color: rgba(0, 0, 0, 0.18);
+    `}
 `;
 
 const Subtitle = styled.div`
+  margin-left:40px;
   font-size: 18px;
   font-weight: 800;
   color: #43474f;
   align-self: flex-start;
-`;
-
-const Label = styled.label`
-  display: block;
-  margin-bottom: 5px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #43474f;
-`;
-
-const MenuImage = styled.img`
-  height: 40px;
-  margin: 0px 15px;
-  width: 40px;
 `;
 
 const Button = styled.button`
@@ -280,6 +354,25 @@ const Button = styled.button`
   border-radius: 10px;
   background-color: transparent;
   color: #43474f;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  
+  &:hover {
+    color: gray;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+`;
+
+const ButtonPagination = styled.button`
+  padding: 10px 10px;
+  font-size: 12px;
+  border: none;
+  border-radius: 5px;
+  background-color: #43474f;
+  color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
   

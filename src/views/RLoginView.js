@@ -14,16 +14,10 @@ import {
   setEditingMode  
 } from '../redux-store/reducers/uiSlice';
 import { 
-  setMode, 
   setNarrative, 
   setFeature, 
-  setFeatureItem, 
-  setCharacter, 
-  setCharacterIndex, 
-  setCurrentStage, 
-  setCurrentStageIndex, 
-  setText, 
-  setAudios 
+  setCharacters,
+  setCurrentStage
 } from '../redux-store/reducers/storySlice';
 import styled from 'styled-components';
 
@@ -36,28 +30,13 @@ function RLoginView() {
     contrasena: '',
   });
 
-  /*useEffect(() => {
-    dispatch(setBackIcon(null));
-    dispatch(setMenuIcon('menu-icon.png'));
-
-    // Hard reset de todos los estados
-    dispatch(setFigurePos(null));
-    dispatch(setEditingMode(false));
-
-    dispatch(setMode(null));
+  useEffect(() => {
+    //dispatch(setMode(null));
     dispatch(setNarrative(null));
     dispatch(setFeature(null));
-    dispatch(setFeatureItem({ key: 'genre', value: null }));
-    dispatch(setFeatureItem({ key: 'plot', value: null }));
-    dispatch(setFeatureItem({ key: 'desire', value: null }));
-    dispatch(setFeatureItem({ key: 'timeSpace', value: null }));
-    dispatch(setCharacter(null));
-    dispatch(setCharacterIndex(0));
-    dispatch(setCurrentStage(null));
-    dispatch(setCurrentStageIndex(-1));
-    dispatch(setText([]));
-    dispatch(setAudios([]));
-  }, [dispatch]);*/
+    dispatch(setCharacters([]));
+    dispatch(setCurrentStage(0));
+  }, [dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -74,10 +53,10 @@ function RLoginView() {
 
     try {      
       const response = await axios.post('http://localhost:5001/rakonti/usuarios/login', loginData);
-      const { token, usuario } = response.data;
+      const { token, id_usuario } = response.data;
       
       localStorage.setItem('token', token);
-      localStorage.setItem('usuario', JSON.stringify(usuario));
+      localStorage.setItem('id_usuario', id_usuario);
 
       navigate('/home');
     } catch (error) {
