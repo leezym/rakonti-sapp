@@ -415,9 +415,9 @@ function RCharacterView() {
   const index = location.state?.index;
 
   const { narrative, 
-      feature,
-      characters,
-      personalities } = useSelector(state => state.story);
+    feature,
+    characters,
+    personalities } = useSelector(state => state.story);
   
   const [step, setStep] = useState(1);
   const [showPopup, setShowPopup] = useState(false);
@@ -456,13 +456,16 @@ function RCharacterView() {
       })
 
       axios.get(`http://localhost:5001/rakonti/personaje-roles/${id_personaje}`)
-      .then(res => 
+      .then(res => {
+        const rolesArray = Array.isArray(res.data) ? res.data : [];
+        
         setData({
           ...data,
-          roles: res.data.map(r => r.id_rol)
-        })
-      )
+          roles: rolesArray.map(r => r.id_rol)
+        });
+      })
       .catch(err => console.error('Error al cargar los roles por personaje:', err));
+
     }
   }, [id_personaje]);
 

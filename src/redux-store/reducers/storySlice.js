@@ -17,9 +17,6 @@ export const storySlice = createSlice({
   name: 'story', 
   initialState, 
   reducers: {
-    setMode: (state, action) => {
-      state.mode = action.payload;
-    },
 
     setNarrative: (state, action) => {
       state.narrative = action.payload;
@@ -86,21 +83,19 @@ export const storySlice = createSlice({
     },
 
     setRoles: (state, action) => {
+      if (!Array.isArray(state.roles)) {
+        state.roles = [];
+      }
       if (Array.isArray(action.payload)) {
-        // Si el payload es un array de roles
-        state.roles.push(
-          action.payload.filter(
-            (newRole, index, self) =>
-              index === self.findIndex((r) => r.id === newRole.id)
-          )
+        const filteredRoles = action.payload.filter(
+          (newRole, index, self) =>
+            index === self.findIndex((r) => r.id === newRole.id)
         );
-      } else {
-        // Si el payload es un solo rol
-        if (!Array.isArray(state.roles) || state.roles.length === 0) {
-          // Crear primer grupo si no existe
+        state.roles.push(filteredRoles);
+      } else if (action.payload) {
+        if (state.roles.length === 0) {
           state.roles = [[action.payload]];
         } else {
-          // Agregar al último grupo sin duplicar
           const lastGroup = state.roles[state.roles.length - 1];
           const exists = lastGroup.some((r) => r.id === action.payload.id);
           if (!exists) {
