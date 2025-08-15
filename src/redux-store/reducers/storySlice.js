@@ -14,10 +14,9 @@ const initialState = {
 };
 
 export const storySlice = createSlice({
-  name: 'story', 
-  initialState, 
+  name: 'story',
+  initialState,
   reducers: {
-
     setNarrative: (state, action) => {
       state.narrative = action.payload;
     },
@@ -41,13 +40,11 @@ export const storySlice = createSlice({
     setTime: (state, action) => {
       state.time = action.payload;
     },
-    
+
     setCharacters: (state, action) => {
       if (Array.isArray(action.payload)) {
-        // Si el payload es un arreglo, reemplaza toda la lista
         state.characters = action.payload;
       } else {
-        // Si el payload es un solo objeto (JSON), agrega al array
         if (!Array.isArray(state.characters)) {
           state.characters = [];
         }
@@ -56,7 +53,9 @@ export const storySlice = createSlice({
     },
 
     setCharacter: (state, action) => {
-      const index = state.characters.findIndex(c => c.id_personaje === action.payload.id_personaje);
+      const index = state.characters.findIndex(
+        c => c.id_personaje === action.payload.id_personaje
+      );
       if (index !== -1) {
         state.characters[index] = action.payload;
       }
@@ -64,10 +63,8 @@ export const storySlice = createSlice({
 
     setPersonalities: (state, action) => {
       if (Array.isArray(action.payload)) {
-        // Si el payload es un arreglo, reemplaza toda la lista
         state.personalities = action.payload;
       } else {
-        // Si el payload es un solo objeto (JSON), agrega al array
         if (!Array.isArray(state.personalities)) {
           state.personalities = [];
         }
@@ -76,47 +73,24 @@ export const storySlice = createSlice({
     },
 
     setPersonality: (state, action) => {
-      const index = state.personalities.findIndex(c => c.id_personalidad === action.payload.id_personalidad);
+      const index = state.personalities.findIndex(
+        c => c.id_personalidad === action.payload.id_personalidad
+      );
       if (index !== -1) {
         state.personalities[index] = action.payload;
       }
     },
 
     setRoles: (state, action) => {
+      state.roles = action.payload;
+    },
+
+    setRolesAtIndex: (state, action) => {
+      const { index, roles } = action.payload;
       if (!Array.isArray(state.roles)) {
         state.roles = [];
       }
-      if (Array.isArray(action.payload)) {
-        const filteredRoles = action.payload.filter(
-          (newRole, index, self) =>
-            index === self.findIndex((r) => r.id === newRole.id)
-        );
-        state.roles.push(filteredRoles);
-      } else if (action.payload) {
-        if (state.roles.length === 0) {
-          state.roles = [[action.payload]];
-        } else {
-          const lastGroup = state.roles[state.roles.length - 1];
-          const exists = lastGroup.some((r) => r.id === action.payload.id);
-          if (!exists) {
-            lastGroup.push(action.payload);
-          }
-        }
-      }
-    },
-
-    setRol: (state, action) => {
-      const { id_personaje, id_rol, ...rest } = action.payload;
-      
-      for (let group of state.roles) {
-        const index = group.findIndex(
-          r => r.id_rol === id_rol && r.id_personaje === id_personaje
-        );
-        if (index !== -1) {
-          group[index] = { id_personaje, id_rol, ...rest };
-          break;
-        }
-      }
+      state.roles[index] = roles;
     },
 
     setCurrentStage: (state, action) => {
@@ -132,12 +106,12 @@ export const {
   setPlot,
   setTime,
   setDesire,
-  setCharacters, 
+  setCharacters,
   setCharacter,
   setPersonalities,
   setPersonality,
   setRoles,
-  setRol,
+  setRolesAtIndex,
   setCurrentStage
 } = storySlice.actions;
 

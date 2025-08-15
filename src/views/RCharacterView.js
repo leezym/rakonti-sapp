@@ -16,7 +16,7 @@ import {
   setCharacters,
   setPersonality,
   setPersonalities,
-  setRol,
+  setRolesAtIndex,
   setRoles,
   setCurrentStage
 } from '../redux-store/reducers/storySlice';
@@ -240,29 +240,33 @@ function StepThree({ data, setData }) {
         {dividirEnColumnas(roles, 2).map((columna, i) => (
           <Column key={i}>
             {columna.map(rol => (
-              <>
-                <LabelCheckbox key={rol.id_rol}>
-                  <InputCheckbox type="checkbox"
-                        value={rol.id_rol}
-                        checked={data.roles.includes(rol.id_rol)}
-                        onChange={(e) => {
-                          const id = parseInt(e.target.value);
-                          const seleccionados = data.roles;
-                          
-                          if (e.target.checked) {
-                            setData({ ...data, roles: [...seleccionados, id] });
-                          } else {
-                            setData({
-                              ...data,
-                              roles: seleccionados.filter(g => g !== id)
-                            });
-                          }
-                        }}
-                        />
+              <div key={rol.id_rol}>
+                <LabelCheckbox>
+                  <InputCheckbox
+                    type="checkbox"
+                    value={rol.id_rol}
+                    checked={data.roles.some(r => r.id_rol === rol.id_rol)}
+
+                    onChange={(e) => {
+                      const seleccionados = data.roles;
+
+                      if (e.target.checked) {
+                        setData({
+                          ...data,
+                          roles: [...seleccionados, { id_rol: rol.id_rol, nombre: rol.nombre }]
+                        });
+                      } else {
+                        setData({
+                          ...data,
+                          roles: seleccionados.filter(g => g.id_rol !== rol.id_rol)
+                        });
+                      }
+                    }}
+                  />
                   <b>{rol.nombre}</b>
                 </LabelCheckbox>
                 <div dangerouslySetInnerHTML={{ __html: rol.descripcion }} />
-              </>
+              </div>
             ))}
           </Column>
         ))}
@@ -359,7 +363,15 @@ function StepFive({ formData, data }) {
                 <b>Nombre(s): </b>{formData.nombre}<br/><br/>
                 <b>Apellido(s): </b>{formData.apellido}<br/><br/>
                 <b>Edad: </b>{formData.edad}<br/><br/>
-                <b>Género: </b>{formData.sexo}
+                <b>Género: </b>{formData.sexo}<br/><br/>
+                <b>Roles:</b>
+                <ul>
+                  {data.roles.map((rol) => (
+                    <li>
+                      {rol.nombre}
+                    </li>
+                  ))}
+                </ul>                
               </p>
             </CardDescription>
           </Card>
@@ -417,7 +429,8 @@ function RCharacterView() {
   const { narrative, 
     feature,
     characters,
-    personalities } = useSelector(state => state.story);
+    personalities,
+    roles } = useSelector(state => state.story);
   
   const [step, setStep] = useState(1);
   const [showPopup, setShowPopup] = useState(false);
@@ -446,28 +459,16 @@ function RCharacterView() {
 
   useEffect(() => {
     if (id_personaje) {
-      // Estamos editando: obtener los datos del personaje
       setFormData(characters[index]);
+
       setData({
-        ...data,
-        personalidad: personalities[index].nombre,
-        personalidad_descripcion: personalities[index].descripcion,
-        personalidad_imagen: personalities[index].imagen
-      })
-
-      axios.get(`http://localhost:5001/rakonti/personaje-roles/${id_personaje}`)
-      .then(res => {
-        const rolesArray = Array.isArray(res.data) ? res.data : [];
-        
-        setData({
-          ...data,
-          roles: rolesArray.map(r => r.id_rol)
-        });
-      })
-      .catch(err => console.error('Error al cargar los roles por personaje:', err));
-
+        personalidad: personalities[index]?.nombre,
+        personalidad_descripcion: personalities[index]?.descripcion ,
+        personalidad_imagen: personalities[index]?.imagen,
+        roles: roles[index]
+      });
     }
-  }, [id_personaje]);
+  }, [id_personaje, characters, personalities, roles, index]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -511,52 +512,51 @@ function RCharacterView() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Caso 1: Editar personaje existente en historia existente
-    if (id_personaje && id_historia) {
-      try {
-        let mensajesExito = [];
+    // Obtenemos el array de roles del personaje actual
+    const rolesOriginales = roles[index] || [];
+    const rolesNuevos = data.roles || [];
 
+    // Detectar cambios en roles para enviar a DB
+    const rolesOriginalesIds = rolesOriginales.map(r => r.id_rol);
+    const rolesNuevosIds = rolesNuevos.map(r => r.id_rol);
+
+    const rolesParaAgregar = rolesNuevos.filter(r => !rolesOriginalesIds.includes(r.id_rol));
+    const rolesParaEliminar = rolesOriginales.filter(r => !rolesNuevosIds.includes(r.id_rol));
+
+    try {
+      let mensajesExito = [];
+
+      // Caso 1: Editar personaje existente en historia existente
+      if (id_personaje && id_historia) {
         // Actualizar personaje
         const personajeResponse = await axios.put(
           `http://localhost:5001/rakonti/personajes/${id_personaje}`,
           formData
         );
-        mensajesExito.push("Personaje actualizado con éxito");
+        mensajesExito.push("Personaje actualizado con éxito.");
 
         // Actualizar historia
         const historiaResponse = await axios.put(
           `http://localhost:5001/rakonti/historias/${id_historia}`,
           feature
         );
-        mensajesExito.push("Historia actualizada con éxito");
+        mensajesExito.push("Historia actualizada con éxito.");
 
-        // Actualizar roles
-        const rolesActualesResponse = await axios.get(
+        // Actualizar roles en DB
+        for (const rol of rolesParaAgregar) {
+          await axios.post(`http://localhost:5001/rakonti/personaje-roles`, {
+            id_personaje, id_rol: rol.id_rol
+          });
+        }
+        for (const rol of rolesParaEliminar) {
+          await axios.delete(`http://localhost:5001/rakonti/personaje-roles/${id_personaje}/${rol.id_rol}`);
+        }
+
+        // Refrescar lista final de roles desde DB (para asegurar consistencia)
+        const rolesFinalResponse = await axios.get(
           `http://localhost:5001/rakonti/personaje-roles/${id_personaje}`
         );
-        const rolesActuales = rolesActualesResponse.data.map(r => r.id_rol);
-        // Roles a agregar y eliminar
-        const rolesParaAgregar = data.roles.filter(id => !rolesActuales.includes(id));
-        const rolesParaEliminar = rolesActuales.filter(id => !data.roles.includes(id));
-        
-        // Eliminar roles que el usuario quitó
-        for (const id_rol of rolesParaEliminar) {
-          await axios.delete(
-            `http://localhost:5001/rakonti/personaje-roles/${id_personaje}/${id_rol}`
-          );
-        }
-        
-        //  Agregar roles nuevos
-        for (const id_rol of rolesParaAgregar) {
-          const rolResponse = await axios.post(
-            'http://localhost:5001/rakonti/personaje-roles',
-            { id_personaje, id_rol }
-          );
-          dispatch(setRol({
-            id_personaje,
-            ...rolResponse.data
-          }));
-        }
+        const rolesFinales = rolesFinalResponse.data;
 
         dispatch(setFeature(historiaResponse.data));
         dispatch(setCharacter(personajeResponse.data));
@@ -566,80 +566,44 @@ function RCharacterView() {
           descripcion: data.personalidad_descripcion,
           imagen: data.personalidad_imagen
         }));
-
-        // Mostrar todos los mensajes juntos
-        alert(mensajesExito.join("\n"));
-
-        // Volver atrás
-        window.history.back();
-
-      } catch (error) {
-        console.error(error);
-        alert(`Ocurrió un error al guardar el personaje: ${error.message}`);
-      }
-    }
-    /*if (id_personaje && id_historia) {
-      try {
-        const personajeResponse = await axios.put(`http://localhost:5001/rakonti/personajes/${id_personaje}`, formData);
-        alert('Personaje actualizado con éxito');
-
-        const historiaResponse = await axios.put(`http://localhost:5001/rakonti/historias/${id_historia}`, feature);
-        alert('Título actualizado con éxito');
-        
-        let rolResponse;
-        for (const id_rol of data.roles) {
-          rolResponse = axios.put(`http://localhost:5001/rakonti/personaje-roles/${id_personaje}/${id_rol}`, {
-            id_personaje,
-            id_rol
-          });
-        }
-
-        console.log("rolResponse: "+rolResponse.data)
-
-        dispatch(setFeature(historiaResponse.data));
-        dispatch(setCharacter(personajeResponse.data));
-        dispatch(setPersonality({
-          id_personalidad: formData.id_personalidad,
-          nombre: data.personalidad,
-          descripcion: data.personalidad_descripcion
+        dispatch(setRolesAtIndex({
+          index,
+          roles: rolesFinales
         }));
-        dispatch(setRol(rolResponse.data));
 
+        alert(mensajesExito.join("\n"));
         window.history.back();
-      } catch (error) {
-        alert('Ocurrió un error al guardar el personaje. ' + error);
+
       }
-    } */
-
-    // Caso 2: Crear historia y primer personaje (cuando no existe historia)
-    else if (!id_personaje && !id_historia) {
-      try {
-        let mensajesExito = [];
-
+      // Caso 2: Crear historia y primer personaje (cuando no existe historia)
+      else if (!id_personaje && !id_historia) {
         // Crear historia
         const historiaResponse = await axios.post(
           'http://localhost:5001/rakonti/historias',
           feature
         );
         const nuevaIdHistoria = historiaResponse.data.id_historia;
-        mensajesExito.push("Historia creada con éxito");
+        mensajesExito.push("Historia creada con éxito.");
 
         // Crear personaje vinculado a la historia
         const personajeResponse = await axios.post(
           'http://localhost:5001/rakonti/personajes',
           { ...formData, id_historia: nuevaIdHistoria }
         );
-        mensajesExito.push("Personaje creado con éxito");
+        const nuevoIdPersonaje = personajeResponse.data.id_personaje;
+        mensajesExito.push("Personaje creado con éxito.");
 
-        // Crear roles del personaje
-        const rolesResponses = [];
-        for (const id_rol of data.roles) {
-          const rolResponse = await axios.post(
-            'http://localhost:5001/rakonti/personaje-roles',
-            { id_personaje: personajeResponse.data.id_personaje, id_rol }
-          );
-          rolesResponses.push(rolResponse.data);
+         // Crear roles
+        for (const rol of rolesNuevos) {
+          await axios.post(`http://localhost:5001/rakonti/personaje-roles`, {
+            id_personaje: nuevoIdPersonaje, id_rol: rol.id_rol
+          });
         }
+
+        const rolesFinalResponse = await axios.get(
+          `http://localhost:5001/rakonti/personaje-roles/${nuevoIdPersonaje}`
+        );
+        const rolesFinales = rolesFinalResponse.data;
 
         dispatch(setFeature(historiaResponse.data));
         dispatch(setCharacters(personajeResponse.data));
@@ -649,108 +613,40 @@ function RCharacterView() {
           descripcion: data.personalidad_descripcion,
           imagen: data.personalidad_imagen
         }));
-        if (rolesResponses.length > 0) {
-        dispatch(setRoles(rolesResponses));
-      }
+        dispatch(setRoles([rolesFinales])); 
 
-        // Mostrar mensajes de éxito juntos
         alert(mensajesExito.join("\n"));
-
         setStep(step + 1);
-
-      } catch (error) {
-        if (error.response?.status === 409) {
-          const mensaje = error.response.data?.error || '';
-          if (mensaje.includes('historia')) {
-            alert('Ya existe una historia con ese título. Por favor elige otro.');
-          } else if (mensaje.includes('personaje')) {
-            alert('Ya existe un personaje con ese nombre y apellido. Por favor elige otro.');
-          } else {
-            alert(`Conflicto: ${mensaje}`);
-          }
-        } else {
-          alert(`Error inesperado: ${error.message}`);
-        }
-      }
-    }
-
-      /*if (!id_personaje && !id_historia) {
-      try {
-        // Crear historia
-        const historiaResponse = await axios.post('http://localhost:5001/rakonti/historias', feature);
-        const nuevaIdHistoria = historiaResponse.data.id_historia;
-
-        // Crear personaje con nueva historia
-        const personajeResponse = await axios.post('http://localhost:5001/rakonti/personajes', {
-          ...formData,
-          id_historia: nuevaIdHistoria
-        });
-        
-        let rolResponse;
-        for (const id_rol of data.roles) {
-          rolResponse = axios.post('http://localhost:5001/rakonti/personaje-roles', {
-            id_personaje: personajeResponse.data.id_personaje,
-            id_rol
-          });
-        }
-
-        dispatch(setFeature(historiaResponse.data));
-        dispatch(setCharacters(personajeResponse.data));
-        dispatch(setPersonalities({
-          id_personalidad: formData.id_personalidad,
-          nombre: data.personalidad,
-          descripcion: data.personalidad_descripcion
-        }));
-        dispatch(setRoles(rolResponse.data));
-
-        console.log("personalities: "+personalities)
-
-        setStep(step + 1);
-      } catch (error) {
-        if (error.response?.status === 409) {
-          const mensaje = error.response.data?.error || '';
-          if (mensaje.includes('historia')) {
-            alert('Ya existe una historia con ese título. Por favor elige otro.');
-          } else if (mensaje.includes('personaje')) {
-            alert('Ya existe un personaje con ese nombre y apellido. Por favor elige otro.');
-          } else {
-            alert(mensaje);
-          }
-        } else {
-          alert('Error inesperado: ' + error.message);
-        }
-      }
-    } */
-
-    // Caso 3: Crear nuevo personaje en historia existente
-    else if (!id_personaje && id_historia) {
-      try {
-        let mensajesExito = [];
-
+      }      
+      // Caso 3: Crear nuevo personaje en historia existente
+      else if (!id_personaje && id_historia) {
         // Crear personaje vinculado a la historia
         const personajeResponse = await axios.post(
           'http://localhost:5001/rakonti/personajes',
           { ...formData, id_historia }
         );
-        mensajesExito.push("Personaje creado con éxito");
+        const nuevoIdPersonaje = personajeResponse.data.id_personaje;
+        mensajesExito.push("Personaje creado con éxito.");
 
         // Actualizar historia existente
         const historiaResponse = await axios.put(
           `http://localhost:5001/rakonti/historias/${id_historia}`,
           feature
         );
-        mensajesExito.push("Historia actualizada con éxito");
+        mensajesExito.push("Historia actualizada con éxito.");
 
-        // Asignar roles al personaje
-        const rolesResponses = [];
-        for (const id_rol of data.roles) {
-          const rolResponse = await axios.post(
-            'http://localhost:5001/rakonti/personaje-roles',
-            { id_personaje: personajeResponse.data.id_personaje, id_rol }
-          );
-          rolesResponses.push(rolResponse.data);
+        // Crear roles
+        for (const rol of rolesNuevos) {
+          await axios.post(`http://localhost:5001/rakonti/personaje-roles`, {
+            id_personaje: nuevoIdPersonaje, id_rol: rol.id_rol
+          });
         }
 
+        const rolesFinalResponse = await axios.get(
+          `http://localhost:5001/rakonti/personaje-roles/${nuevoIdPersonaje}`
+        );
+        const rolesFinales = rolesFinalResponse.data;
+        
         dispatch(setFeature(historiaResponse.data));
         dispatch(setCharacters(personajeResponse.data));
         dispatch(setPersonalities({
@@ -759,61 +655,28 @@ function RCharacterView() {
           descripcion: data.personalidad_descripcion,
           imagen: data.personalidad_imagen
         }));
-        if (rolesResponses.length > 0) {
-          dispatch(setRoles(rolesResponses));
-        }
+        dispatch(setRoles([...roles, rolesFinales]));
 
         // Mostrar mensajes juntos
         alert(mensajesExito.join("\n"));
-
         window.history.back();
-
-      } catch (error) {
-        if (error.response?.status === 409) {
+      }
+    } catch (error) {
+      if (error.response?.status === 409) {
+        const mensaje = error.response.data?.error || '';
+        if (mensaje.includes('historia')) {
+          alert('Ya existe una historia con ese título. Por favor elige otro.');
+        } else if (mensaje.includes('personaje')) {
           alert('Ya existe un personaje con ese nombre y apellido. Por favor elige otro.');
         } else {
-          alert(`Error inesperado: ${error.message}`);
+          alert(`Conflicto: ${mensaje}`);
         }
+      } else {
+        alert(`Error inesperado: ${error.message}`);
       }
     }
-
-      /*if (!id_personaje && id_historia) {
-      try {
-        const personajeResponse = await axios.post('http://localhost:5001/rakonti/personajes', {
-          ...formData,
-          id_historia
-        });
-
-        const historiaResponse = await axios.put(`http://localhost:5001/rakonti/historias/${id_historia}`, feature);
-        
-        let rolResponse;
-        for (const id_rol of data.roles) {
-          await axios.post('http://localhost:5001/rakonti/personaje-roles', {
-            id_personaje: personajeResponse.data.id_personaje,
-            id_rol
-          });
-        }
-
-        dispatch(setFeature(historiaResponse.data));
-        dispatch(setCharacters(personajeResponse.data));
-        dispatch(setPersonalities({
-          id_personalidad: formData.id_personalidad,
-          nombre: data.personalidad,
-          descripcion: data.personalidad_descripcion
-        }));
-        dispatch(setRoles(rolResponse.data));
-
-        window.history.back();
-      } catch (error) {
-        if (error.response?.status === 409) {
-          alert('Ya existe un personaje con ese nombre y apellido. Por favor elige otro.');
-        } else {
-          alert('Error inesperado: ' + error.message);
-        }
-      }
-    }*/
   };
-
+  
   const handleCancel = () => {
     const confirmar = window.confirm("¿Estás seguro de que quieres salir? Los cambios se perderán.");
     if (!confirmar) return;

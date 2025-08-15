@@ -75,7 +75,7 @@ function Edit({ stages, currentStage, quillRef, value, handleChange, modules, sh
   );
 }
 
-function Features({ genre, plot, desire, time, handleEditFeature }){
+function Features({ genre, plot, desire, time }){
   return (
     <StepsWrapper>
       <LeftColumn>
@@ -112,9 +112,10 @@ function Features({ genre, plot, desire, time, handleEditFeature }){
   );
 }
 
-function Characters({ characters, personalities, handleEditCharacters }){
+function Characters({ characters, personalities, roles, handleEditCharacters }){
   const [currentCharacter, setCurrentCharacter] = useState(characters[0]);
   const [currentPersonality, setCurrentPersonality] = useState(personalities[0]);
+  const [currentRol, setCurrentRol] = useState(roles[0]);
 
   return (
     <>
@@ -134,6 +135,7 @@ function Characters({ characters, personalities, handleEditCharacters }){
                   onClick={() => {
                     setCurrentCharacter(character);
                     setCurrentPersonality(personalities[index]);
+                    setCurrentRol(roles[index]);
                   }}
                 >
                   {character.nombre + " " + character.apellido}
@@ -151,7 +153,9 @@ function Characters({ characters, personalities, handleEditCharacters }){
 
             <Card>
               <CardTitle>ROL:</CardTitle>
-              <CardDescription>Edad: {currentCharacter.edad}</CardDescription>
+              {currentRol.map((rol) => (
+                <CardDescription>{rol.nombre}</CardDescription>
+              ))}              
             </Card>
           </div>
 
@@ -274,6 +278,7 @@ function RMapView() {
   const time = useSelector(state => state.story.time);
   const characters = useSelector(state => state.story.characters);
   const personalities = useSelector(state => state.story.personalities);
+  const roles = useSelector(state => state.story.roles);
   const currentStage = useSelector(state => state.story.currentStage);
   
   const [stages, setStages] = useState([]);
@@ -512,7 +517,6 @@ function RMapView() {
               plot={plot}
               desire={desire}
               time={time}
-              handleEditFeature={handleEditFeature}
             />
           )}
 
@@ -521,6 +525,7 @@ function RMapView() {
               <Characters
                 characters={characters}
                 personalities={personalities}
+                roles={roles}
                 handleEditCharacters={handleEditCharacters}
               />
             </StepsWrapper>

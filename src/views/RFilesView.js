@@ -64,13 +64,11 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
   };
 
   const handleSeleccionarFila = async (historia) => {
-    const confirmar = window.confirm("¿Estás seguro de cargar esta historia?");
-    if (!confirmar) return;
+    if (!window.confirm("¿Estás seguro de cargar esta historia?")) return;
 
     setFilaSeleccionada(historia.id_historia);
 
     const estructuraCompleta = estructuras[historia.id_historia];
-
     if (!estructuraCompleta) {
       console.warn('Estructura no encontrada para la historia:', historia.id_historia);
       return;
@@ -91,39 +89,40 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
         axios.get(`http://localhost:5001/rakonti/personajes/historia/${historia.id_historia}`)
       ]);
 
-      const personajes = personajesRes.data;
+      const personajes = personajesRes.data || [];
+      if (!Array.isArray(personajes) || personajes.length === 0) {
+        console.warn('No se encontraron personajes para la historia:', historia.id_historia);
+      }
 
-      const [
-        personalidadesRes,
-        rolesRes
-      ] = await Promise.all(
-        personajes.map(personaje =>
-          axios.get(`http://localhost:5001/rakonti/personalidades/${personaje.id_personalidad}`)
-        ),
-        personajes.map(personaje =>
-          axios.get(`http://localhost:5001/rakonti/personaje-roles/${personaje.id_personaje}`)
-        )
-      );
-      
-      const personalidades = personalidadesRes.map(res => res.data);
-      const roles = rolesRes.map(res => res.data);
+      const [personalidadesRes, rolesRes] = await Promise.all([
+        Promise.all(personajes.map(p =>
+          axios.get(`http://localhost:5001/rakonti/personalidades/${p.id_personalidad}`)
+        )),
+        Promise.all(personajes.map(p =>
+          axios.get(`http://localhost:5001/rakonti/personaje-roles/${p.id_personaje}`)
+        ))
+      ]);
+
+      const personalidades = personalidadesRes.map(r => r.data);
+      const roles = rolesRes.map(r => r.data);
 
       dispatch(setNarrative(estructuraCompleta));
       dispatch(setFeature(historia));
       dispatch(setGenre(generosRes.data));
       dispatch(setPlot(tramasRes.data));
       dispatch(setDesire(objetosRes.data));
-      dispatch(setTime(tiempoEspacioRes.data));      
-      dispatch(setCharacters(personajesRes.data));
+      dispatch(setTime(tiempoEspacioRes.data));
+      dispatch(setCharacters(personajes));
       dispatch(setPersonalities(personalidades));
       dispatch(setRoles(roles));
       dispatch(setCurrentStage(historia.paso_actual));
 
       closePopup();
       navigate(`/map/${historia.id_historia}`);
+
     } catch (error) {
-      console.error('Error al obtener personajes de la historia:', error);
-    }  
+      console.error('Error al cargar datos de la historia:', error.response?.data || error.message);
+    }
   };
 
   return (
@@ -244,7 +243,7 @@ function RFilesView({ setNarrative, setFeature, setGenre, setPlot, setDesire, se
       />
     </MenuContainer>
 
-    <div style={{ width:'96%', textAlign: 'center', position: 'absolute', bottom: 0, margin:'20px 0px'}}>
+    <div style={{ width:'96%', textAlign: 'center', bottom: 0, margin:'20px 0px'}}>
       <ButtonPagination
         onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
         disabled={currentPage === 1}
