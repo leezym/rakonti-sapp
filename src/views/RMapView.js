@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import TopMenu from './TopMenu';
 import RFilesView from './RFilesView';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import { useQuill } from 'react-quilljs';
+import 'quill/dist/quill.snow.css';
 import {
   setNarrative, 
   setFeature,
@@ -21,12 +21,41 @@ import {
 } from '../redux-store/reducers/storySlice';
 import downloadWordDocument from './downloadWordDocument';
 
-function Edit({ stages, currentStage, quillRef, value, handleChange, modules, showSteps, stepContents }) {
-  const currentIndex = currentStage - 1;
+function Edit({ stages, currentStage, value, handleChange, showSteps, stepContents }) {
+  const { quill, quillRef } = useQuill({
+    modules: {
+      toolbar: [
+        ["bold", "italic", "underline", "strike"],
+        [{ list: "ordered" }, { list: "bullet" }],
+        ["clean"],
+      ],
+      history: {
+        delay: 500,
+        maxStack: 100,
+        userOnly: true,
+      },
+    },
+    placeholder: "Escribe aquí...",
+    theme: "snow",
+  });
 
   const orderedStepContents = Object.entries(stepContents)
     .sort(([a], [b]) => Number(a) - Number(b))
     .map(([_, value]) => value);
+
+  useEffect(() => {
+    if (quill) {
+      quill.on("text-change", () => {
+        handleChange(quill.root.innerHTML);
+      });
+    }
+  }, [quill, handleChange]);
+
+  useEffect(() => {
+    if (quill && value !== quill.root.innerHTML) {
+      quill.root.innerHTML = value || "";
+    }
+  }, [quill, value]);
 
   return (
     <>
@@ -49,13 +78,16 @@ function Edit({ stages, currentStage, quillRef, value, handleChange, modules, sh
             </>
           ))}
           <Separator opacity={'1'} color={'black'}/>
-          <StyledEditor
-            showSteps={showSteps}
+          <div
             ref={quillRef}
-            value={value}
-            onChange={handleChange}
-            modules={modules}
-            placeholder={'Escribe aquí...'}
+            style={{
+              width: "100%",
+              height: showSteps ? "300px" : "500px",
+              backgroundColor: "white",
+              borderRadius: "10px",
+              padding: "10px",
+            }}
+            
           />
           <Separator  opacity={'1'} color={'black'}/>
 
@@ -294,8 +326,6 @@ function RMapView() {
   const [showTips, setShowTips] = useState(false);
   const [originalFeature, setOriginalFeature] = useState(feature);  
 
-  const quillRef = useRef();
-
   const totalSteps = narrative.hitos_cantidad.reduce((a, b) => a + b, 0);
 
   useEffect(() => {
@@ -468,19 +498,6 @@ function RMapView() {
   const closePopup = () => {
     setShowPopup(false);
   };
-  
-  const modules = useMemo(() => ({
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      ['clean']
-    ],
-    history: {
-      delay: 500,
-      maxStack: 100,
-      userOnly: true
-    }
-  }), []);
 
   return (
     <>
@@ -600,11 +617,9 @@ function RMapView() {
       <Container>
         <Edit 
           stages={stages} 
-          currentStage={currentStage} 
-          quillRef={quillRef} 
-          value={value} 
-          handleChange={handleChange} 
-          modules={modules} 
+          currentStage={currentStage}
+          value={value}
+          handleChange={handleChange}
           showSteps={showSteps} 
           stepContents={stepContents} />
         <ButtonsWrapper>
@@ -863,31 +878,6 @@ const FormContainer = styled.form`
   height: 100%;
   box-sizing: border-box;
   border-radius: 40px;
-`;
-
-const StyledEditor = styled(ReactQuill)`
-  width: 100%;
-
-  .ql-toolbar {
-    border: none !important;
-    display: flex;
-    justify-content: center;
-    border-radius: 0;
-  }
-
-  .ql-container {
-    border: none !important;
-    border-radius: 0;
-    background-color: transparent;
-    color: black;
-  }
-
-  .ql-editor {
-    height: ${({ showSteps }) => showSteps ? '300px' : '500px'};
-    overflow-y: auto;
-    text-align: left;
-    border: none !important;
-  }
 `;
 
 const ButtonsWrapper = styled.div`
