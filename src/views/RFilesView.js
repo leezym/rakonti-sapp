@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import api from "../api/axiosConfig";
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import styled from 'styled-components';
 import downloadWordDocument from './downloadWordDocument';
-import { setRol } from '../redux-store/reducers/storySlice';
 
 function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usuario, setNarrative, setFeature, setGenre, setPlot, setDesire, setTime, setCharacters, setPersonalities, setRoles, setCurrentStage, closePopup }) {
   const [estructuras, setEstructuras] = useState({});
@@ -21,7 +21,7 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
     .slice(startIndex, endIndex);
 
   useEffect(() => {
-    axios.get(`http://localhost:5001/rakonti/historias/${id_usuario}`)
+    api.get(`/historias/${id_usuario}`)
       .then(res => setHistorias(res.data))
       .catch(err => console.error('Error al cargar las historias del usuario:', err));
   }, []);
@@ -31,7 +31,7 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
 
     const fetchEstructuras = async () => {
       const peticiones = historias.map(historia =>
-        axios.get(`http://localhost:5001/rakonti/estructuras-narrativas/${historia.id_estructura}`)
+        api.get(`/estructuras-narrativas/${historia.id_estructura}`)
           .then(res => ({ id_historia: historia.id_historia, estructura: res.data }))
           .catch(() => ({ id_historia: historia.id_historia, estructura: { nombre: 'Desconocida' } }))
       );
@@ -82,11 +82,11 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
         tiempoEspacioRes,
         personajesRes
       ] = await Promise.all([
-        axios.get(`http://localhost:5001/rakonti/generos/${historia.id_genero}`),
-        axios.get(`http://localhost:5001/rakonti/tramas/${historia.id_trama}`),
-        axios.get(`http://localhost:5001/rakonti/objetos-deseo/${historia.id_objeto}`),
-        axios.get(`http://localhost:5001/rakonti/tiempo-espacio/${historia.id_tiempo_espacio}`),
-        axios.get(`http://localhost:5001/rakonti/personajes/historia/${historia.id_historia}`)
+        api.get(`/generos/${historia.id_genero}`),
+        api.get(`/tramas/${historia.id_trama}`),
+        api.get(`/objetos-deseo/${historia.id_objeto}`),
+        api.get(`/tiempo-espacio/${historia.id_tiempo_espacio}`),
+        api.get(`/personajes/historia/${historia.id_historia}`)
       ]);
 
       const personajes = personajesRes.data || [];
@@ -96,10 +96,10 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
 
       const [personalidadesRes, rolesRes] = await Promise.all([
         Promise.all(personajes.map(p =>
-          axios.get(`http://localhost:5001/rakonti/personalidades/${p.id_personalidad}`)
+          api.get(`/personalidades/${p.id_personalidad}`)
         )),
         Promise.all(personajes.map(p =>
-          axios.get(`http://localhost:5001/rakonti/personaje-roles/${p.id_personaje}`)
+          api.get(`/personaje-roles/${p.id_personaje}`)
         ))
       ]);
 
@@ -174,11 +174,11 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
 
                         try {
                           // 1. Obtener pasos de la estructura narrativa
-                          const pasosRes = await axios.get(`http://localhost:5001/rakonti/pasos-estructura-narrativa/estructura/${historia.id_estructura}`);
+                          const pasosRes = await api.get(`/pasos-estructura-narrativa/estructura/${historia.id_estructura}`);
                           const stages = pasosRes.data;
 
                           // 2. Obtener contenidos de la historia
-                          const contenidosRes = await axios.get(`http://localhost:5001/rakonti/pasos-estructura-narrativa-historia/historia/${historia.id_historia}`);
+                          const contenidosRes = await api.get(`/pasos-estructura-narrativa-historia/historia/${historia.id_historia}`);
                           const contenidosArray = contenidosRes.data; 
 
                           // 3. Construir objeto stepContents { id_paso_estructura: contenido, ... }
@@ -211,9 +211,6 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
 }
 
 function RFilesView({ setNarrative, setFeature, setGenre, setPlot, setDesire, setTime, setCharacters, setPersonalities, setRoles, setCurrentStage, closePopup }) {  
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   const [historias, setHistorias] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 

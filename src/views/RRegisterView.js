@@ -1,6 +1,6 @@
+import api from "../api/axiosConfig";
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import styled from 'styled-components';
 
 function StepOne({ formData, handleChange }) {
@@ -158,7 +158,7 @@ function GenreCheckboxes({ formData, setFormData }) {
   const [generos, setGeneros] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5001/rakonti/generos')
+    api.get('/generos')
       .then(res => setGeneros(res.data))
       .catch(err => console.error('Error al cargar los géneros:', err));
   }, []);
@@ -286,13 +286,13 @@ function RRegisterView() {
     }  
   
     try {
-      const response = await axios.post('http://localhost:5001/rakonti/usuarios/registro', formData);
+      const response = await api.post('/usuarios/registro', formData);
       console.log('Usuario creado:', response.data);
       
       const id_usuario = response.data.id_usuario;
 
       for (const id_genero of formData.generos_favoritos) {
-        await axios.post('http://localhost:5001/rakonti/usuario-generos', {
+        await api.post('/usuario-generos', {
           id_usuario,
           id_genero
         });
@@ -316,7 +316,7 @@ function RRegisterView() {
     e.preventDefault();
 
     try {
-      const loginResponse = await axios.post('http://localhost:5001/rakonti/usuarios/login/', {
+      const loginResponse = await api.post('/usuarios/login/', {
         correo: formData.correo,
         contrasena: formData.contrasena
       });

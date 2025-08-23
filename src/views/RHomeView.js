@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import api from "../api/axiosConfig";
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
+import { persistor } from '../redux-store';
 import {
   setNarrative, 
   setFeature,
@@ -22,6 +23,7 @@ function RHomeView() {
   const navigate = useNavigate();
 
   const [showPopup, setShowPopup] = useState(false);
+  const [isNewStory, setIsNewStory] = useState(false);
 
   useEffect(() => {
     dispatch(setNarrative(null));
@@ -40,13 +42,35 @@ function RHomeView() {
     setShowPopup(true);
   };
 
+  const newStory = () => {
+    const id_usuario = localStorage.getItem('id_usuario');
+
+    api.get(`/historias/${id_usuario}`)
+      .then(res => setIsNewStory(res.data.length === 0 ? true : false))
+      .catch(err => console.error('Error al cargar las historias del usuario:', err));
+
+    if(isNewStory)
+      navigate('/narratives', { state: { isNewStory } })
+    else
+      navigate('/narratives')
+  };
+
+  const handleLogout = () => {
+    persistor.purge();
+    localStorage.clear();
+    sessionStorage.clear();
+    dispatch({ type: "LOGOUT" });
+    navigate('/');
+  };
+
   return <>
     <BackgroundImage src='images/rakonti-background.jpg' alt='rakonti-background'/>
 
     <Container>
-        <Button onClick={() => navigate('/narratives')}>Nueva historia</Button>
+        <Button onClick={newStory}>Nueva historia</Button>
         <Button onClick={() => popUp()}>Mis historias</Button>
-        <Button>Configuración</Button>
+        <Button onClick={handleLogout}>Cerrar sesión</Button>
+        
     </Container>
 
     <PopUp

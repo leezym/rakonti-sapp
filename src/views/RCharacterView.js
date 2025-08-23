@@ -1,7 +1,7 @@
+import api from "../api/axiosConfig";
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import styled from 'styled-components';
 import TopMenu from './TopMenu';
 import PopUp from './PopUp';
@@ -132,7 +132,7 @@ function StepTwo({ formData, setFormData, data, setData }) {
   const [personalidades, setPersonalidades] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5001/rakonti/personalidades')
+    api.get('/personalidades')
       .then(res => setPersonalidades(res.data))
       .catch(err => console.error('Error al cargar las personalidades:', err));
   }, []);
@@ -221,7 +221,7 @@ function StepThree({ data, setData }) {
   const [roles, setRoles] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5001/rakonti/roles')
+    api.get('/roles')
       .then(res => setRoles(res.data))
       .catch(err => console.error('Error al cargar los roles:', err));
   }, []);
@@ -529,33 +529,31 @@ function RCharacterView() {
       // Caso 1: Editar personaje existente en historia existente
       if (id_personaje && id_historia) {
         // Actualizar personaje
-        const personajeResponse = await axios.put(
-          `http://localhost:5001/rakonti/personajes/${id_personaje}`,
+        const personajeResponse = await api.put(
+          `/personajes/${id_personaje}`,
           formData
         );
         mensajesExito.push("Personaje actualizado con éxito.");
 
         // Actualizar historia
-        const historiaResponse = await axios.put(
-          `http://localhost:5001/rakonti/historias/${id_historia}`,
+        const historiaResponse = await api.put(
+          `/historias/${id_historia}`,
           feature
         );
         mensajesExito.push("Historia actualizada con éxito.");
 
         // Actualizar roles en DB
         for (const rol of rolesParaAgregar) {
-          await axios.post(`http://localhost:5001/rakonti/personaje-roles`, {
+          await api.post(`/personaje-roles`, {
             id_personaje, id_rol: rol.id_rol
           });
         }
         for (const rol of rolesParaEliminar) {
-          await axios.delete(`http://localhost:5001/rakonti/personaje-roles/${id_personaje}/${rol.id_rol}`);
+          await api.delete(`/personaje-roles/${id_personaje}/${rol.id_rol}`);
         }
 
         // Refrescar lista final de roles desde DB (para asegurar consistencia)
-        const rolesFinalResponse = await axios.get(
-          `http://localhost:5001/rakonti/personaje-roles/${id_personaje}`
-        );
+        const rolesFinalResponse = await api.get(`/personaje-roles/${id_personaje}`);
         const rolesFinales = rolesFinalResponse.data;
 
         dispatch(setFeature(historiaResponse.data));
@@ -578,16 +576,16 @@ function RCharacterView() {
       // Caso 2: Crear historia y primer personaje (cuando no existe historia)
       else if (!id_personaje && !id_historia) {
         // Crear historia
-        const historiaResponse = await axios.post(
-          'http://localhost:5001/rakonti/historias',
+        const historiaResponse = await api.post(
+          '/historias',
           feature
         );
         const nuevaIdHistoria = historiaResponse.data.id_historia;
         mensajesExito.push("Historia creada con éxito.");
 
         // Crear personaje vinculado a la historia
-        const personajeResponse = await axios.post(
-          'http://localhost:5001/rakonti/personajes',
+        const personajeResponse = await api.post(
+          '/personajes',
           { ...formData, id_historia: nuevaIdHistoria }
         );
         const nuevoIdPersonaje = personajeResponse.data.id_personaje;
@@ -595,13 +593,13 @@ function RCharacterView() {
 
          // Crear roles
         for (const rol of rolesNuevos) {
-          await axios.post(`http://localhost:5001/rakonti/personaje-roles`, {
+          await api.post(`/personaje-roles`, {
             id_personaje: nuevoIdPersonaje, id_rol: rol.id_rol
           });
         }
 
-        const rolesFinalResponse = await axios.get(
-          `http://localhost:5001/rakonti/personaje-roles/${nuevoIdPersonaje}`
+        const rolesFinalResponse = await api.get(
+          `/personaje-roles/${nuevoIdPersonaje}`
         );
         const rolesFinales = rolesFinalResponse.data;
 
@@ -621,29 +619,29 @@ function RCharacterView() {
       // Caso 3: Crear nuevo personaje en historia existente
       else if (!id_personaje && id_historia) {
         // Crear personaje vinculado a la historia
-        const personajeResponse = await axios.post(
-          'http://localhost:5001/rakonti/personajes',
+        const personajeResponse = await api.post(
+          '/personajes',
           { ...formData, id_historia }
         );
         const nuevoIdPersonaje = personajeResponse.data.id_personaje;
         mensajesExito.push("Personaje creado con éxito.");
 
         // Actualizar historia existente
-        const historiaResponse = await axios.put(
-          `http://localhost:5001/rakonti/historias/${id_historia}`,
+        const historiaResponse = await api.put(
+          `/historias/${id_historia}`,
           feature
         );
         mensajesExito.push("Historia actualizada con éxito.");
 
         // Crear roles
         for (const rol of rolesNuevos) {
-          await axios.post(`http://localhost:5001/rakonti/personaje-roles`, {
+          await api.post(`/personaje-roles`, {
             id_personaje: nuevoIdPersonaje, id_rol: rol.id_rol
           });
         }
 
-        const rolesFinalResponse = await axios.get(
-          `http://localhost:5001/rakonti/personaje-roles/${nuevoIdPersonaje}`
+        const rolesFinalResponse = await api.get(
+          `/personaje-roles/${nuevoIdPersonaje}`
         );
         const rolesFinales = rolesFinalResponse.data;
         

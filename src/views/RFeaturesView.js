@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import api from "../api/axiosConfig";
+import { useEffect, useState, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import styled from 'styled-components';
 import TopMenu from './TopMenu';
+import Tutorial from "./Tutorial";
 import PopUp from './PopUp';
 import {
   setNarrative, 
@@ -22,7 +23,7 @@ function StepOne({ data, setData, formData, setFormData }) {
   const [generos, setGeneros] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5001/rakonti/generos')
+    api.get('/generos')
       .then(res => setGeneros(res.data))
       .catch(err => console.error('Error al cargar los géneros:', err));
   }, []);
@@ -118,7 +119,7 @@ function StepTwo({ data, setData, formData, setFormData }) {
   const [tramas, setTramas] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5001/rakonti/tramas')
+    api.get('/tramas')
       .then(res => setTramas(res.data))
       .catch(err => console.error('Error al cargar las tramas:', err));
   }, []);
@@ -212,7 +213,7 @@ function StepThree({ data, setData, formData, setFormData }) {
   const [objetos, setObjetos] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5001/rakonti/objetos-deseo')
+    api.get('/objetos-deseo')
       .then(res => setObjetos(res.data))
       .catch(err => console.error('Error al cargar los objetos del deseo:', err));
   }, []);
@@ -305,7 +306,7 @@ function StepFour({ data, setData, formData, setFormData }) {
   const [tiemposEspacios, setTiemposEspacios] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5001/rakonti/tiempo-espacio')
+    api.get('/tiempo-espacio')
       .then(res => setTiemposEspacios(res.data))
       .catch(err => console.error('Error al cargar los tiempos-espacios:', err));
   }, []);
@@ -457,16 +458,18 @@ function StepSix() {
 }
 
 function RFeaturesView() {
-  const { id_historia } = useParams();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
 
-  const { narrative, 
-    feature } = useSelector(state => state.story);
+  const { narrative, feature} = useSelector(state => state.story);
 
   const id_usuario = localStorage.getItem('id_usuario');
   
+  const [showTutorial, setShowTutorial] = useState(location.state?.isNewStory);
+  const [tutorialStep, setTutorialStep] = useState(0);
+  const [rect, setRect] = useState(null);
   const [step, setStep] = useState(1);
   const [showPopup, setShowPopup] = useState(false);
   const [data, setData] = useState({
@@ -496,12 +499,33 @@ function RFeaturesView() {
     paso_actual: 1
   });
 
+  const menu_left = useRef(null);
+  const title = useRef(null);
+  const menu_right = useRef(null);
+
+  const tutorialSteps = [
+    { ref: null, text: "<h2><b>¡Te damos la bienvenida a Rakonti!</b></h2><br/><p>Para comenzar a crear tu primera historia, debes familiarizarte con el espacio de trabajo. Vamos a dar un tour rápido.</p><br/>" },
+    { ref: menu_left, text: "<h2><b>Comandos generales</b></h2><br/><p>En la esquina superior izquierda encuentras las siguientes funcionalidades generales:<ul><li>Volver al inicio</li><li>Guardar</li><li>Mis historias</li></ul><br/><br/>Nota: El botón Guardar solo sale en la vista de edición de la historia.</p><br/>" },
+    { ref: title, text: "<h2><b>Nombre de tu historia</b></h2><br/><p>En la parte superior encuentras el nombre de tu historia. ¡Puedes editarlo en cualquier momento con solo hacer doble click!</p><br/>" },
+    { ref: menu_right, text: "<h2><b>Herramientas disponibles</b></h2><br/><p>En la esquina superior derecha encuentras un grupo de botones muy útiles con los que puedes activar o desactivar las siguientes funcionalidades:<ul><li>Resumen de los 4 pilares</li><li>Resumen de los personajes</li><li>Tips y consejos</li><li>Modo concentración. ¡Úsalo para ocultar todo menos el editor de texto!</li></ul><br/><br/>Nota: El botón Guardar solo sale en la vista de edición de la historia.</p><br/>" },
+    { ref: null, text: "<h2><b>¡Muy bien! Ya conoces tu espacio de trabajo</b></h2><br/><p>Ahora que ya conoces cómo se organiza tu espacio de trabajo, puedes sacar el mayor provecho de todas las funcionalidades y herramientas a tu disposición. Ahora si...</p><br/>" }
+  ];
+  
   useEffect(() => {
-    if (id_historia) {
-      // Estamos editando: obtener los datos de la historia
-      setFormData(feature);
+    if (showTutorial) {
+      const currentStep = tutorialSteps[tutorialStep];
+      if (currentStep.ref?.current) {
+        setRect(currentStep.ref.current.getBoundingClientRect());
+      } else {
+        setRect(null); // paso sin elemento
+      }
     }
-  }, [id_historia, feature]);
+  }, [tutorialStep, showTutorial]);
+
+  useEffect(() => {
+    // Se crea por primera vez
+    dispatch(setFeature(formData));
+  }, []);
 
   const handleNextStep = async (e) => {
 
@@ -548,76 +572,40 @@ function RFeaturesView() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Editar historia
-    if(id_historia)
-    {
-      try {
-        const response = await axios.put(`http://localhost:5001/rakonti/historias/${id_historia}`, formData);
-        alert('Historia actualizada con éxito');
-
-        dispatch(setFeature(formData))
-        dispatch(setGenre({
-          nombre: data.genero,
-          descripcion: data.genero_descripcion,
-          imagen: data.genero_imagen
-        }));
-        dispatch(setPlot({
-          nombre: data.trama,
-          descripcion: data.trama_descripcion,
-          imagen: data.trama_imagen
-        }));
-        dispatch(setDesire({
-          nombre: data.objeto_deseo,
-          descripcion: data.objeto_deseo_descripcion,
-          imagen: data.objeto_deseo_imagen
-        }));
-        dispatch(setTime({
-          nombre: data.tiempo_espacio,
-          descripcion: data.tiempo_espacio_descripcion,
-          imagen: data.tiempo_espacio_imagen
-        }));
-
-        window.history.back();
-      } catch (error) {
-        alert('Ocurrió un error al guardar la historia. '+ error);
-      }
-    }
     // Crear historia temporalmente
-    else{
-      dispatch(setFeature(formData));
-      dispatch(setGenre({
-        nombre: data.genero,
-        descripcion: data.genero_descripcion,
-        imagen: data.genero_imagen
-      }));
-      dispatch(setPlot({
-        nombre: data.trama,
-        descripcion: data.trama_descripcion,
-        imagen: data.trama_imagen
-      }));
-      dispatch(setDesire({
-        nombre: data.objeto_deseo,
-        descripcion: data.objeto_deseo_descripcion,
-        imagen: data.objeto_deseo_imagen
-      }));
-      dispatch(setTime({
-        nombre: data.tiempo_espacio,
-        descripcion: data.tiempo_espacio_descripcion,
-        imagen: data.tiempo_espacio_imagen
-      }));
-
-      setStep(step + 1);
-    }
+    dispatch(setFeature({
+      ...formData,
+      titulo: feature.titulo
+    }));
+    dispatch(setGenre({
+      nombre: data.genero,
+      descripcion: data.genero_descripcion,
+      imagen: data.genero_imagen
+    }));
+    dispatch(setPlot({
+      nombre: data.trama,
+      descripcion: data.trama_descripcion,
+      imagen: data.trama_imagen
+    }));
+    dispatch(setDesire({
+      nombre: data.objeto_deseo,
+      descripcion: data.objeto_deseo_descripcion,
+      imagen: data.objeto_deseo_imagen
+    }));
+    dispatch(setTime({
+      nombre: data.tiempo_espacio,
+      descripcion: data.tiempo_espacio_descripcion,
+      imagen: data.tiempo_espacio_imagen
+    }));
+    
+    setStep(step + 1);
   };
 
   const handleCancel = () => {
     const confirmar = window.confirm("¿Estás seguro de que quieres salir? Los cambios se perderán.");
     if (!confirmar) return;
 
-    if (id_historia)
-      window.history.back();
-    else  
-      navigate('/home');
+    navigate('/home');
   };
 
   const popUp = () => {
@@ -628,8 +616,28 @@ function RFeaturesView() {
     <BackgroundImage src='images/narratives-background.jpg' alt='rakonti-background-2'/>
     
     <Opacity>
-      <TopMenu feature={feature} popUp={popUp}/>
+      <TopMenu 
+        isNewStory={showTutorial} 
+        feature={feature} 
+        popUp={popUp}
+        onStartTutorial={() => {
+          setShowTutorial(true);
+          setTutorialStep(0);
+        }}
+        refsTutorial={{ menu_left, title, menu_right }}
+      />
 
+      {showTutorial && (
+        <Tutorial
+          step={tutorialStep}
+          steps={tutorialSteps}
+          rect={rect}
+          onNext={() => setTutorialStep(tutorialStep + 1)}
+          onPrev={() => setTutorialStep(tutorialStep - 1)}
+          onClose={() => setShowTutorial(false)}
+        />
+      )}
+      
       <StepsWrapper>
         <LeftColumn>
           <RotatedTitle>LOS 4 PILARES</RotatedTitle>
@@ -676,9 +684,8 @@ function RFeaturesView() {
         {step > 1 && step < 6 && <Button onClick={() => setStep(step - 1)}>Anterior</Button>}
         {step < 5 && <Button onClick={handleNextStep}>Siguiente</Button>}
         {step === 5 && <Button onClick={handleSubmit} type="submit">Enviar</Button>}
-        {step === 6 && !id_historia && <Button onClick={() => navigate('/character')}>Crear nuevo personaje</Button>}
+        {step === 6 && <Button onClick={() => navigate('/character')}>Crear nuevo personaje</Button>}
       </ButtonsContainer>
-
     </Container>
 
     <PopUp

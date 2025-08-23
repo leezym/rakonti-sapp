@@ -5,11 +5,19 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storyReducer from './reducers/storySlice';
 import uiReducer from './reducers/uiSlice';
 
-// Combinar reducers
-const rootReducer = combineReducers({
+// Combinar reducers reales
+const appReducer = combineReducers({
   story: storyReducer,
   ui: uiReducer,
 });
+
+// Reducer raíz con reset en LOGOUT
+const rootReducer = (state, action) => {
+  if (action.type === 'LOGOUT') {
+    state = undefined; // esto resetea el state entero
+  }
+  return appReducer(state, action);
+};
 
 // Configuración de persistencia
 const persistConfig = {
@@ -20,9 +28,14 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
+
 // Crear store
 export const store = configureStore({
   reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false, // necesario para redux-persist
+    }),
 });
 
 // Crear persistor

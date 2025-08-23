@@ -1,7 +1,7 @@
+import api from "../api/axiosConfig";
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
 import styled from 'styled-components';
 import {
   setNarrative, 
@@ -20,14 +20,16 @@ import PopUp from './PopUp';
 
 function RNarrativesView() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const location = useLocation();
   
   const [estructuras, setEstructuras] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
-  
-  const dispatch = useDispatch();
+
+  const isNewStory = location.state?.isNewStory;
 
   useEffect(() => {
-    axios.get('http://localhost:5001/rakonti/estructuras-narrativas')
+    api.get('/estructuras-narrativas')
       .then(res => setEstructuras(res.data))
       .catch(err => console.error('Error al cargar las estructuras narrativas:', err));
   }, []);
@@ -36,7 +38,10 @@ function RNarrativesView() {
     // Crear narrativa temporalmente
     dispatch(setNarrative(estructura));
 
-    navigate('/features');
+    if(isNewStory)
+      navigate('/features', { state: { isNewStory } })
+    else
+      navigate('/features');
   }
   
   const popUp = () => {

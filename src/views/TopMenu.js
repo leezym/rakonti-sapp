@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { setFeature } from '../redux-store/reducers/storySlice';
 import styled from 'styled-components';
 
-function TopMenu({ feature, handleSave, handleFeature, handleCharacters, handleTips, handleToggleSteps, hasUnsavedChanges, popUp, showSteps }) {
+function TopMenu({ refsTutorial, isNewStory, feature, handleSave, handleFeature, handleCharacters, handleTips, handleToggleSteps, hasUnsavedChanges, popUp, showSteps }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
@@ -46,21 +46,13 @@ function TopMenu({ feature, handleSave, handleFeature, handleCharacters, handleT
     navigate(`/${label}`);
   };
 
-  //cerrar sesion
-  /*import { persistor } from './redux-store';
-    const handleLogout = () => {
-      persistor.purge(); // Borra el storage persistido
-      // Aquí también puedes hacer dispatch para limpiar manualmente si quieres
-    };
-*/
-
   return (
     <MenuContainer>
-      <MenuSection>
+      <MenuSection ref={refsTutorial?.menu_left}>
         <IconButton onClick={() => handleClick('home')}>
           <IconImage src="images/home-icon.png" alt="Home" />
         </IconButton>
-        {isMapRoute && (
+        {isMapRoute || isNewStory && (
           <IconButton onClick={handleSave}>
             <IconImage src="images/save-icon.png" alt="Guardar" />
           </IconButton>
@@ -70,8 +62,8 @@ function TopMenu({ feature, handleSave, handleFeature, handleCharacters, handleT
         </IconButton>
       </MenuSection>
 
-      {feature?.titulo !== undefined && (
-        <TitleWrapper>
+      {feature && (
+        <TitleWrapper ref={refsTutorial?.title}>
           {isEditing ? (
             <TitleInput
               ref={inputRef}
@@ -84,16 +76,16 @@ function TopMenu({ feature, handleSave, handleFeature, handleCharacters, handleT
           ) : (
             <TitleText
               onDoubleClick={handleDoubleClick}
-              isPlaceholder={feature.titulo?.trim() === ''}
+              isPlaceholder={!feature.titulo || feature.titulo.trim() === ''}
             >
-              {feature.titulo?.trim() !== '' ? feature.titulo : 'Haz doble clic para editar'}
+              {feature.titulo?.trim() || 'Haz doble clic para editar'}
             </TitleText>
           )}
         </TitleWrapper>
       )}
 
-      <MenuSection>
-        {isMapRoute && (
+      <MenuSection ref={refsTutorial?.menu_right}>
+        {isMapRoute || isNewStory && (
         <>
           <IconButton onClick={handleFeature} disabled={showSteps}>
             <IconImage src="images/structure-icon.png" alt="Pilares" />

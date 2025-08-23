@@ -1,4 +1,5 @@
-import { useEffect, useState, useMemo, useRef  } from 'react';
+import api from "../api/axiosConfig";
+import { useEffect, useState  } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -85,6 +86,7 @@ function Edit({ stages, currentStage, value, handleChange, showSteps, stepConten
               height: showSteps ? "300px" : "500px",
               backgroundColor: "white",
               borderRadius: "10px",
+              border: 'none',
               padding: "10px",
             }}
             
@@ -334,7 +336,7 @@ function RMapView() {
   
   useEffect(() => {
     if (feature?.id_estructura) {
-      axios.get(`http://localhost:5001/rakonti/pasos-estructura-narrativa/estructura/${feature.id_estructura}`)
+      api.get(`/pasos-estructura-narrativa/estructura/${feature.id_estructura}`)
       .then(res => {
         const pasosOrdenados = res.data.sort((a, b) => a.numero_paso - b.numero_paso);
         setStages(pasosOrdenados);
@@ -418,7 +420,7 @@ function RMapView() {
     
     try {
       const saveRequests = Object.entries(editedSteps).map(([id_paso_estructura, contenido]) =>
-        axios.post('http://localhost:5001/rakonti/pasos-estructura-narrativa-historia', {
+        api.post('/pasos-estructura-narrativa-historia', {
           id_historia,
           id_paso_estructura: Number(id_paso_estructura),
           contenido
@@ -427,7 +429,7 @@ function RMapView() {
       
       await Promise.all(saveRequests);
       
-      await axios.put(`http://localhost:5001/rakonti/historias/${id_historia}`, {
+      await api.put(`/historias/${id_historia}`, {
         titulo: feature.titulo,
         paso_actual: currentStage,
         fecha_edicion: new Date()

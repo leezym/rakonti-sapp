@@ -1,18 +1,7 @@
-/**
- * @author Elizabeth Moncada
- * @version 1.0.1
- */
-
+import api from "../api/axiosConfig";
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { 
-  setBackIcon, 
-  setMenuIcon, 
-  setFigurePos, 
-  setEditingMode  
-} from '../redux-store/reducers/uiSlice';
 import { 
   setNarrative, 
   setFeature,
@@ -63,7 +52,7 @@ function RLoginView() {
     }
 
     try {      
-      const response = await axios.post('http://localhost:5001/rakonti/usuarios/login', loginData);
+      const response = await api.post('/usuarios/login', loginData);
       const { token, id_usuario } = response.data;
       
       localStorage.setItem('token', token);
