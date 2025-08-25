@@ -3,7 +3,6 @@ import { useEffect, useState  } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import TopMenu from './TopMenu';
 import RFilesView from './RFilesView';
 import { useQuill } from 'react-quilljs';
@@ -720,14 +719,6 @@ const RotatedTitle = styled.div`
   white-space: normal;
   word-break: break-word;
 `;
-  
-const Subtitle = styled.div`
-  font-size: 16px;
-  font-weight: 800;
-  color: #43474f;
-  align-self: flex-start;
-  margin-bottom: 10px;
-  `;
   
 const StepsWrapper = styled.div`
   display: flex;
