@@ -1,8 +1,3 @@
-/**
- * @author Martín Vladimir Alonso Sierra Galvis 
- * @version 1.0.0
- */
-
 /** Función encargada de tranformar un audio blob a un string base64 */
 export const audioBlobToBase64 = (audioBlob, callback) => {
   const reader = new FileReader();

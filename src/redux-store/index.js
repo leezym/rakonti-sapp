@@ -3,12 +3,10 @@ import storage from 'redux-persist/lib/storage'; // usa localStorage por defecto
 import { persistStore, persistReducer } from 'redux-persist';
 
 import storyReducer from './reducers/storySlice';
-import uiReducer from './reducers/uiSlice';
 
 // Combinar reducers reales
 const appReducer = combineReducers({
-  story: storyReducer,
-  ui: uiReducer,
+  story: storyReducer
 });
 
 // Reducer raíz con reset en LOGOUT
@@ -27,7 +25,6 @@ const persistConfig = {
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
-
 
 // Crear store
 export const store = configureStore({

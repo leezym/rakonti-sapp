@@ -52,7 +52,7 @@ function TopMenu({ refsTutorial, isNewStory, feature, handleSave, handleFeature,
         <IconButton onClick={() => handleClick('home')}>
           <IconImage src="images/home-icon.png" alt="Home" />
         </IconButton>
-        {isMapRoute || isNewStory && (
+        {(isMapRoute || isNewStory) && (
           <IconButton onClick={handleSave}>
             <IconImage src="images/save-icon.png" alt="Guardar" />
           </IconButton>
@@ -85,7 +85,7 @@ function TopMenu({ refsTutorial, isNewStory, feature, handleSave, handleFeature,
       )}
 
       <MenuSection ref={refsTutorial?.menu_right}>
-        {isMapRoute || isNewStory && (
+        {(isMapRoute || isNewStory) && (
         <>
           <IconButton onClick={handleFeature} disabled={showSteps}>
             <IconImage src="images/structure-icon.png" alt="Pilares" />
