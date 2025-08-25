@@ -3,15 +3,15 @@ name: Build Electron App
 on:
   push:
     branches:
-      - main   # o la rama donde trabajes
-  workflow_dispatch: # permite correrlo manualmente
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, macos-latest] # Genera instaladores en Win y Mac
+        os: [windows-latest, macos-latest]
 
     steps:
       - name: Checkout repo
@@ -22,14 +22,23 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install dependencies (Windows)
+        if: matrix.os == 'windows-latest'
+        run: npm install --legacy-peer-deps
+        shell: pwsh
+
+      - name: Install dependencies (Mac)
+        if: matrix.os == 'macos-latest'
+        run: npm install
+        shell: bash
 
       - name: Build app
         run: npm run build
+        shell: bash
 
       - name: Package Electron app
         run: npx electron-builder --${{ matrix.os == 'windows-latest' && 'win' || 'mac' }} --publish never
+        shell: bash
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
