@@ -241,8 +241,7 @@ function Tips({ feature, stages, currentStage }) {
   useEffect(() => {
     if (!stages[currentStage - 1]) return;
 
-    axios
-      .get(`http://localhost:5001/rakonti/tips-consejos/${feature.id_estructura}/${stages[currentStage - 1]?.id_paso_estructura}`)
+    api.get(`/tips-consejos/${feature.id_estructura}/${stages[currentStage - 1]?.id_paso_estructura}`)
       .then(res => {
         setTips(res.data);
         setCurrentTipIndex(0);
@@ -344,8 +343,7 @@ function RMapView() {
       .catch(err => console.error('Error al cargar los pasos de la estructura:', err));
     }
     
-    axios
-      .get(`http://localhost:5001/rakonti/pasos-estructura-narrativa-historia/historia/${id_historia}`)
+    api.get(`/pasos-estructura-narrativa-historia/historia/${id_historia}`)
       .then((res) => {
         const contents = {};
         res.data.forEach((paso) => {

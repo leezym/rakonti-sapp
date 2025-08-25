@@ -5,7 +5,7 @@
   "license": "MIT",
   "description": "Rakonti: Sistema Interactivo Para Crear Narrativas",
   "private": true,
-  "main": "public/electron.js",
+  "main": "electron/main.js",
   "homepage": "./",
   "engines": {
     "node": "20.x"
@@ -40,18 +40,25 @@
     "eject": "react-scripts eject",
     "electron:dev": "concurrently -k \"cross-env BROWSER=none npm start\" \"npm run electron:start\"",
     "electron:start": "wait-on tcp:3000 && electron .",
-    "electron:build": "npm run build && electron-builder -c.extraMetadata.main=build/electron.js"
+    "electron:build": "npm run build && electron-builder"
   },
   "build": {
-    "appId": "com.rakonti-sapp",
+    "appId": "com.rakonti.sapp",
+    "productName": "Rakonti",
     "files": [
-      "dist/**/*",
       "build/**/*",
+      "electron/**/*",
       "node_modules/**/*",
       "package.json"
     ],
     "directories": {
       "buildResources": "assets"
+    },
+    "mac": {
+      "target": ["dmg"]
+    },
+    "win": {
+      "target": ["nsis"]
     }
   },
   "eslintConfig": {
