@@ -40,7 +40,8 @@
     "eject": "react-scripts eject",
     "electron:dev": "concurrently -k \"cross-env BROWSER=none npm start\" \"npm run electron:start\"",
     "electron:start": "wait-on tcp:3000 && electron .",
-    "electron:build": "npm run build && electron-builder"
+    "electron:build": "npm run build && electron-builder",
+    "electron:package": "electron-builder"
   },
   "build": {
     "appId": "com.rakonti.sapp",
