@@ -35,6 +35,8 @@ jobs:
       - name: Build app
         run: npm run build
         shell: bash
+        env:
+          CI: false
 
       - name: Package Electron app
         run: npx electron-builder --${{ matrix.os == 'windows-latest' && 'win' || 'mac' }} --publish never
