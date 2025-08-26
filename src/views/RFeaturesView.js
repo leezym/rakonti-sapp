@@ -1,10 +1,9 @@
 import api from "../api/axiosConfig";
-import { useEffect, useState, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import TopMenu from './TopMenu';
-import Tutorial from "./Tutorial";
 import PopUp from './PopUp';
 import {
   setNarrative, 
@@ -101,7 +100,7 @@ function StepOne({ data, setData, formData, setFormData }) {
 
         <DetailContainer>
           <Row>
-          <DetailImage small_width="40%">
+          <DetailImage>
             <Image src={data.genero_imagen}></Image>
           </DetailImage>
           <DetailDescription>
@@ -195,7 +194,7 @@ function StepTwo({ data, setData, formData, setFormData }) {
 
         <DetailContainer>
           <Row>
-          <DetailImage small_width="40%">
+          <DetailImage>
             <Image src={data.trama_imagen}></Image>
           </DetailImage>
           <DetailDescription>
@@ -288,7 +287,7 @@ function StepThree({ data, setData, formData, setFormData }) {
 
         <DetailContainer>
           <Row>
-          <DetailImage small_width="15%">
+          <DetailImage>
             <Image src={data.objeto_deseo_imagen}></Image>
           </DetailImage>
           <DetailDescription>
@@ -382,7 +381,7 @@ function StepFour({ data, setData, formData, setFormData }) {
 
         <DetailContainer>
           <Row>
-          <DetailImage small_width="40%">
+          <DetailImage>
             <Image src={data.tiempo_espacio_imagen}/>
           </DetailImage>
           <DetailDescription>
@@ -461,15 +460,11 @@ function RFeaturesView() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const location = useLocation();
 
   const { narrative, feature} = useSelector(state => state.story);
 
   const id_usuario = localStorage.getItem('id_usuario');
   
-  const [showTutorial, setShowTutorial] = useState(location.state?.isNewStory);
-  const [tutorialStep, setTutorialStep] = useState(0);
-  const [rect, setRect] = useState(null);
   const [step, setStep] = useState(1);
   const [showPopup, setShowPopup] = useState(false);
   const [data, setData] = useState({
@@ -497,30 +492,7 @@ function RFeaturesView() {
     fecha_creacion: '',
     fecha_edicion: '',
     paso_actual: 1
-  });
-
-  const menu_left = useRef(null);
-  const title = useRef(null);
-  const menu_right = useRef(null);
-
-  const tutorialSteps = [
-    { ref: null, text: "<h2><b>¡Te damos la bienvenida a Rakonti!</b></h2><br/><p>Para comenzar a crear tu primera historia, debes familiarizarte con el espacio de trabajo. Vamos a dar un tour rápido.</p><br/>" },
-    { ref: menu_left, text: "<h2><b>Comandos generales</b></h2><br/><p>En la esquina superior izquierda encuentras las siguientes funcionalidades generales:<ul><li>Volver al inicio</li><li>Guardar</li><li>Mis historias</li></ul><br/><br/>Nota: El botón Guardar solo sale en la vista de edición de la historia.</p><br/>" },
-    { ref: title, text: "<h2><b>Nombre de tu historia</b></h2><br/><p>En la parte superior encuentras el nombre de tu historia. ¡Puedes editarlo en cualquier momento con solo hacer doble click!</p><br/>" },
-    { ref: menu_right, text: "<h2><b>Herramientas disponibles</b></h2><br/><p>En la esquina superior derecha encuentras un grupo de botones muy útiles con los que puedes activar o desactivar las siguientes funcionalidades:<ul><li>Resumen de los 4 pilares</li><li>Resumen de los personajes</li><li>Tips y consejos</li><li>Modo concentración. ¡Úsalo para ocultar todo menos el editor de texto!</li></ul><br/><br/>Nota: El botón Guardar solo sale en la vista de edición de la historia.</p><br/>" },
-    { ref: null, text: "<h2><b>¡Muy bien! Ya conoces tu espacio de trabajo</b></h2><br/><p>Ahora que ya conoces cómo se organiza tu espacio de trabajo, puedes sacar el mayor provecho de todas las funcionalidades y herramientas a tu disposición. Ahora si...</p><br/>" }
-  ];
-  
-  useEffect(() => {
-    if (showTutorial) {
-      const currentStep = tutorialSteps[tutorialStep];
-      if (currentStep.ref?.current) {
-        setRect(currentStep.ref.current.getBoundingClientRect());
-      } else {
-        setRect(null); // paso sin elemento
-      }
-    }
-  }, [tutorialStep, showTutorial]);
+  });  
 
   useEffect(() => {
     // Se crea por primera vez
@@ -617,27 +589,10 @@ function RFeaturesView() {
     
     <Opacity>
       <TopMenu 
-        isNewStory={showTutorial} 
         feature={feature} 
-        popUp={popUp}
-        onStartTutorial={() => {
-          setShowTutorial(true);
-          setTutorialStep(0);
-        }}
-        refsTutorial={{ menu_left, title, menu_right }}
+        popUp={popUp}        
       />
 
-      {showTutorial && (
-        <Tutorial
-          step={tutorialStep}
-          steps={tutorialSteps}
-          rect={rect}
-          onNext={() => setTutorialStep(tutorialStep + 1)}
-          onPrev={() => setTutorialStep(tutorialStep - 1)}
-          onClose={() => setShowTutorial(false)}
-        />
-      )}
-      
       <StepsWrapper>
         <LeftColumn>
           <RotatedTitle>LOS 4 PILARES</RotatedTitle>
@@ -735,14 +690,6 @@ const Row = styled.div`
   gap: 40px;
   width: 100%;
   margin:15px;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 0px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 `;
 
 const Title = styled.h1`
@@ -869,12 +816,6 @@ const Step = styled.div`
   word-wrap: break-word;
   word-break: break-word;
   white-space: normal;
-
-  @media (max-width: 1024px) {
-    padding: 20px 60px 20px 60px;
-    width: 50%;
-    text-align: center;
-  }
 `;
 
 const FormContainer = styled.form`
@@ -888,13 +829,7 @@ const FormContainer = styled.form`
   background-position: center;
   width: ${({ width }) => width || '80%'};
   box-sizing: border-box;
-  border-radius: 45px;  
-
-  @media (max-width: 768px) {
-    width: 90%;
-    padding: 35px;
-    border-radius: 60px;
-  }
+  border-radius: 45px;
 `;
 
 const DetailContainer = styled.form`
@@ -922,11 +857,6 @@ const DetailImage = styled.div`
   justify-content: center;
   align-items: center;
   margin: 50px 0px 35px 0px;
-  
-  @media (max-width: 768px) {
-  margin: 50px 0px 10px 0px;
-  max-width: ${({ small_width }) => small_width};    
-  }
 `;
     
 const DetailDescription = styled.div`
@@ -937,11 +867,6 @@ const DetailDescription = styled.div`
   flex-direction: column;
   justify-content: center;
   margin: 50px 0px 35px 0px;
-
-  @media (max-width: 768px) {
-    margin: 10px 30px 40px 0px;
-    max-width: 80%;
-  }
 `;
 
 const Select = styled.select`
@@ -1006,14 +931,6 @@ const CardRow = styled.div`
   width: 90%;
   margin: 0 auto;
   grid-auto-rows: 1fr; /*Esto fuerza igual altura en TODAS las filas */
-
-  @media (max-width: 1024px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
 `;
 
 const CardColumn = styled.div`

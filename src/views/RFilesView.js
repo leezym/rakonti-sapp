@@ -9,6 +9,7 @@ import downloadWordDocument from './downloadWordDocument';
 function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usuario, setNarrative, setFeature, setGenre, setPlot, setDesire, setTime, setCharacters, setPersonalities, setRoles, setCurrentStage, closePopup }) {
   const [estructuras, setEstructuras] = useState({});
   const [filaSeleccionada, setFilaSeleccionada] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
     .slice(startIndex, endIndex);
 
   useEffect(() => {
+    setLoading(true);
     api.get(`/historias/${id_usuario}`)
       .then(res => setHistorias(res.data))
       .catch(err => console.error('Error al cargar las historias del usuario:', err));
@@ -30,20 +32,27 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
     if (historias.length === 0) return;
 
     const fetchEstructuras = async () => {
-      const peticiones = historias.map(historia =>
-        api.get(`/estructuras-narrativas/${historia.id_estructura}`)
-          .then(res => ({ id_historia: historia.id_historia, estructura: res.data }))
-          .catch(() => ({ id_historia: historia.id_historia, estructura: { nombre: 'Desconocida' } }))
-      );
+      setLoading(true);
+      try {
+        const peticiones = historias.map(historia =>
+          api.get(`/estructuras-narrativas/${historia.id_estructura}`)
+            .then(res => ({ id_historia: historia.id_historia, estructura: res.data }))
+            .catch(() => ({ id_historia: historia.id_historia, estructura: { nombre: 'Desconocida' } }))
+        );
 
-      const resultados = await axios.all(peticiones);
-      const mapEstructuras = {};
+        const resultados = await axios.all(peticiones);
+        const mapEstructuras = {};
 
-      resultados.forEach(({ id_historia, estructura }) => {
-        mapEstructuras[id_historia] = estructura;
-      });
+        resultados.forEach(({ id_historia, estructura }) => {
+          mapEstructuras[id_historia] = estructura;
+        });
 
-      setEstructuras(mapEstructuras);
+        setEstructuras(mapEstructuras);
+      } catch (err) {
+        console.error("Error cargando estructuras:", err);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchEstructuras();
@@ -129,83 +138,90 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
     <>
       <Subtitle>Da clic en la historia que quieras cargar:</Subtitle>
       <br/>
-      <div style={{ marginTop: '5px', marginBottom: '20px', overflowX: 'auto', width: '100%' }}>
-        <table style={{
-          width: '100%',
-          height: '100%',
-          borderCollapse: 'collapse',
-          borderSpacing: 0
-        }}>
-          <thead>
-            <tr>
-              <th style={{ padding: '8px', width: '25%', textAlign: 'center' }}>Nombre</th>
-              <th style={{ padding: '8px', width: '25%', textAlign: 'center' }}>Última Edición</th>
-              <th style={{ padding: '8px', width: '25%', textAlign: 'center' }}>Estructura</th>
-              <th style={{ padding: '8px', width: '25%', textAlign: 'center' }}>Exportar</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colSpan={4} style={{
-                height: '20px',
-                backgroundImage: 'url("/images/table-line.png")',
-                backgroundRepeat: 'repeat-x',
-                backgroundPosition: 'bottom',
-                backgroundSize: '100% 100%',
-                padding: 0,
-                margin: 0,
-                border: 'none'
-              }} />
-            </tr>
-            {historiasPaginadas.map(historia => {
-              return (
-                <TableRow
-                  key={historia.id_historia}
-                  selected={filaSeleccionada === historia.id_historia}
-                  onClick={() => handleSeleccionarFila(historia)}
-                >
-                  <TableCell selected={filaSeleccionada === historia.id_historia}>{historia.titulo}</TableCell>
-                  <TableCell selected={filaSeleccionada === historia.id_historia}>{formatearFecha(historia.fecha_edicion)}</TableCell>
-                  <TableCell selected={filaSeleccionada === historia.id_historia}>{estructuras[historia.id_historia]?.nombre || 'Desconocida'}</TableCell>
-                  <TableCell selected={filaSeleccionada === historia.id_historia}>
-                    <button
-                      onClick={async e => {
-                        e.stopPropagation();
 
-                        try {
-                          // 1. Obtener pasos de la estructura narrativa
-                          const pasosRes = await api.get(`/pasos-estructura-narrativa/estructura/${historia.id_estructura}`);
-                          const stages = pasosRes.data;
+      {loading && historiasPaginadas.length !== 0 ? (
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <p>Cargando tus historias...</p>
+        </div>
+      ) : (
+        <div style={{ marginTop: '5px', marginBottom: '20px', overflowX: 'auto', width: '100%' }}>
+          <table style={{
+            width: '100%',
+            height: '100%',
+            borderCollapse: 'collapse',
+            borderSpacing: 0
+          }}>
+            <thead>
+              <tr>
+                <th style={{ padding: '8px', width: '25%', textAlign: 'center' }}>Nombre</th>
+                <th style={{ padding: '8px', width: '25%', textAlign: 'center' }}>Última Edición</th>
+                <th style={{ padding: '8px', width: '25%', textAlign: 'center' }}>Estructura</th>
+                <th style={{ padding: '8px', width: '25%', textAlign: 'center' }}>Exportar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colSpan={4} style={{
+                  height: '20px',
+                  backgroundImage: 'url("images/table-line.png")',
+                  backgroundRepeat: 'repeat-x',
+                  backgroundPosition: 'bottom',
+                  backgroundSize: '100% 100%',
+                  padding: 0,
+                  margin: 0,
+                  border: 'none'
+                }} />
+              </tr>
+              {historiasPaginadas.map(historia => {
+                return (
+                  <TableRow
+                    key={historia.id_historia}
+                    selected={filaSeleccionada === historia.id_historia}
+                    onClick={() => handleSeleccionarFila(historia)}
+                  >
+                    <TableCell selected={filaSeleccionada === historia.id_historia}>{historia.titulo}</TableCell>
+                    <TableCell selected={filaSeleccionada === historia.id_historia}>{formatearFecha(historia.fecha_edicion)}</TableCell>
+                    <TableCell selected={filaSeleccionada === historia.id_historia}>{estructuras[historia.id_historia]?.nombre || 'Desconocida'}</TableCell>
+                    <TableCell selected={filaSeleccionada === historia.id_historia}>
+                      <button
+                        onClick={async e => {
+                          e.stopPropagation();
 
-                          // 2. Obtener contenidos de la historia
-                          const contenidosRes = await api.get(`/pasos-estructura-narrativa-historia/historia/${historia.id_historia}`);
-                          const contenidosArray = contenidosRes.data; 
+                          try {
+                            // 1. Obtener pasos de la estructura narrativa
+                            const pasosRes = await api.get(`/pasos-estructura-narrativa/estructura/${historia.id_estructura}`);
+                            const stages = pasosRes.data;
 
-                          // 3. Construir objeto stepContents { id_paso_estructura: contenido, ... }
-                          const stepContents = {};
-                          contenidosArray.forEach(item => {
-                            stepContents[item.id_paso_estructura] = item.contenido;
-                          });
+                            // 2. Obtener contenidos de la historia
+                            const contenidosRes = await api.get(`/pasos-estructura-narrativa-historia/historia/${historia.id_historia}`);
+                            const contenidosArray = contenidosRes.data; 
 
-                          // 4. Llamar la función para descargar Word
-                          downloadWordDocument(historia.titulo, stages, stepContents);
+                            // 3. Construir objeto stepContents { id_paso_estructura: contenido, ... }
+                            const stepContents = {};
+                            contenidosArray.forEach(item => {
+                              stepContents[item.id_paso_estructura] = item.contenido;
+                            });
 
-                        } catch (error) {
-                          console.error("Error al descargar documento Word:", error);
-                          alert("Error al descargar el documento Word.");
-                        }
-                      }}
-                      style={{ cursor: "pointer", padding: "6px 12px", fontSize: "12px" }}
-                    >
-                      Descargar
-                    </button>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+                            // 4. Llamar la función para descargar Word
+                            downloadWordDocument(historia.titulo, stages, stepContents);
+
+                          } catch (error) {
+                            console.error("Error al descargar documento Word:", error);
+                            alert("Error al descargar el documento Word.");
+                          }
+                        }}
+                        style={{ cursor: "pointer", padding: "6px 12px", fontSize: "12px" }}
+                      >
+                        Descargar
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>          
+      )}      
     </>
   );
 }
@@ -275,12 +291,6 @@ const MenuContainer = styled.div`
   width: 100%;
   box-sizing: border-box;
   border-radius: 45px;
-
-  @media (max-width: 768px) {
-    width: 100%;
-    padding: 35px;
-    border-radius: 80px;
-  }
 `;
 
 const TableRow = styled.tr`

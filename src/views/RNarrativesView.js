@@ -1,6 +1,6 @@
 import api from "../api/axiosConfig";
 import { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import {
@@ -21,12 +21,9 @@ import PopUp from './PopUp';
 function RNarrativesView() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const location = useLocation();
   
   const [estructuras, setEstructuras] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
-
-  const isNewStory = location.state?.isNewStory;
 
   useEffect(() => {
     api.get('/estructuras-narrativas')
@@ -38,10 +35,7 @@ function RNarrativesView() {
     // Crear narrativa temporalmente
     dispatch(setNarrative(estructura));
 
-    if(isNewStory)
-      navigate('/features', { state: { isNewStory } })
-    else
-      navigate('/features');
+    navigate('/features');
   }
   
   const popUp = () => {
@@ -165,14 +159,6 @@ const CardRow = styled.div`
   width: 70%;
   margin: 0 auto;
   grid-auto-rows: 1fr; /*Esto fuerza igual altura en TODAS las filas */
-
-  @media (max-width: 1024px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
 `;
 
 const CardColumn = styled.div`

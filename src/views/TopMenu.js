@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { setFeature } from '../redux-store/reducers/storySlice';
 import styled from 'styled-components';
 
-function TopMenu({ refsTutorial, isNewStory, feature, handleSave, handleFeature, handleCharacters, handleTips, handleToggleSteps, hasUnsavedChanges, popUp, showSteps }) {
+function TopMenu({ refsTutorial, showTutorial, feature, handleSave, handleFeature, handleCharacters, handleTips, handleToggleSteps, hasUnsavedChanges, popUp, showSteps }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
@@ -49,16 +49,16 @@ function TopMenu({ refsTutorial, isNewStory, feature, handleSave, handleFeature,
   return (
     <MenuContainer>
       <MenuSection ref={refsTutorial?.menu_left}>
-        <IconButton onClick={() => handleClick('home')}>
-          <IconImage src="images/home-icon.png" alt="Home" />
+        <IconButton onClick={() => handleClick('home')} disabled={showTutorial}>
+          <IconImage src="images/home-icon.png" alt="Home"/>
         </IconButton>
-        {(isMapRoute || isNewStory) && (
-          <IconButton onClick={handleSave}>
-            <IconImage src="images/save-icon.png" alt="Guardar" />
+        {isMapRoute && (
+          <IconButton onClick={handleSave} disabled={showTutorial}>
+            <IconImage src="images/save-icon.png" alt="Guardar"/>
           </IconButton>
         )}
-        <IconButton onClick={() => popUp()}>
-          <IconImage src="images/folder-icon.png" alt="Cargar" />
+        <IconButton onClick={() => popUp()} disabled={showTutorial}>
+          <IconImage src="images/folder-icon.png" alt="Cargar"/>
         </IconButton>
       </MenuSection>
 
@@ -85,18 +85,18 @@ function TopMenu({ refsTutorial, isNewStory, feature, handleSave, handleFeature,
       )}
 
       <MenuSection ref={refsTutorial?.menu_right}>
-        {(isMapRoute || isNewStory) && (
+        {isMapRoute && (
         <>
-          <IconButton onClick={handleFeature} disabled={showSteps}>
+          <IconButton onClick={handleFeature} disabled={showSteps || showTutorial}>
             <IconImage src="images/structure-icon.png" alt="Pilares" />
           </IconButton>
-          <IconButton onClick={handleCharacters} disabled={showSteps}>
+          <IconButton onClick={handleCharacters} disabled={showSteps || showTutorial}>
             <IconImage src="images/characters-icon.png" alt="Personajes" />
           </IconButton>
-          <IconButton onClick={handleTips} disabled={showSteps}>
+          <IconButton onClick={handleTips} disabled={showSteps || showTutorial}>
             <IconImage src="images/tips-icon.png" alt="Tips" />
           </IconButton>
-          <IconButton onClick={handleToggleSteps}>
+          <IconButton onClick={handleToggleSteps} disabled={showTutorial}>
             <IconImage src="images/view-icon.png" alt="Escritura" />
           </IconButton>
         </>
@@ -120,23 +120,12 @@ const MenuContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    padding: 20px 10px 10px 10px;
-  }
 `;
 
 const MenuSection = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-
-  @media (max-width: 768px) {
-    margin-bottom: 10px;
-    width: 100%;
-    justify-content: center;
-  }
 `;
     
 const IconButton = styled.button`
@@ -173,12 +162,6 @@ const TitleWrapper = styled.div`
   transform: translateX(-50%);
   text-align: center;
   max-width: 50%;
-
-  @media (max-width: 768px) {
-    position: relative;
-    left: 0%;
-    transform: translateX(0%);
-  }
 `;
 
 const TitleText = styled.h1`

@@ -390,21 +390,12 @@ const Row = styled.div`
   gap: 40px;
   width: 100%;
   margin:15px;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 20px;
-  }
 `;
 
 const Column = styled.div`
   flex: 1;
   max-width: 45%;
   box-sizing: border-box;
-
-  @media (max-width: 768px) {
-    max-width: 100%;
-  }
 `;
 
 const Container = styled.div`
@@ -434,11 +425,6 @@ const StepsContainer = styled.div`
   margin-bottom: 30px;
   flex-direction: row;
   width: 60%;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: center;
-  }
 `;
 
 const Step = styled.div`
@@ -478,10 +464,6 @@ const Step = styled.div`
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
-
-  @media (max-width: 768px) {
-    width: 100%;
-  }
 `;
 
 const Subtitle = styled.div`
@@ -503,12 +485,6 @@ const FormContainer = styled.form`
   width: 60%;
   box-sizing: border-box;
   border-radius: 45px;
-  
-  @media (max-width: 768px) {
-    width: 90%;
-    padding: 35px;
-    border-radius: 60px;
-  }
 `;
 
 const Label = styled.label`

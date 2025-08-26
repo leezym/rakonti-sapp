@@ -1,7 +1,7 @@
 import api from "../api/axiosConfig";
-import { useEffect, useState  } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import TopMenu from './TopMenu';
 import RFilesView from './RFilesView';
@@ -20,6 +20,7 @@ import {
   setCurrentStage
 } from '../redux-store/reducers/storySlice';
 import downloadWordDocument from './downloadWordDocument';
+import Tutorial from "./Tutorial";
 
 function Edit({ stages, currentStage, value, handleChange, showSteps, stepContents }) {
   const { quill, quillRef } = useQuill({
@@ -274,9 +275,9 @@ function Tips({ feature, stages, currentStage }) {
             </TipButtonContainer>
 
             <TipContent>
-              <CardTitle style={{fontSize:'15px'}}>{stages[currentStage - 1]?.nombre_paso.toUpperCase()}</CardTitle>
+              <CardTitle style={{fontSize:'18px'}}>TIP: {stages[currentStage - 1]?.nombre_paso.toUpperCase()}</CardTitle>
               <br />
-              <CardDescription style={{textAlign:'center', fontSize:'13px'}}>
+              <CardDescription style={{textAlign:'center', fontSize:'16px'}}>
                 {currentTip ? currentTip.descripcion : 'No hay tips disponibles.'}
               </CardDescription>
               <br />
@@ -301,6 +302,7 @@ function RMapView() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const narrative = useSelector(state => state.story.narrative);
   const feature = useSelector(state => state.story.feature);
@@ -325,8 +327,36 @@ function RMapView() {
   const [showCharacters, setShowCharacters] = useState(false);
   const [showTips, setShowTips] = useState(false);
   const [originalFeature, setOriginalFeature] = useState(feature);  
+  const [tutorialStep, setTutorialStep] = useState(0);
+  const [showTutorial, setShowTutorial] = useState(location.state?.isNewStory);
+  const [rect, setRect] = useState(null);
+  
+  const menu_left = useRef(null);
+  const title = useRef(null);
+  const menu_right = useRef(null);
+  const writing = useRef(null);
 
   const totalSteps = narrative.hitos_cantidad.reduce((a, b) => a + b, 0);
+
+  const tutorialSteps = [
+    { ref: null, text: "<h2><b>¡Te damos la bienvenida a Rakonti!</b></h2><br/><p>Para comenzar a crear tu primera historia, debes familiarizarte con el espacio de trabajo. Vamos a dar un tour rápido.</p><br/>" },
+    { ref: menu_left, text: "<h2><b>Comandos generales</b></h2><br/><p>En la esquina superior izquierda encuentras las siguientes funcionalidades generales:<ul><li>Volver al inicio</li><li>Guardar</li><li>Mis historias</li></ul><br/>" },
+    { ref: title, text: "<h2><b>Nombre de tu historia</b></h2><br/><p>En la parte superior encuentras el nombre de tu historia. ¡Puedes editarlo en cualquier momento con solo hacer doble click!</p><br/>" },
+    { ref: menu_right, text: "<h2><b>Herramientas disponibles</b></h2><br/><p>En la esquina superior derecha encuentras un grupo de botones muy útiles con los que puedes activar o desactivar las siguientes funcionalidades:<ul><li>Resumen de los 4 pilares</li><li>Resumen de los personajes</li><li>Tips y consejos</li><li>Modo concentración. ¡Úsalo para ocultar todo menos el editor de texto!</li></ul><br/>" },
+    { ref: writing, text: "<h2><b>Zona de escritura</b></h2><br/><p>En esta sección encuentras la zona para escribir en cada paso tu historia. Podrás avanzar en ella con el botón <b>Siguiente paso<b/>.<br/>" },
+    { ref: null, text: "<h2><b>¡Muy bien! Ya conoces tu espacio de trabajo</b></h2><br/><p>Ahora que ya conoces cómo se organiza tu espacio de trabajo, puedes sacar el mayor provecho de todas las funcionalidades y herramientas a tu disposición. Ahora si...</p><br/>" }
+  ];
+
+  useEffect(() => {
+    if (showTutorial) {
+      const currentStep = tutorialSteps[tutorialStep];
+      if (currentStep.ref?.current) {
+        setRect(currentStep.ref.current.getBoundingClientRect());
+      } else {
+        setRect(null); // paso sin elemento
+      }
+    }
+  }, [tutorialStep, showTutorial]);
 
   useEffect(() => {
     setOriginalFeature(feature);
@@ -440,15 +470,6 @@ function RMapView() {
     }
   };
 
-  const handleEditFeature = () => {
-    if (hasUnsavedChanges) {
-      const confirm = window.confirm("Tienes cambios sin guardar. ¿Estás seguro de continuar?");
-      if (!confirm) return;
-    }
-
-    navigate(`/features/${feature.id_historia}`);
-  }
-
   const handleEditCharacters = () => {
     if (hasUnsavedChanges) {
       const confirm = window.confirm("Tienes cambios sin guardar. ¿Estás seguro de continuar?");
@@ -502,6 +523,7 @@ function RMapView() {
     <>
       <BackgroundImage src='images/modes-background.jpg' alt='narratives-background' />
       <TopMenu 
+        showTutorial={showTutorial}
         feature={feature}
         handleSave={handleSave} 
         handleFeature={() => {
@@ -523,7 +545,23 @@ function RMapView() {
         hasUnsavedChanges={hasUnsavedChanges}
         popUp={popUp}
         showSteps={!showSteps}
+        onStartTutorial={() => {
+          setShowTutorial(true);
+          setTutorialStep(0);
+        }}
+        refsTutorial={{ menu_left, title, menu_right }}
       />
+
+      {showTutorial && (
+        <Tutorial
+          step={tutorialStep}
+          steps={tutorialSteps}
+          rect={rect}
+          onNext={() => setTutorialStep(tutorialStep + 1)}
+          onPrev={() => setTutorialStep(tutorialStep - 1)}
+          onClose={() => setShowTutorial(false)}
+        />
+      )}
 
       {showSteps && (
         <>
@@ -613,7 +651,7 @@ function RMapView() {
         </>
       )}
 
-      <Container>
+      <Container ref={writing}>
         <Edit 
           stages={stages} 
           currentStage={currentStage}
@@ -723,14 +761,18 @@ const RotatedTitle = styled.div`
 const StepsWrapper = styled.div`
   display: flex;
   width: 100%;
-  height: 35vh;
+  height: auto;
 `;
+
   
 const MapWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
+  flex: 0 1 auto;            /* 👈 evita que se estire a lo ancho de todo */
+  max-width: 150px;          /* 👈 tamaño máximo por paso */
+  min-width: 80px; 
 `;
   
 const LeftColumn = styled.div`
@@ -750,8 +792,8 @@ const RightColumn = styled.div`
 const StepsContainer = styled.div`
   display: flex;
   width: 95%;
-  height: 100%;
-  gap:5px;
+  gap: 5px;
+  align-items: stretch;
 `;
 
 const CenteredButtonContainer = styled.div`
@@ -766,6 +808,7 @@ const CenteredButtonContainer = styled.div`
 const MapsContainer = styled.div`
   display: flex;
   width: 95%;
+  justify-content: center; //
 `;
 
 const Step = styled.div`
@@ -793,16 +836,11 @@ const Step = styled.div`
   word-wrap: break-word;
   word-break: break-word;
   white-space: normal;
-
-  @media (max-width: 1024px) {
-    padding: 20px 60px 20px 60px;
-    width: 100%;
-  }
 `;
 
 const StepLabel = styled.div`
   margin-top: 5px;
-  font-size: 8px;
+  font-size: 10px;
   color: white;
   text-align: center;
   max-width: 70px;
@@ -812,7 +850,8 @@ const StepLabel = styled.div`
 const Map = styled.div`
   position: relative;
   width: 100%;
-  height: 100px;
+  aspect-ratio: 1 / 1;
+  //height: 100px;
   background-image: ${({ narrative, active, step }) => {
     if (active) {
       return `url('${narrative.imagen.substring(0, narrative.imagen.lastIndexOf("."))}-map-step-${step}.png')`;
@@ -946,7 +985,7 @@ const PopupContent = styled.div`
 `;
 
 const FinalPopupContent = styled(PopupContent)`
-  background-image: url('/images/pop-up-final.png');
+  background-image: url('images/pop-up-final.png');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -1018,7 +1057,7 @@ const TipContent = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0px 20px;
+  padding: 30px;
   text-align: center;
 `;
 

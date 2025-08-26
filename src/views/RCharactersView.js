@@ -1,3 +1,4 @@
+import api from "../api/axiosConfig";
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,14 +29,25 @@ function RCharactersView() {
   const characters = useSelector(state => state.story.characters) || [];
   const personalities = useSelector(state => state.story.personalities) || [];
 
+
   const onClicked = (character, index) => {
     navigate(`/character/${character.id_personaje}`, { state: { index, id_historia } });
   }
 
   const handleFinish = () => {
     dispatch(setCurrentStage(1));
-
-    navigate(`/map/${id_historia}`)
+    const id_usuario = localStorage.getItem('id_usuario');
+    
+    api.get(`/historias/${id_usuario}`)
+      .then(res => {
+        const isNewStory = res.data.length === 1; // la primera historia que acaba de crear
+        
+        if(isNewStory)
+          navigate(`/map/${id_historia}`, { state: { isNewStory } })
+        else
+          navigate(`/map/${id_historia}`)
+      })
+      .catch(err => console.error('Error al cargar las historias del usuario:', err));    
   }
 
   const popUp = () => {
@@ -78,7 +90,7 @@ function RCharactersView() {
               <Card>
                 <Title style={{fontSize:'18px'}}>{character.nombre + " " + character.apellido}</Title>
                 <Subtitle>{personalities[index].nombre}</Subtitle>
-                <CardImage src={`/${personalities[index].imagen.replace('square', 'avatar')}`} />
+                <CardImage src={`${personalities[index].imagen.replace('square', 'avatar')}`} />
                 <Button 
                   onClick={() => onClicked(character, index)}
                   style={{ marginTop: 'auto', display: 'flex', justifyContent: 'center' }}
@@ -186,14 +198,6 @@ const CardRow = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   justify-content: center;
-
-  @media (max-width: 1024px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
 `;
 
 const CardColumn = styled.div`
@@ -216,10 +220,6 @@ const Card = styled.form`
   height: 100%;
   box-sizing: border-box;
   margin-bottom: 10px;
-
-  @media (max-width: 768px) {
-    padding: 35px;
-  }
 `;
 
 const CardImage = styled.img`
