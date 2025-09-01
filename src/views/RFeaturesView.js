@@ -44,9 +44,7 @@ function StepOne({ data, setData, formData, setFormData }) {
   return (
     <>
       <FormContainer>
-        <p style={{ color: '#43474f' }}>El <b>Género</b> es la categoría narrativa que define el estilo, tono y tipo de conflicto en la historia. A continuación, encontrarás las opciones de género para tu elección:
-        </p>
-        <p style={{ color: '#43474f' }}><b>Elige el género que deseas usar para tu historia</b></p>
+        <p>El <b>Género</b> es la categoría narrativa que define el estilo, tono y tipo de conflicto en la historia. A continuación, encontrarás las opciones de género para tu elección:</p>
 
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Select
@@ -105,7 +103,7 @@ function StepOne({ data, setData, formData, setFormData }) {
           </DetailImage>
           <DetailDescription>
             <Subtitle>{data.genero}</Subtitle>
-            <div dangerouslySetInnerHTML={{ __html: data.genero_descripcion }} />
+            <p dangerouslySetInnerHTML={{ __html: data.genero_descripcion }} />
           </DetailDescription>
           </Row>
         </DetailContainer>
@@ -140,7 +138,7 @@ function StepTwo({ data, setData, formData, setFormData }) {
   return (
     <>
       <FormContainer>
-        <p style={{ color: '#43474f' }}>La <b>Trama</b> es la categoría narrativa que organiza los eventos principales de la historia en torno a un conflicto central. A continuación, encontrarás las opciones de trama para tu elección:</p>
+        <p>La <b>Trama</b> es la categoría narrativa que organiza los eventos principales de la historia en torno a un conflicto central. A continuación, encontrarás las opciones de trama para tu elección:</p>
 
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Select
@@ -199,7 +197,7 @@ function StepTwo({ data, setData, formData, setFormData }) {
           </DetailImage>
           <DetailDescription>
             <Subtitle>{data.trama}</Subtitle>
-            <div dangerouslySetInnerHTML={{ __html: data.trama_descripcion }} />
+            <p dangerouslySetInnerHTML={{ __html: data.trama_descripcion }} />
           </DetailDescription>
           </Row>
         </DetailContainer>
@@ -234,7 +232,7 @@ function StepThree({ data, setData, formData, setFormData }) {
   return (
     <>
       <FormContainer>
-        <p style={{ color: '#43474f' }}>El <b>Objeto del deseo</b> es la categoría narrativa que identifica aquello que motiva al protagonista y moviliza la acción. A continuación, encontrarás las opciones de objeto de deseo para tu elección:</p>
+        <p>El <b>Objeto del deseo</b> es la categoría narrativa que identifica aquello que motiva al protagonista y moviliza la acción. A continuación, encontrarás las opciones de objeto de deseo para tu elección:</p>
 
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Select
@@ -292,7 +290,7 @@ function StepThree({ data, setData, formData, setFormData }) {
           </DetailImage>
           <DetailDescription>
             <Subtitle>{data.objeto_deseo}</Subtitle>
-            <div dangerouslySetInnerHTML={{ __html: data.objeto_deseo_descripcion }} />
+            <p dangerouslySetInnerHTML={{ __html: data.objeto_deseo_descripcion }} />
           </DetailDescription>
           </Row>
         </DetailContainer>
@@ -327,7 +325,7 @@ function StepFour({ data, setData, formData, setFormData }) {
   return (
     <>
       <FormContainer>
-        <p style={{ color: '#43474f' }}>El <b>Tiempo y Espacio</b> es la categoría narrativa que sitúa la historia en un contexto temporal y geográfico específico, dándole atmósfera y verosimilitud. A continuación, encontrarás las opciones de tiempo y espacio para tu elección:</p>
+        <p>El <b>Tiempo y Espacio</b> es la categoría narrativa que sitúa la historia en un contexto temporal y geográfico específico, dándole atmósfera y verosimilitud. A continuación, encontrarás las opciones de tiempo y espacio para tu elección:</p>
 
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Select
@@ -386,7 +384,7 @@ function StepFour({ data, setData, formData, setFormData }) {
           </DetailImage>
           <DetailDescription>
             <Subtitle>{data.tiempo_espacio}</Subtitle>
-            <div dangerouslySetInnerHTML={{ __html: data.tiempo_espacio_descripcion }} />
+            <p dangerouslySetInnerHTML={{ __html: data.tiempo_espacio_descripcion }} />
           </DetailDescription>
           </Row>
         </DetailContainer>
@@ -402,40 +400,40 @@ function StepFive({ data }) {
       <CardRow>
         <CardColumn>
           <Card>
-            <Title>Género:<br/>{data.genero}</Title>
+            <Title style={{fontSize:'12px'}}>Género:<br/>{data.genero}</Title>
             <CardImage  src={data.genero_imagen}/>
             <CardDescription>
-              <div dangerouslySetInnerHTML={{ __html: data.genero_descripcion }} />
+              <p style={{color:'white', fontSize:'12px'}} dangerouslySetInnerHTML={{ __html: data.genero_descripcion }} />
             </CardDescription>
           </Card>
         </CardColumn>
 
         <CardColumn>
           <Card>
-            <Title>Trama:<br/>{data.trama}</Title>
+            <Title style={{fontSize:'12px'}}>Trama:<br/>{data.trama}</Title>
             <CardImage  src={data.trama_imagen}/>
             <CardDescription>
-              <div dangerouslySetInnerHTML={{ __html: data.trama_descripcion }} />
+              <p style={{color:'white', fontSize:'12px'}} dangerouslySetInnerHTML={{ __html: data.trama_descripcion }} />
             </CardDescription>
           </Card>
         </CardColumn>
 
         <CardColumn>
           <Card>
-            <Title>Objeto del deseo:<br/>{data.objeto_deseo}</Title>
+            <Title style={{fontSize:'12px'}}>Objeto del deseo:<br/>{data.objeto_deseo}</Title>
             <CardImage  src={data.objeto_deseo_imagen}/>
             <CardDescription>
-              <div dangerouslySetInnerHTML={{ __html: data.objeto_deseo_descripcion }} />
+              <p style={{color:'white', fontSize:'12px'}} dangerouslySetInnerHTML={{ __html: data.objeto_deseo_descripcion }} />
             </CardDescription>
           </Card>
         </CardColumn>
 
         <CardColumn>
           <Card>
-            <Title>Tiempo y Espacio:<br/>{data.tiempo_espacio}</Title>
+            <Title style={{fontSize:'12px'}}>Tiempo y Espacio:<br/>{data.tiempo_espacio}</Title>
             <CardImage  src={data.tiempo_espacio_imagen}/>
             <CardDescription>
-              <div dangerouslySetInnerHTML={{ __html: data.tiempo_espacio_descripcion }} />
+              <div style={{color:'white', fontSize:'12px'}} dangerouslySetInnerHTML={{ __html: data.tiempo_espacio_descripcion }} />
             </CardDescription>
           </Card>
         </CardColumn>
@@ -447,9 +445,10 @@ function StepFive({ data }) {
 function StepSix() {
   return (
     <>
-      <FormContainer width="50%" style={{padding: '0px 0px 0px 0px'}}>
+      <br/>
+      <FormContainer width="50%">
         <Title color='#43474f'><h1>¡Felicitaciones!</h1></Title>
-        <p style={{color:'#43474f'}}>Has desbloqueado el generador de personajes</p>
+        <p>Has desbloqueado el generador de personajes</p>
       </FormContainer>
       <Image style={{width:'20%', marginTop:'15px'}} src={'images/character-statue.png'}/>
     </>
@@ -585,7 +584,7 @@ function RFeaturesView() {
   };
 
   return <>
-    <BackgroundImage src='images/narratives-background.jpg' alt='rakonti-background-2'/>
+    <BackgroundImage src='images/narratives-background.jpg'/>
     
     <Opacity>
       <TopMenu 
@@ -595,31 +594,29 @@ function RFeaturesView() {
 
       <StepsWrapper>
         <LeftColumn>
-          <RotatedTitle>LOS 4 PILARES</RotatedTitle>
+          <RotatedTitle>LOS 4<br/>PILARES</RotatedTitle>
         </LeftColumn>
+        
         <RightColumn>
-
           <StepsContainer>
             <Step active={step === 1} step={1} padding="20px 10px 20px 10px">
               <b>Género</b>
-              <br />{data.genero === '' ? "Ninguno" : data.genero}
+              {data.genero === '' ? "Ninguno" : data.genero}
             </Step>
             <Step active={step === 2} step={2} padding="20px 40px 20px 40px">
               <b>Trama</b>
-              <br />{data.trama === '' ? "Ninguna" : data.trama}
+              {data.trama === '' ? "Ninguna" : data.trama}
             </Step>
-            <Step active={step === 3} step={3} padding="20px 40px 20px 40px">
+            <Step active={step === 3} step={3} padding="20px 40px 20px 50px">
               <b>Objeto del deseo</b>
-              <br />{data.objeto_deseo === '' ? "Ninguno" : data.objeto_deseo}
+              {data.objeto_deseo === '' ? "Ninguno" : data.objeto_deseo}
             </Step>
-            <Step active={step === 4} step={4} padding="20px 40px 20px 40px">
+            <Step active={step === 4} step={4} padding="20px 40px 20px 75px">
               <b>Tiempo y espacio</b>
-              <br />{data.tiempo_espacio ? data.tiempo_espacio.split(':')[1]?.trim() : "Ninguno"}          
+              {data.tiempo_espacio ? data.tiempo_espacio.split(':')[1]?.trim() : "Ninguno"}          
             </Step>
             <Step active={step === 5} step={5} padding="20px 10px 20px 10px">
-              <br/>
               <b>Resumen</b>
-              <br/>
             </Step>
           </StepsContainer>
         </RightColumn>
@@ -635,11 +632,11 @@ function RFeaturesView() {
       {step === 6 && <StepSix/>}
 
       <ButtonsContainer>
-        {step >= 1 && step <= 5 && <Button onClick={handleCancel}>Cancelar</Button>}
-        {step > 1 && step < 6 && <Button onClick={() => setStep(step - 1)}>Anterior</Button>}
-        {step < 5 && <Button onClick={handleNextStep}>Siguiente</Button>}
-        {step === 5 && <Button onClick={handleSubmit} type="submit">Enviar</Button>}
-        {step === 6 && <Button onClick={() => navigate('/character')}>Crear nuevo personaje</Button>}
+        {step >= 1 && step <= 5 && <ButtonSecondary onClick={handleCancel}>Cancelar</ButtonSecondary>}
+        {step > 1 && step < 6 && <ButtonSecondary onClick={() => setStep(step - 1)}>Anterior</ButtonSecondary>}
+        {step < 5 && <ButtonPrimary onClick={handleNextStep}>Siguiente</ButtonPrimary>}
+        {step === 5 && <ButtonPrimary onClick={handleSubmit} type="submit">Enviar</ButtonPrimary>}
+        {step === 6 && <ButtonPrimary onClick={() => navigate('/character')}>Crear nuevo personaje</ButtonPrimary>}
       </ButtonsContainer>
     </Container>
 
@@ -664,21 +661,19 @@ const BackgroundImage = styled.img`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-repeat: repeat-y;
-  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
   z-index: -1;
 `;
 
 const Container = styled.div`
-  margin-top:10px;
   align-items: center;
   display: flex;
   justify-content: flex-start;
   position: relative;
   width: 100%;
-  height: 100%; 
+  height: 100%;
   box-sizing: border-box;
   flex-direction: column;
 `;
@@ -687,14 +682,15 @@ const Row = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
   gap: 40px;
   width: 100%;
-  margin:15px;
+  margin: 15px;
 `;
 
 const Title = styled.h1`
   font-size:15px;
-  font-weight: 800;
+  font-weight: 600;
   color:  ${props => (props.color == null ? 'white' : props.color)};
   text-align: center;
   display: flex;
@@ -704,6 +700,7 @@ const Title = styled.h1`
 `;
 
 const RotatedTitle = styled.div`
+  font-weight: 900;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -711,7 +708,7 @@ const RotatedTitle = styled.div`
   transform-origin: center center;
   text-align: center;
   color: white;
-  font-size: 20px;
+  font-size: 18px;
   word-break: break-word;
   white-space: normal;
   max-width: 100%;
@@ -725,12 +722,12 @@ const Subtitle = styled.div`
 `;
 
 const Paragraph = styled.div`
-  font-size: 16px;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 600;
   color: #43474f;
   align-self: center;
-  margin: 20px;
-  padding: 20px;
+  margin: 10px;
+  padding: 15px;
   background-image: url('images/top-bar.png');
   background-color: transparent;
   background-size: 100% 100%;
@@ -749,7 +746,6 @@ const Label = styled.label`
 
 const Opacity = styled.div`
   width: 100%;
-  height: 20%;
   background-image: url('images/opacity.png');
   background-size: fill;
   background-repeat: no-repeat;
@@ -758,8 +754,11 @@ const Opacity = styled.div`
 
 const StepsWrapper = styled.div`
   display: flex;
-  width: 100%;
   align-items: stretch;
+  width: 98%;
+  margin: 0 auto;
+  height: auto; 
+  min-height: 90px;  
 `;
 
 const LeftColumn = styled.div`
@@ -767,7 +766,6 @@ const LeftColumn = styled.div`
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-  height: 170px;
 `;
 
 const RightColumn = styled.div`
@@ -779,7 +777,6 @@ const RightColumn = styled.div`
 
 const StepsContainer = styled.div`
   display: flex;
-  width: 98%;
 `;
 
 const Step = styled.div`
@@ -819,7 +816,7 @@ const Step = styled.div`
 `;
 
 const FormContainer = styled.form`
-  padding: 20px 40px 30px 40px;
+  padding: 40px 40px 30px 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -835,7 +832,7 @@ const FormContainer = styled.form`
 const DetailContainer = styled.form`
   flex-direction: column;
   align-items: center;
-  background-image: url('images/square-of-lines.png');
+  background-image: url('images/rectangle-of-lines.png');
   background-color: transparent;
   background-size: 100% 100%;
   background-repeat: no-repeat;
@@ -850,34 +847,31 @@ const Image = styled.img`
 `;
 
 const DetailImage = styled.div`
-  flex: 1;
-  max-width: 20%;
+  height: 150px;
+  width: auto;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 50px 0px 35px 0px;
+  margin: 20px 0px 20px 50px;
 `;
     
 const DetailDescription = styled.div`
   flex: 1;
-  max-width: 60%;
   text-align: left;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 50px 0px 35px 0px;
+  margin: 40px 100px 20px 0px;
 `;
 
 const Select = styled.select`
   padding: 10px;
-  font-size: 16px;
+  font-size: 14px;
   border-radius: 8px;
   border: 1px solid #ccc;
   background-color: #f9f9f9;
   color: #333;
   width: 250px;
-  margin-top: 10px;
   cursor: pointer;
 `;
 
@@ -899,17 +893,16 @@ const RandomButton = styled.button`
   border: none;
   cursor: pointer;
   margin-left: 10px;
-  margin-top: 10px;
 `;
 
 const ButtonsContainer = styled.div`
-  padding: 20px 0px 20px 0px;
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   gap: 20px;
 `;
 
-const Button = styled.button`
+const ButtonPrimary = styled.button`
   padding: 10px 30px;
   font-size: 15px;
   border: none;
@@ -918,9 +911,25 @@ const Button = styled.button`
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  
+
   &:hover {
-    background-color: #5c5f66;
+    background-color: gray;
+  }
+`;
+
+const ButtonSecondary = styled.button`
+  padding: 10px 30px;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  background-color: white;
+  color: #43474f;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #43474f;
+    color: white;
   }
 `;
 
@@ -963,8 +972,8 @@ const CardDescription = styled.div`
 `;
 
 const CardImage = styled.img`
-  width: 100px;
-  height: 100px;
+  height: 60px;
+  width: auto;
   object-fit: contain;
   margin: 10px 0;
 `;

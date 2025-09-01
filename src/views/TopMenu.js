@@ -65,7 +65,7 @@ function TopMenu({ refsTutorial, showTutorial, feature, handleSave, handleFeatur
       {feature && (
         <TitleWrapper ref={refsTutorial?.title}>
           {isEditing ? (
-            <TitleInput
+            <Input
               ref={inputRef}
               value={feature.titulo}
               onChange={handleChange}
@@ -119,7 +119,7 @@ const MenuContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  padding: 8px 20px;
 `;
 
 const MenuSection = styled.div`
@@ -134,8 +134,8 @@ const IconButton = styled.button`
   cursor: pointer;
   padding: 0;
   margin: 0;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -165,14 +165,14 @@ const TitleWrapper = styled.div`
 `;
 
 const TitleText = styled.h1`
-  font-size: 28px;
+  font-size: 25px;
   font-weight: bold;
   color: ${({ isPlaceholder }) => (isPlaceholder ? 'white' : '#43474f')};
   margin: 10px 0;
   cursor: pointer;
 `;
   
-const TitleInput = styled.input`
+const Input = styled.input`
   font-size: 28px;
   font-weight: bold;
   color: #43474f;

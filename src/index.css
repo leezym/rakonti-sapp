@@ -1,12 +1,78 @@
-html, body {
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+/* Reset global */
+* {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 
-    'Montserrat', sans-serif;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  padding: 0;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;  
+  line-height: 1.5; 
+  background-color: transparent; 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Tipografía para títulos */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  margin: 0 0 0.5em 0;
+  line-height: 1.2;
+  color: #43474f;
+}
+
+h1 { font-size: 2.25rem; } /* ~36px */
+h2 { font-size: 1.75rem; } /* ~28px */
+h3 { font-size: 1.5rem; }  /* ~24px */
+h4 { font-size: 1.25rem; } /* ~20px */
+h5 { font-size: 1.1rem; }  /* ~18px */
+h6 { font-size: 1rem; }    /* ~16px */
+
+/* Párrafos */
+p {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  margin: 0 0 1em 0;
+  color:#43474f;
+  font-size: 14px;
+
+  ul {
+    padding-left: 18px;
+    margin: 0 0 1em 0;
+    list-style-type: disc;
+  }
+
+  li {
+    margin-bottom: 0.5em;
+    list-style-position: outside;
+  }
+}
+
+/* Código */
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* Botones */
+button {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  background: #2c3e50;
+  color: #fff;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background: #1a242f;
 }

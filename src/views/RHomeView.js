@@ -56,9 +56,11 @@ function RHomeView() {
   };
 
   return <>
-    <BackgroundImage src='images/rakonti-background.jpg' alt='rakonti-background'/>
-
+    <BackgroundImage src='images/rakonti-background.png'/>
+    
     <Container>
+        <Logo src="images/logo.png" alt="Logo" />
+
         <Button onClick={newStory}>Nueva historia</Button>
         <Button onClick={() => popUp()}>Mis historias</Button>
         <Button onClick={handleLogout}>Cerrar sesión</Button>
@@ -92,16 +94,19 @@ const BackgroundImage = styled.img`
   z-index: -1;
 `;
 
+const Logo = styled.img`
+  width: 40%;
+  height: auto;
+`;
+
 const Container = styled.div`
-  position: absolute;
-  top: 60%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 30px;
-  width: 100%;
+  align-items: center;      
+  justify-content: flex-start; 
+  min-height: 100vh;
+  padding-top: 80px;
+  box-sizing: border-box;
 `;
 
 const Button = styled.button`
@@ -119,6 +124,7 @@ const Button = styled.button`
   color: #43474f;
   cursor: pointer;
   transition: all 0.3s ease;
+  margin: 20px;
 
   &:hover {
     color: gray;

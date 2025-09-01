@@ -6,6 +6,7 @@ import styled from 'styled-components';
 function StepOne({ formData, handleChange }) {
   return (
     <>
+      <br/>
       <FormContainer>
         <Subtitle>Sobre ti</Subtitle>
 
@@ -54,7 +55,7 @@ function StepOne({ formData, handleChange }) {
           </Column>
         </Row>
       </FormContainer>
-
+      <br/>
       <FormContainer>
         <Subtitle>Seguridad de tu cuenta</Subtitle>
 
@@ -101,10 +102,56 @@ function StepOne({ formData, handleChange }) {
 }
 
 function StepTwo({ formData, setFormData }) {
+  const [generos, setGeneros] = useState([]);
+
+  useEffect(() => {
+    api.get('/generos')
+      .then(res => setGeneros(res.data))
+      .catch(err => console.error('Error al cargar los géneros:', err));
+  }, []);
+
   return (
     <>
+      <br/>
       <FormContainer>
-        <GenreCheckboxes formData={formData} setFormData={setFormData} />
+        <Subtitle>¿Cuáles son tus tres (3) géneros favoritos?</Subtitle>
+        <br/>
+        <Row>
+          {dividirEnColumnas(generos, 2).map((columna, i) => (
+            <Column key={i}>
+              {columna.map(genero => (
+                <LabelCheckbox key={genero.id_genero}>
+                  <InputCheckbox type="checkbox"
+                        value={genero.id_genero}
+                        checked={formData.generos_favoritos.includes(genero.id_genero)}
+                        disabled={
+                          !formData.generos_favoritos.includes(genero.id_genero) &&
+                          formData.generos_favoritos.length >= 3
+                        }
+                        onChange={(e) => {
+                          const id = parseInt(e.target.value);
+                          const seleccionados = formData.generos_favoritos;
+                      
+                          if (e.target.checked) {
+                            if (seleccionados.length !== 3) {
+                              setFormData({ ...formData, generos_favoritos: [...seleccionados, id] });
+                            } else {
+                              alert('Solo puedes seleccionar 3 géneros favoritos.');
+                            }
+                          } else {
+                            setFormData({
+                              ...formData,
+                              generos_favoritos: seleccionados.filter(g => g !== id)
+                            });
+                          }
+                        }}
+                  />
+                  {genero.nombre}
+                </LabelCheckbox>
+              ))}
+            </Column>
+          ))}
+        </Row>
       </FormContainer>
     </>
   );
@@ -113,9 +160,10 @@ function StepTwo({ formData, setFormData }) {
 function StepThree({ formData, handleChange }) {
   return (
     <>
+      <br/>    
       <FormContainer>
         <Subtitle>¿Cuál es tu experiencia contando historias?</Subtitle>
-
+        <br/>
         <Row>
           <Column style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
             <InputRadio type="radio"
@@ -125,7 +173,7 @@ function StepThree({ formData, handleChange }) {
                   checked={formData.experiencia === 'principiante'}
                   onChange={handleChange}
               />
-            <LabelRadioButton htmlFor="principiante">Principiante: Es la primera vez que voy a escribir una historia siguiendo una estructura narrativa.</LabelRadioButton>
+            <LabelRadioButton htmlFor="principiante"><b>Principiante:</b> Es la primera vez que voy a escribir una historia siguiendo una estructura narrativa.</LabelRadioButton>
           </Column>
           <Column style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
             <InputRadio type="radio"
@@ -135,7 +183,7 @@ function StepThree({ formData, handleChange }) {
                   checked={formData.experiencia === 'experto'}
                   onChange={handleChange}
             />
-            <LabelRadioButton htmlFor="experto">Experto: He escrito historias anteriormente y/o estoy familiarizado con el concepto de estructura narrativa.</LabelRadioButton>
+            <LabelRadioButton htmlFor="experto"><b>Experto:</b> He escrito historias anteriormente y/o estoy familiarizado con el concepto de estructura narrativa.</LabelRadioButton>
           </Column>
         </Row>
       </FormContainer>
@@ -150,58 +198,6 @@ function StepFour() {
         <Title>¡FELICITACIONES!<br/>TU CUENTA HA SIDO CREADA</Title>
         <p>Todo está listo para empezar a crear tus propias hisotiras.</p>
       </FormContainer>
-    </>
-  );
-}
-
-function GenreCheckboxes({ formData, setFormData }) {
-  const [generos, setGeneros] = useState([]);
-
-  useEffect(() => {
-    api.get('/generos')
-      .then(res => setGeneros(res.data))
-      .catch(err => console.error('Error al cargar los géneros:', err));
-  }, []);
-
-  return (
-    <>
-      <Subtitle>¿Cuáles son tus géneros favoritos?</Subtitle>
-      <Row>
-        {dividirEnColumnas(generos, 3).map((columna, i) => (
-          <Column key={i}>
-            {columna.map(genero => (
-              <LabelCheckbox key={genero.id_genero}>
-                <InputCheckbox type="checkbox"
-                      value={genero.id_genero}
-                      checked={formData.generos_favoritos.includes(genero.id_genero)}
-                      disabled={
-                        !formData.generos_favoritos.includes(genero.id_genero) &&
-                        formData.generos_favoritos.length >= 3
-                      }
-                      onChange={(e) => {
-                        const id = parseInt(e.target.value);
-                        const seleccionados = formData.generos_favoritos;
-                    
-                        if (e.target.checked) {
-                          if (seleccionados.length !== 3) {
-                            setFormData({ ...formData, generos_favoritos: [...seleccionados, id] });
-                          } else {
-                            alert('Solo puedes seleccionar 3 géneros favoritos.');
-                          }
-                        } else {
-                          setFormData({
-                            ...formData,
-                            generos_favoritos: seleccionados.filter(g => g !== id)
-                          });
-                        }
-                      }}
-                />
-                {genero.nombre}
-              </LabelCheckbox>
-            ))}
-          </Column>
-        ))}
-      </Row>
     </>
   );
 }
@@ -335,7 +331,7 @@ function RRegisterView() {
   };  
 
   return <div>
-    <BackgroundImage src='images/rakonti-background-2.jpg' alt='rakonti-background-2'/>
+    <BackgroundImage src='images/narratives-background.jpg'/>
 
     <Container>
       <Title>CREACIÓN DE CUENTA</Title>
@@ -361,11 +357,11 @@ function RRegisterView() {
       {step === 4 && <StepFour />}
 
       <ButtonsContainer>
-        {step >= 1 && step <= 3 && <Button onClick={handleCancel}>Cancelar</Button>}
-        {step > 1 && step < 4 && <Button onClick={() => setStep(step - 1)}>Anterior</Button>}
-        {step < 3 && <Button onClick={handleNextStep}>Siguiente</Button>}
-        {step === 3 && <Button onClick={handleSubmit} type="submit">Enviar</Button>}
-        {step === 4 && <Button onClick={handleNewStory}>Crear nueva historia</Button>}
+        {step >= 1 && step <= 3 && <ButtonSecondary onClick={handleCancel}>Cancelar</ButtonSecondary>}
+        {step > 1 && step < 4 && <ButtonSecondary onClick={() => setStep(step - 1)}>Anterior</ButtonSecondary>}
+        {step < 3 && <ButtonPrimary onClick={handleNextStep}>Siguiente</ButtonPrimary>}
+        {step === 3 && <ButtonPrimary onClick={handleSubmit} type="submit">Enviar</ButtonPrimary>}
+        {step === 4 && <ButtonPrimary onClick={handleNewStory}>Crear nueva historia</ButtonPrimary>}
       </ButtonsContainer>
 
     </Container>
@@ -376,10 +372,9 @@ const BackgroundImage = styled.img`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-repeat: repeat-y;
-  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
   z-index: -1;
 `;
 
@@ -389,12 +384,12 @@ const Row = styled.div`
   justify-content: center;
   gap: 40px;
   width: 100%;
-  margin:15px;
+  padding: 8px 0px 8px 0px;
 `;
 
 const Column = styled.div`
   flex: 1;
-  max-width: 45%;
+  max-width: 48%;
   box-sizing: border-box;
 `;
 
@@ -403,9 +398,9 @@ align-items: center;
 display: flex;
 justify-content: flex-start;
 position: absolute;
-top: 10%;
+margin-top:10px;
 width: 100%;
-height: 100%; 
+height: 100%;
 box-sizing: border-box;
 flex-direction: column;
 `;
@@ -422,9 +417,8 @@ const StepsContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 30px;
   flex-direction: row;
-  width: 60%;
+  width: 70%;
 `;
 
 const Step = styled.div`
@@ -467,14 +461,14 @@ const Step = styled.div`
 `;
 
 const Subtitle = styled.div`
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 800;
   color: #43474f;
   align-self: flex-start;
 `;
 
 const FormContainer = styled.form`
-  padding: 20px 40px 30px 40px;
+  padding: 20px 40px 20px 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -482,7 +476,7 @@ const FormContainer = styled.form`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  width: 60%;
+  width: 70%;
   box-sizing: border-box;
   border-radius: 45px;
 `;
@@ -513,17 +507,17 @@ const LabelCheckbox = styled.label`
 
 const Input = styled.input`
   width: 100%;
-  padding: 10px;
+  padding: 5px;
   background-color: transparent;
-  font-size: 14px;
+  font-size: 12px;
   color: black;
   box-sizing: border-box;
 `;
 
 const Select = styled.select`
   width: 100%;
-  padding: 10px;
-  font-size: 14px;
+  padding: 5px;
+  font-size: 12px;
   color: black;
   box-sizing: border-box;
 `;
@@ -538,13 +532,13 @@ const InputCheckbox = styled.input`
 `;
 
 const ButtonsContainer = styled.div`
-  padding: 20px 0px 20px 0px;
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   gap: 20px;
 `;
 
-const Button = styled.button`
+const ButtonPrimary = styled.button`
   padding: 10px 30px;
   font-size: 15px;
   border: none;
@@ -553,9 +547,25 @@ const Button = styled.button`
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  
+
   &:hover {
-    background-color: #5c5f66;
+    background-color: gray;
+  }
+`;
+
+const ButtonSecondary = styled.button`
+  padding: 10px 30px;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  background-color: white;
+  color: #43474f;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #43474f;
+    color: white;
   }
 `;
 

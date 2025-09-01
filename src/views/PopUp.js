@@ -47,8 +47,8 @@ const PopupContent = styled.div`
   background: white;
   padding: 30px;
   border-radius: 12px;
-  width: 60%;
-  height: 60%;
+  width: 80%;
+  height: 70%;
   overflow: auto;
   position: relative;
 `;
@@ -61,6 +61,8 @@ const CloseButton = styled.button`
   border: none;
   font-size: 18px;
   cursor: pointer;
+  color: #43474f;
+  border: solid;
 `;
 
 export default PopUp;

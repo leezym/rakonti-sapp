@@ -24,6 +24,7 @@ import {
 function StepOne({ formData, handleChange }) {
   return (
     <>
+      <br/>
       <FormContainer>
         <Subtitle>Perfil demográfico</Subtitle>
 
@@ -72,11 +73,10 @@ function StepOne({ formData, handleChange }) {
           </Column>
         </Row>
       </FormContainer>
-
+      <br/>
       <FormContainer>
-        <Subtitle>Perfil psicológico</Subtitle>
-
-        <Label>¿El personaje prefiere seguir un plan detallado y organizado o improvisar y adaptarse según ñas circunstancias?</Label>
+        <Subtitle style={{marginBottom:'8px'}}>Perfil psicológico</Subtitle>
+        <Label>¿El personaje prefiere seguir un plan detallado y organizado o improvisar y adaptarse según las circunstancias?</Label>
         <Row>
           <Column style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
             <InputRadio type="radio"
@@ -158,7 +158,7 @@ function StepTwo({ formData, setFormData, data, setData }) {
 
   return (
     <>
-      <Paragraph>De acuerdo al perfil psicológico elegido te proponemos usar una de las siguientes personalidades</Paragraph>
+      <Paragraph>De acuerdo al perfil psicológico elegido te proponemos usar una de las siguientes personalidades:</Paragraph>
       <Row>
         {primerasDos.map(personalidad => (
           <Column key={personalidad.id_personalidad}>
@@ -179,7 +179,7 @@ function StepTwo({ formData, setFormData, data, setData }) {
                   id_personalidad: personalidad ? personalidad.id_personalidad : ''
                 });
               }}>
-              <Title align="right">{personalidad.nombre}</Title>
+              <Title style={{fontSize:'13px'}} align="right">{personalidad.nombre}</Title>
               <CardHorizontalDescription dangerouslySetInnerHTML={{ __html: personalidad.descripcion }} />
             </CardHorizontal>
           </Column>
@@ -206,7 +206,7 @@ function StepTwo({ formData, setFormData, data, setData }) {
                   id_personalidad: personalidad ? personalidad.id_personalidad : ''
                 });
               }}>
-              <Title align="right">{personalidad.nombre}</Title>
+              <Title style={{fontSize:'13px'}} align="right">{personalidad.nombre}</Title>
               <CardHorizontalDescription dangerouslySetInnerHTML={{ __html: personalidad.descripcion }} />
             </CardHorizontal>
           </Column>
@@ -227,51 +227,54 @@ function StepThree({ data, setData }) {
   }, []);
 
   return (
+    <>
+      <br/>
       <FormContainer>
-        <p style={{ color: '#43474f' }}>Los <b>Roles actanciales</b> son elementos clave en la estructura narrativa de una historia. Ayudan a definir las relaciones entre los personajes y las fuerzas que impulsan la trama. Al identificar estos roles, se puede comprender mejor la motivación de los personajes y el significado de sus acciones. Para definir los roles actanciales ten en cuenta estos tres puntos:
+        <p>Los <b>Roles actanciales</b> son elementos clave en la estructura narrativa de una historia. Ayudan a definir las relaciones entre los personajes y las fuerzas que impulsan la trama. Al identificar estos roles, se puede comprender mejor la motivación de los personajes y el significado de sus acciones. Para definir los roles actanciales ten en cuenta estos tres puntos:
           <ul>
             <li>El objeto es el único rol actancial que puede ocupar o no un personaje, el resto de los roles siempre son ocupados por personajes.</li>
             <li>Un rol actancial puede ser ocupado por uno o más personajes.</li>
             <li>Un personaje puede ocupar uno o varios roles actanciales.</li>
           </ul>
-          Selecciona qué rol(es) actancial(es) ocupa este personaje que estás creando:
+          <b>Selecciona qué rol(es) actancial(es) ocupa este personaje que estás creando:</b>
         </p>
-      <Row>
-        {dividirEnColumnas(roles, 2).map((columna, i) => (
-          <Column key={i}>
-            {columna.map(rol => (
-              <div key={rol.id_rol}>
-                <LabelCheckbox>
-                  <InputCheckbox
-                    type="checkbox"
-                    value={rol.id_rol}
-                    checked={data.roles.some(r => r.id_rol === rol.id_rol)}
-
-                    onChange={(e) => {
-                      const seleccionados = data.roles;
-
-                      if (e.target.checked) {
-                        setData({
-                          ...data,
-                          roles: [...seleccionados, { id_rol: rol.id_rol, nombre: rol.nombre }]
-                        });
-                      } else {
-                        setData({
-                          ...data,
-                          roles: seleccionados.filter(g => g.id_rol !== rol.id_rol)
-                        });
-                      }
-                    }}
-                  />
-                  <b>{rol.nombre}</b>
-                </LabelCheckbox>
-                <div dangerouslySetInnerHTML={{ __html: rol.descripcion }} />
-              </div>
-            ))}
-          </Column>
-        ))}
-      </Row>
-    </FormContainer>
+        <Row>
+          {dividirEnColumnas(roles, 2).map((columna, i) => (
+            <Column key={i}>
+              {columna.map(rol => (
+                <div key={rol.id_rol}>
+                  <LabelCheckbox>
+                    <InputCheckbox
+                      type="checkbox"
+                      value={rol.id_rol}
+                      checked={data.roles.some(r => r.id_rol === rol.id_rol)}
+                      
+                      onChange={(e) => {
+                        const seleccionados = data.roles;
+                        
+                        if (e.target.checked) {
+                          setData({
+                            ...data,
+                            roles: [...seleccionados, { id_rol: rol.id_rol, nombre: rol.nombre }]
+                          });
+                        } else {
+                          setData({
+                            ...data,
+                            roles: seleccionados.filter(g => g.id_rol !== rol.id_rol)
+                          });
+                        }
+                      }}
+                      />
+                    <b>{rol.nombre}</b>
+                  </LabelCheckbox>
+                  <p style={{fontSize:'12px'}} dangerouslySetInnerHTML={{ __html: rol.descripcion }} />
+                </div>
+              ))}
+            </Column>
+          ))}
+        </Row>
+      </FormContainer>
+    </>
   );
 }
 
@@ -359,7 +362,7 @@ function StepFive({ formData, data }) {
           <Card>
             <Title>Perfil demográfico</Title>
             <CardDescription>
-              <p>
+              <p style={{color:'white'}}>
                 <b>Nombre(s): </b>{formData.nombre}<br/><br/>
                 <b>Apellido(s): </b>{formData.apellido}<br/><br/>
                 <b>Edad: </b>{formData.edad}<br/><br/>
@@ -388,7 +391,7 @@ function StepFive({ formData, data }) {
           <Card>
             <Title>Características</Title>
             <CardDescription>
-              <p>
+              <p style={{color:'white'}}>
                 <b>Apariencia: </b>{formData.apariencia}<br/><br/>
                 <b>Ocupación/profesión: </b>{formData.ocupacion}<br/><br/>
                 <b>Intereses: </b>{formData.intereses}<br/><br/>
@@ -407,11 +410,12 @@ function StepFive({ formData, data }) {
 function StepSix({ narrative }) {
   return (
     <>
-      <FormContainer width="50%" style={{padding: '0px 0px 0px 0px'}}>
+      <br/>
+      <FormContainer width="50%">
         <Title color='#43474f'><h1>¡Felicitaciones!</h1></Title>
-        <p style={{color:'#43474f'}}>Has desbloqueado tu primera estructura narrativa</p>
+        <p>Has desbloqueado tu primera estructura narrativa</p>
       </FormContainer>
-      <Image style={{width:'20%', marginTop:'15px'}} src={narrative.imagen}/>
+      <Image style={{width:'30%', marginTop:'15px'}} src={narrative.imagen}/>
     </>
   );
 }
@@ -434,6 +438,7 @@ function RCharacterView() {
   
   const [step, setStep] = useState(1);
   const [showPopup, setShowPopup] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
   const [data, setData] = useState({
     personalidad: '',
     personalidad_descripcion: '',
@@ -575,6 +580,14 @@ function RCharacterView() {
       }
       // Caso 2: Crear historia y primer personaje (cuando no existe historia)
       else if (!id_personaje && !id_historia) {
+        const id_usuario = localStorage.getItem('id_usuario');
+    
+        api.get(`/historias/${id_usuario}`)
+        .then(res => {
+          setShowTutorial(res.data.length === 0);
+        })
+        .catch(err => console.error('Error al cargar las historias del usuario:', err));
+
         // Crear historia
         const historiaResponse = await api.post(
           '/historias',
@@ -690,14 +703,14 @@ function RCharacterView() {
   };
 
   return <>
-    <BackgroundImage src='images/narratives-background.jpg' alt='rakonti-background-2'/>
+    <BackgroundImage src='images/narratives-background.jpg'/>
     
     <Opacity>
       <TopMenu feature={feature} popUp={popUp}/>
 
       <StepsWrapper>
         <LeftColumn>
-          <RotatedTitle>CREADOR DE PERSONAJES</RotatedTitle>
+          <RotatedTitle>CREADOR DE<br/>PERSONAJES</RotatedTitle>
         </LeftColumn>
         <RightColumn>
           <StepsContainer>
@@ -730,11 +743,17 @@ function RCharacterView() {
       {step === 6 && <StepSix narrative={narrative}/>}
 
       <ButtonsContainer>
-        {step >= 1 && step <= 5 && <Button onClick={handleCancel}>Cancelar</Button>}
-        {step > 1 && step < 6 && <Button onClick={() => setStep(step - 1)}>Anterior</Button>}
-        {step < 5 && <Button onClick={handleNextStep}>Siguiente</Button>}
-        {step === 5 && <Button onClick={handleSubmit} type="submit">Enviar</Button>} 
-        {step === 6 && <Button onClick={() => navigate(`/characters/${feature.id_historia}`)}>Mis personajes</Button>}
+        {step >= 1 && step <= 5 && <ButtonSecondary onClick={handleCancel}>Cancelar</ButtonSecondary>}
+        {step > 1 && step < 6 && <ButtonSecondary onClick={() => setStep(step - 1)}>Anterior</ButtonSecondary>}
+        {step < 5 && <ButtonPrimary onClick={handleNextStep}>Siguiente</ButtonPrimary>}
+        {step === 5 && <ButtonPrimary onClick={handleSubmit} type="submit">Enviar</ButtonPrimary>} 
+        {step === 6 && <ButtonPrimary onClick={() => {
+          if(showTutorial)
+              navigate(`/characters/${feature.id_historia}`, { state: { showTutorial } })
+            else
+              navigate(`/characters/${feature.id_historia}`)
+
+        }}>Mis personajes</ButtonPrimary>}
       </ButtonsContainer>
 
     </Container>
@@ -759,21 +778,19 @@ const BackgroundImage = styled.img`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-repeat: repeat-y;
-  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
   z-index: -1;
 `;
 
 const Container = styled.div`
-  margin-top:10px;
   align-items: center;
   display: flex;
   justify-content: flex-start;
   position: relative;
   width: 100%;
-  height: 100%; 
+  height: 100%;
   box-sizing: border-box;
   flex-direction: column;
 `;
@@ -784,12 +801,12 @@ const Row = styled.div`
   justify-content: center;
   gap: 40px;
   width: 100%;
-  margin:15px;
+  padding: 8px 0px 8px 0px;
 `;
 
 const Column = styled.div`
   flex: 1;
-  max-width: 45%;
+  max-width: 48%;
   box-sizing: border-box;
 `;
 
@@ -806,6 +823,7 @@ const Title = styled.h1`
 `;
 
 const RotatedTitle = styled.div`
+  font-weight: 900;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -813,10 +831,10 @@ const RotatedTitle = styled.div`
   transform-origin: center center;
   text-align: center;
   color: white;
-  font-size: 20px;
+  font-size: 18px;
   word-break: break-word;
   white-space: normal;
-  max-width: 50%;
+  max-width: 100%;
 `;
 
 const Subtitle = styled.div`
@@ -824,16 +842,15 @@ const Subtitle = styled.div`
   font-weight: 800;
   color: #43474f;
   align-self: flex-start;
-  margin-bottom: 10px;
 `;
 
 const Paragraph = styled.div`
-  font-size: 16px;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 600;
   color: #43474f;
   align-self: center;
-  margin: 20px;
-  padding: 20px;
+  margin: 10px;
+  padding: 15px;
   background-image: url('images/top-bar.png');
   background-color: transparent;
   background-size: 100% 100%;
@@ -844,7 +861,6 @@ const Paragraph = styled.div`
 
 const Label = styled.label`
   display: block;
-  margin-bottom: 5px;
   font-size: 14px;
   font-weight: 600;
   color: #43474f;
@@ -860,16 +876,16 @@ const LabelRadioButton = styled.label`
 
 const Input = styled.input`
   width: 100%;
-  padding: 10px;
+  padding: 5px;
   background-color: transparent;
-  font-size: 14px;
+  font-size: 12px;
   color: black;
   box-sizing: border-box;
 `;
 
 const TextArea = styled.textarea`
   width: 100%;
-  height: 80px;
+  height: 60px;
   padding: 10px;
   background-color: transparent;
   font-size: 14px;
@@ -877,7 +893,7 @@ const TextArea = styled.textarea`
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 5px;
-  resize: vertical; /* Permite que el usuario lo redimensione */
+  resize: none;
   overflow-y: auto;
 
   white-space: pre-wrap;
@@ -899,8 +915,8 @@ const TextArea = styled.textarea`
 
 const Select = styled.select`
   width: 100%;
-  padding: 10px;
-  font-size: 14px;
+  padding: 5px;
+  font-size: 12px;
   color: black;
   box-sizing: border-box;
 `;
@@ -921,8 +937,11 @@ const Opacity = styled.div`
 
 const StepsWrapper = styled.div`
   display: flex;
-  width: 100%;
   align-items: stretch;
+  width: 98%;
+  margin: 0 auto;
+  height: auto; 
+  min-height: 135px;  
 `;
 
 const LeftColumn = styled.div`
@@ -930,7 +949,6 @@ const LeftColumn = styled.div`
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-  height: 170px;
 `;
 
 const RightColumn = styled.div`
@@ -980,7 +998,7 @@ const Step = styled.div`
 `;
 
 const FormContainer = styled.form`
-  padding: 20px 40px 30px 40px;
+  padding: 20px 40px 20px 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -988,7 +1006,7 @@ const FormContainer = styled.form`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  width: 60%;
+  width: 70%;
   box-sizing: border-box;
   border-radius: 45px;
 `;
@@ -1000,13 +1018,13 @@ const Image = styled.img`
 `;
 
 const ButtonsContainer = styled.div`
-  padding: 20px 0px 20px 0px;
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   gap: 20px;
 `;
 
-const Button = styled.button`
+const ButtonPrimary = styled.button`
   padding: 10px 30px;
   font-size: 15px;
   border: none;
@@ -1015,9 +1033,25 @@ const Button = styled.button`
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  
+
   &:hover {
-    background-color: #5c5f66;
+    background-color: gray;
+  }
+`;
+
+const ButtonSecondary = styled.button`
+  padding: 10px 30px;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  background-color: white;
+  color: #43474f;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #43474f;
+    color: white;
   }
 `;
 
@@ -1063,6 +1097,17 @@ const CardDescription = styled.div`
   word-break: break-word;
   overflow-wrap: break-word;
 
+  ul {
+    padding-left: 18px;
+    margin: 0 0 1em 0;
+    list-style-type: disc;
+  }
+
+  li {
+    margin-bottom: 0.5em;
+    list-style-position: outside;
+  }
+
   /* WebKit (Chrome, Safari, Edge) */
   &::-webkit-scrollbar {
     width: 6px;
@@ -1088,34 +1133,47 @@ const CardHorizontal = styled.form`
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 20px 40px 30px 0px;
+  padding: 20px 30px 20px 0px;
   background-image: ${({ image }) => `url(${image})`};
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
-  width: 100%;
-  height: 100%;
+  height: 175px;
+  width: 80%;
+  margin: 0 auto;
   box-sizing: border-box;
   text-align: right;
   box-shadow: ${({ selected }) =>
     selected
-      ? '0 0 10px 4px rgba(255, 255, 255, 0.6)'  // efecto de "resplandor"
+      ? '0 0 10px 4px rgba(255, 255, 255, 0.8)'
       : '0 4px 12px rgba(0, 0, 0, 0.1)'};
   border: ${({ selected }) =>
-    selected ? '2px solid rgba(255, 255, 255, 0.6)' : 'none'};
+    selected ? '2px solid rgba(255, 255, 255, 0.8)' : 'none'};
   transition: box-shadow 0.2s ease, border 0.2s ease;
+
 `;
 
 const CardHorizontalDescription = styled.div`
   color: white;
-  font-size: 12px;
+  font-size: 11px;
   text-align: justify;
   width: 60%;
   height: 150px;
   overflow-y: auto;
   padding-right: 5px;
 
-  /* WebKit (Chrome, Safari, Edge) */
+  ul {
+    padding-left: 18px;
+    margin: 0 0 1em 0;
+    list-style-type: disc;
+  }
+
+  li {
+    margin-bottom: 0.5em;
+    list-style-position: outside;
+  }
+
+  /* Scroll personalizado */
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -1125,7 +1183,7 @@ const CardHorizontalDescription = styled.div`
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.3); /* blanco translúcido */
+    background-color: rgba(255, 255, 255, 0.3);
     border-radius: 3px;
   }
 
@@ -1138,7 +1196,7 @@ const LabelCheckbox = styled.label`
   display: flex;
   align-items: center;
   margin-bottom: 8px;
-  font-size: 16px;
+  font-size: 14px;
   color: #43474f;
 `;
 

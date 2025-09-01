@@ -9,48 +9,55 @@ function createWindow() {
     width: 1260,
     height: 800,
     backgroundColor: "white",
-    show: false, // primero oculto, luego muestro maximizado
-    resizable: false,       // evita redimensionar con bordes/flechas
-    fullscreenable: false,  // bloquea modo pantalla completa
-    maximizable: false,     // quita el botón de maximizar/restaurar
+    show: false,          // oculto hasta estar listo
+    resizable: false,     // bloquea bordes/flechas
+    fullscreenable: false,// bloquea F11
+    maximizable: false,   // quita botón maximizar/restaurar
+    movable: true,        // necesario para evitar bug de Inputs
     webPreferences: {
       nodeIntegration: false,
-      contextIsolation: true
-    }
+      contextIsolation: true,
+    },
   });
 
-  // Quitar menú por completo
+  // Quitar menú
   mainWindow.setMenu(null);
 
-  // Cargar URL dependiendo del entorno
+  // Cargar URL según entorno
   const startURL = isDev
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "../build/index.html")}`;
 
   mainWindow.loadURL(startURL);
 
-  // Mostrar siempre maximizado
+  // Mostrar siempre maximizado y asegurar focus
   mainWindow.once("ready-to-show", () => {
     mainWindow.maximize();
     mainWindow.show();
+
+    // Forzar recalculo de tamaño para Chromium
+    mainWindow.setBounds(mainWindow.getBounds());
+
+    // Forzar focus de la ventana
+    mainWindow.webContents.focus();
   });
 
-  // Si intentan "restaurar", volver a maximizar
-  mainWindow.on("unmaximize", () => {
-    mainWindow.maximize();
-  });
+  // Evitar que se mueva aunque movable=true
+  mainWindow.on("will-move", (e) => e.preventDefault());
+
+  // Si alguien intenta restaurar, volver a maximizar
+  mainWindow.on("unmaximize", () => mainWindow.maximize());
 
   mainWindow.on("closed", () => (mainWindow = null));
 }
 
+// App lifecycle
 app.on("ready", createWindow);
 
-// En macOS vuelve a abrir la ventana al hacer click en el ícono
 app.on("activate", () => {
   if (mainWindow === null) createWindow();
 });
 
-// Cerrar cuando todas las ventanas estén cerradas (excepto en macOS)
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });

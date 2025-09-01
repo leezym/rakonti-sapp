@@ -88,10 +88,9 @@ const BackgroundImage = styled.img`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-repeat: repeat-y;
-  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
   z-index: -1;
 `;
 
@@ -105,13 +104,12 @@ const Opacity = styled.div`
 `;
 
 const Container = styled.div`
-  margin-top:10px;
   align-items: center;
   display: flex;
   justify-content: flex-start;
   position: relative;
   width: 100%;
-  height: 100%; 
+  height: 100%;
   box-sizing: border-box;
   flex-direction: column;
 `;
@@ -148,7 +146,7 @@ const Button = styled.button`
   transition: background-color 0.3s ease;
   
   &:hover {
-    background-color:rgb(212, 218, 231);
+    background-color:gray;
   }
 `;
 

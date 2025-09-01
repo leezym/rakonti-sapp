@@ -1,12 +1,11 @@
 import api from "../api/axiosConfig";
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useMemo, useRef  } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import TopMenu from './TopMenu';
-import RFilesView from './RFilesView';
-import { useQuill } from 'react-quilljs';
-import 'quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import {
   setNarrative, 
   setFeature,
@@ -21,54 +20,38 @@ import {
 } from '../redux-store/reducers/storySlice';
 import downloadWordDocument from './downloadWordDocument';
 import Tutorial from "./Tutorial";
+import PopUp from './PopUp';
 
-function Edit({ stages, currentStage, value, handleChange, showSteps, stepContents }) {
-  const { quill, quillRef } = useQuill({
-    modules: {
-      toolbar: [
-        ["bold", "italic", "underline", "strike"],
-        [{ list: "ordered" }, { list: "bullet" }],
-        ["clean"],
-      ],
-      history: {
-        delay: 500,
-        maxStack: 100,
-        userOnly: true,
-      },
-    },
-    placeholder: "Escribe aquí...",
-    theme: "snow",
-  });
+function Edit({ stages, currentStage, quillRef, value, handleChange, modules, showSteps, stepContents, stepContextRef }) {
+  useEffect(() => {
+    if (quillRef.current && stepContextRef.current) {
+      const editorContainer = quillRef.current.editor.container;
+
+      const containerTop = stepContextRef.current.getBoundingClientRect().top;
+      const editorTop = editorContainer.getBoundingClientRect().top;
+
+      stepContextRef.current.scrollTo({
+        top: stepContextRef.current.scrollTop + (editorTop - containerTop) - 50,
+        behavior: "smooth",
+      });
+    }
+  }, [currentStage]);
 
   const orderedStepContents = Object.entries(stepContents)
     .sort(([a], [b]) => Number(a) - Number(b))
     .map(([_, value]) => value);
-
-  useEffect(() => {
-    if (quill) {
-      quill.on("text-change", () => {
-        handleChange(quill.root.innerHTML);
-      });
-    }
-  }, [quill, handleChange]);
-
-  useEffect(() => {
-    if (quill && value !== quill.root.innerHTML) {
-      quill.root.innerHTML = value || "";
-    }
-  }, [quill, value]);
 
   return (
     <>
       {showSteps && (
         <Paragraph>
           <Title>{stages[currentStage - 1]?.nombre_paso.toUpperCase()}</Title>
-          <div style={{fontSize:'13px'}} dangerouslySetInnerHTML={{ __html: stages[currentStage - 1]?.descripcion }} />
+          <p style={{fontSize:'12px'}} dangerouslySetInnerHTML={{ __html: stages[currentStage - 1]?.descripcion }} />
         </Paragraph>
       )}
 
       <FormContainer>
-        <StepContextContainer showSteps={showSteps}>
+        <StepContextContainer ref={stepContextRef} showSteps={showSteps}>
           {orderedStepContents.slice(0, currentStage - 1).map((content, index) => (
             <>
               <Separator opacity={'0.6'} color={'#ccc'}/>
@@ -79,17 +62,13 @@ function Edit({ stages, currentStage, value, handleChange, showSteps, stepConten
             </>
           ))}
           <Separator opacity={'1'} color={'black'}/>
-          <div
+          <StyledEditor
             ref={quillRef}
-            style={{
-              width: "100%",
-              height: showSteps ? "300px" : "500px",
-              backgroundColor: "white",
-              borderRadius: "10px",
-              border: 'none',
-              padding: "10px",
-            }}
-            
+            showSteps={showSteps}
+            value={value}
+            onChange={handleChange}
+            modules={modules}
+            placeholder={'Escribe aquí...'}
           />
           <Separator  opacity={'1'} color={'black'}/>
 
@@ -214,7 +193,7 @@ function Characters({ characters, personalities, roles, handleEditCharacters }){
           <FormContainer style={{'margin':'0px 5px', display:'flex'}}>
             <CardTitle style={{'color': '#43474f'}}>CARACTERÍSTICAS:</CardTitle>
             <CardDescription style={{'color': '#43474f'}}>
-              <p>
+              <p style={{fontSize:'12px'}}>
                 <b>Apariencia: </b>{currentCharacter.apariencia}<br/><br/>
                 <b>Ocupación/profesión: </b>{currentCharacter.ocupacion}<br/><br/>
                 <b>Intereses: </b>{currentCharacter.intereses}<br/><br/>
@@ -328,16 +307,19 @@ function RMapView() {
   const [showTips, setShowTips] = useState(false);
   const [originalFeature, setOriginalFeature] = useState(feature);  
   const [tutorialStep, setTutorialStep] = useState(0);
-  const [showTutorial, setShowTutorial] = useState(location.state?.isNewStory);
+  const [showTutorial, setShowTutorial] = useState(location.state?.showTutorial);
   const [rect, setRect] = useState(null);
   
   const menu_left = useRef(null);
   const title = useRef(null);
   const menu_right = useRef(null);
   const writing = useRef(null);
+  const quillRef = useRef();
+  const stepContextRef = useRef(null);
+  const characterRef = useRef(null);
+  const mapsContainerRef = useRef(null);
 
   const totalSteps = narrative.hitos_cantidad.reduce((a, b) => a + b, 0);
-
   const tutorialSteps = [
     { ref: null, text: "<h2><b>¡Te damos la bienvenida a Rakonti!</b></h2><br/><p>Para comenzar a crear tu primera historia, debes familiarizarte con el espacio de trabajo. Vamos a dar un tour rápido.</p><br/>" },
     { ref: menu_left, text: "<h2><b>Comandos generales</b></h2><br/><p>En la esquina superior izquierda encuentras las siguientes funcionalidades generales:<ul><li>Volver al inicio</li><li>Guardar</li><li>Mis historias</li></ul><br/>" },
@@ -410,6 +392,24 @@ function RMapView() {
       setHasUnsavedChanges(true);
     }
   }, [feature, originalFeature]);
+
+  useEffect(() => {
+    moveSpriteTo(currentStage);
+  }, [currentStage, stages]);
+
+  const moveSpriteTo = (stepNumber) => {
+    const button = document.querySelector(`[data-step='${stepNumber}']`);
+    if (!button || !characterRef.current || !mapsContainerRef.current) return;
+
+    const buttonRect = button.getBoundingClientRect();
+    const containerRect = mapsContainerRef.current.getBoundingClientRect();
+
+    const top = buttonRect.top - containerRect.top - characterRef.current.offsetHeight / 2;
+    const left = (buttonRect.left - containerRect.left - characterRef.current.offsetWidth / 2) + 10;
+
+    characterRef.current.style.top = `${top}px`;
+    characterRef.current.style.left = `${left}px`;
+  };
 
   const handleChange = (content) => {
     setValue(content);
@@ -514,10 +514,19 @@ function RMapView() {
     
     setShowPopup(true);
   };
-
-  const closePopup = () => {
-    setShowPopup(false);
-  };
+  
+  const modules = useMemo(() => ({
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['clean']
+    ],
+    history: {
+      delay: 500,
+      maxStack: 100,
+      userOnly: true
+    }
+  }), []);
 
   return (
     <>
@@ -620,22 +629,25 @@ function RMapView() {
                   })}
                 </StepsContainer>
 
-                <MapsContainer>
+                <MapsContainer ref={mapsContainerRef} className="maps-container">
                   {Array.from({ length: totalSteps }, (_, index) => {
                     const stepNumber = index + 1;
 
                     return (
-                      <MapWrapper
-                        key={stepNumber}
-                        style={{ flexBasis: `${100 / totalSteps}%` }}
-                      >
+                      <MapWrapper key={stepNumber} totalSteps={totalSteps}>
                         <Map
+                          index={index}
+                          totalSteps={totalSteps}
                           active={stepNumber <= currentStage}
                           step={stepNumber}
                           narrative={narrative}
                         >
                           <PointButton
-                            onClick={() => handleStep(stepNumber)}
+                            data-step={stepNumber}
+                            onClick={() => {
+                              handleStep(stepNumber);
+                              moveSpriteTo(stepNumber);
+                            }}
                             active={stepNumber <= currentStage}
                             disabled={stepNumber > currentStage + 1}
                           />
@@ -644,6 +656,19 @@ function RMapView() {
                       </MapWrapper>
                     );
                   })}
+
+                  <img
+                    ref={characterRef}
+                    src="images/character-statue.png"
+                    style={{
+                      position: "absolute",
+                      width: "auto",
+                      height: "50px",
+                      transition: "top 0.5s ease, left 0.5s ease",
+                      pointerEvents: "none",
+                      zIndex: 999,
+                    }}
+                  />
                 </MapsContainer>
               </RightColumn>
             </StepsWrapper>
@@ -651,39 +676,36 @@ function RMapView() {
         </>
       )}
 
-      <Container ref={writing}>
-        <Edit 
+      <Container>
+        <Edit          
           stages={stages} 
-          currentStage={currentStage}
-          value={value}
-          handleChange={handleChange}
+          currentStage={currentStage} 
+          quillRef={quillRef} 
+          value={value} 
+          handleChange={handleChange} 
+          modules={modules} 
           showSteps={showSteps} 
-          stepContents={stepContents} />
-        <ButtonsWrapper>
+          stepContents={stepContents} 
+          stepContextRef={stepContextRef} />
+        <ButtonsContainer>
           { <Button type="button" onClick={handleNext}>{currentStage < totalSteps ? "Siguiente paso" : "Finalizar"}</Button> }
-        </ButtonsWrapper>
+        </ButtonsContainer>
       </Container>
 
-      {showPopup && (
-        <PopupOverlay>
-          <PopupContent>
-            <CloseButton onClick={closePopup}>X</CloseButton>
-            <RFilesView 
-              setNarrative={setNarrative}
-              setFeature={setFeature}
-              setGenre={setGenre}
-              setPlot={setPlot}
-              setDesire={setDesire}
-              setTime={setTime}
-              setCharacters={setCharacters}
-              setPersonalities={setPersonalities}
-              setRoles={setRoles}
-              setCurrentStage={setCurrentStage}
-              closePopup={closePopup}
-            />
-          </PopupContent>
-        </PopupOverlay>
-      )}
+      <PopUp
+        setNarrative={setNarrative}
+        setFeature={setFeature}
+        setGenre={setGenre}
+        setPlot={setPlot}
+        setDesire={setDesire}
+        setTime={setTime}
+        setCharacters={setCharacters}
+        setPersonalities={setPersonalities}
+        setRoles={setRoles}
+        setCurrentStage={setCurrentStage}
+        showPopup={showPopup}
+        setShowPopup={setShowPopup}
+      />
 
       {showFinalPopup && (
         <PopupOverlay>
@@ -704,21 +726,19 @@ const BackgroundImage = styled.img`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-repeat: repeat-y;
-  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
   z-index: -1;
 `;
 
 const Container = styled.div`
-  margin-top:10px;
   align-items: center;
   display: flex;
   justify-content: flex-start;
   position: relative;
   width: 100%;
-  height: 100%; 
+  height: 100%;
   box-sizing: border-box;
   flex-direction: column;
 `;
@@ -727,7 +747,7 @@ const Paragraph = styled.div`
   color: #43474f;
   align-self: center;
   margin: 0px 20px;
-  padding: 20px;
+  padding: 25px 20px 20px 25px;
   background-image: url('images/top-bar.png');
   background-color: transparent;
   background-size: 100% 100%;
@@ -737,7 +757,7 @@ const Paragraph = styled.div`
 `;
   
 const Title = styled.h1`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 800;
   color: #43474f;
   display: flex;
@@ -746,33 +766,32 @@ const Title = styled.h1`
 `;
   
 const RotatedTitle = styled.div`
-  display: inline-block;
+  font-weight: 900;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   transform: rotate(-90deg);
   transform-origin: center center;
   text-align: center;
   color: white;
-  font-size: 20px;
-  line-height: 1.2;
-  width: 200px;
-  white-space: normal;
+  font-size: 18px;
   word-break: break-word;
+  white-space: normal;
+  max-width: 100%;
 `;
-  
+
 const StepsWrapper = styled.div`
   display: flex;
   width: 100%;
   height: auto;
 `;
 
-  
 const MapWrapper = styled.div`
+  flex: 0 0 calc(100% / ${({ totalSteps }) => totalSteps});
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
-  flex: 0 1 auto;            /* 👈 evita que se estire a lo ancho de todo */
-  max-width: 150px;          /* 👈 tamaño máximo por paso */
-  min-width: 80px; 
 `;
   
 const LeftColumn = styled.div`
@@ -787,12 +806,12 @@ const RightColumn = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  margin-right: 30px;
 `;
   
 const StepsContainer = styled.div`
   display: flex;
   width: 95%;
-  gap: 5px;
   align-items: stretch;
 `;
 
@@ -804,11 +823,13 @@ const CenteredButtonContainer = styled.div`
   margin-left: 20px;
   width:5%;
 `;
-  
+
 const MapsContainer = styled.div`
   display: flex;
-  width: 95%;
-  justify-content: center; //
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  position: relative;
 `;
 
 const Step = styled.div`
@@ -836,6 +857,7 @@ const Step = styled.div`
   word-wrap: break-word;
   word-break: break-word;
   white-space: normal;
+  max-height: 50px;
 `;
 
 const StepLabel = styled.div`
@@ -848,35 +870,30 @@ const StepLabel = styled.div`
 `;
 
 const Map = styled.div`
-  position: relative;
   width: 100%;
+  //height: 80%;
   aspect-ratio: 1 / 1;
-  //height: 100px;
-  background-image: ${({ narrative, active, step }) => {
-    if (active) {
-      return `url('${narrative.imagen.substring(0, narrative.imagen.lastIndexOf("."))}-map-step-${step}.png')`;
-    } else {
-      return `url('${narrative.imagen.substring(0, narrative.imagen.lastIndexOf("."))}-map-opacity-step-${step}.png')`;
-    }
-  }};
-  background-size: 100% 100%;
+  background-image: ${({ narrative, active, step }) =>
+    active
+      ? `url('${narrative.imagen.substring(0, narrative.imagen.lastIndexOf("."))}-map-step-${step}.png')`
+      : `url('${narrative.imagen.substring(0, narrative.imagen.lastIndexOf("."))}-map-opacity-step-${step}.png')`};
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-sizing: border-box;
-  transition: all 0.3s ease;
+  /* solapamiento */
+  margin-left: ${({ index }) => (index > 0 ? "-20%" : "0")};
 
-  transform: scaleX(1.8);
-  transform-origin: center;
+  transition: all 0.3s ease;
+  transform: scaleX(1.3);
+  transform-origin: right;
 `;
 
 const PointButton = styled.button`
   position: absolute;
+  top: 50%;
   left: 40%;
-  width: 10px;
+  width: 12px;
   height: 16px;
   border: none;
   padding: 0;
@@ -891,7 +908,7 @@ const PointButton = styled.button`
 
   &:disabled {
     cursor: not-allowed;
-    opacity: 0.6; /* opcional */
+    opacity: 0.6;
   }
 `;
 
@@ -910,20 +927,39 @@ const FormContainer = styled.form`
   border-radius: 40px;
 `;
 
-const ButtonsWrapper = styled.div`
+const StyledEditor = styled(ReactQuill)`
+  width: 100%;
+
+  .ql-toolbar {
+    border: none !important;
+    display: flex;
+    justify-content: center;
+    border-radius: 0;
+  }
+
+  .ql-container {
+    border: none !important;
+    border-radius: 0;
+    background-color: transparent;
+    color: black;
+  }
+
+  .ql-editor {
+    height: ${({ showSteps }) => showSteps ? '200px' : '400px'};
+    overflow-y: auto;
+    text-align: left;
+    border: none !important;
+  }
+`;
+
+const ButtonsContainer = styled.div`
   margin: 10px;
   display: flex;
-  gap: 10px;
-  margin-top: auto;
-
-  button {
-    padding: 5px 12px;
-    cursor: pointer;
-  }
+  justify-content: space-between;
+  gap: 20px;
 `;
   
 const Button = styled.button`
-  height: 40px;
   padding: 10px 30px;
   font-size: 15px;
   border: none;
@@ -932,9 +968,9 @@ const Button = styled.button`
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  
+
   &:hover {
-    background-color: #5c5f66;
+    background-color: gray;
   }
 `;
 
@@ -974,7 +1010,7 @@ const PopupOverlay = styled.div`
   z-index: 1000;
 `;
 
-const PopupContent = styled.div`
+const FinalPopupContent = styled.div`
   background: white;
   padding: 30px;
   border-radius: 12px;
@@ -982,47 +1018,30 @@ const PopupContent = styled.div`
   height: 40%;
   overflow: auto;
   position: relative;
-`;
-
-const FinalPopupContent = styled(PopupContent)`
   background-image: url('images/pop-up-final.png');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
   background-color: transparent;
-  height: 70%;
-  width: 100vh;
+  height: 100vw;
+  width: 110vh;
   padding: 30px;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
 `;
 
-const FinalButtonsWrapper = styled(ButtonsWrapper)`
-  margin-top: 400px;
-  margin-bottom: 20px;
+const FinalButtonsWrapper = styled(ButtonsContainer)`
+  margin-top: 120vh;
   width: 70%;
-
   display: flex;
-  justify-content: center;  /* centra los botones dentro del wrapper */
+  justify-content: center;
   gap: 10px;
-
   margin-left: auto;
   margin-right: auto;
 `;
 
-const CloseButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  background: transparent;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-`;
-
 const Card = styled.form`
-  display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -1112,6 +1131,7 @@ const CardSelect = styled.div`
   box-sizing: border-box;
   background-color: ${({ selected }) => (selected ? 'white' : 'transparent')};
   transition: background-color 0.2s ease, color 0.2s ease;
+  border-radius: 10px;
 
   &:hover {
     background-color: white;
@@ -1168,11 +1188,11 @@ const CardImage = styled.img`
 `;
 
 const StepContextContainer = styled.div`
-  margin: 20px 0px;
+  margin: 8px 0px;
   display: flex;
   flex-direction: column;
   gap: 5px;
-  height: ${({ showSteps }) => showSteps ? '400px' : '680px'};      
+  height: ${({ showSteps }) => showSteps ? '50vh' : '73vh'};      
   overflow-y: auto;       
   padding-right: 8px;
 `;
@@ -1180,16 +1200,40 @@ const StepContextContainer = styled.div`
 
 const ReadOnlyBlock = styled.div`
   color: #555;
-  font-size: 10px;
 `;
-
+  
 const StepTitle = styled.h4`
+  font-size: 12px;
   font-weight: bold;
   margin-bottom: 8px;
   color: #888;
 `;
-
+  
 const StepText = styled.div`
+  p {
+    font-size: 11px;
+  }
+  
+  ul {
+    font-size: 11px;
+    padding-left: 22px;
+    margin: 0 0 1em 0;
+    list-style-type: disc;
+  }
+  
+  ol {
+    font-size: 11px;
+    padding-left: 22px;
+    margin: 0 0 1em 0;
+    list-style-type: number;
+  }
+
+  li {
+    font-size: 11px;
+    margin-bottom: 0.5em;
+    list-style-position: outside;
+  }
+
   white-space: normal;
   word-break: break-word;
   overflow-wrap: break-word;
@@ -1222,14 +1266,26 @@ const CardHorizontal = styled.form`
 
 const CardHorizontalDescription = styled.div`
   color: white;
-  font-size: 12px;
+  font-size: 11px;
   text-align: justify;
   width: 60%;
-  height: 150px;
   overflow-y: auto;
   padding-right: 5px;
+  flex: 1;
+  max-height: 240px;
 
-  /* WebKit (Chrome, Safari, Edge) */
+  ul {
+    padding-left: 18px;
+    margin: 0 0 1em 0;
+    list-style-type: disc;
+  }
+
+  li {
+    margin-bottom: 0.5em;
+    list-style-position: outside;
+  }
+
+  /* Scroll personalizado */
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -1239,7 +1295,7 @@ const CardHorizontalDescription = styled.div`
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.3); /* blanco translúcido */
+    background-color: rgba(255, 255, 255, 0.3);
     border-radius: 3px;
   }
 

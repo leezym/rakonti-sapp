@@ -1,6 +1,6 @@
 import api from "../api/axiosConfig";
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import TopMenu from './TopMenu';
@@ -23,6 +23,7 @@ function RCharactersView() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const [showPopup, setShowPopup] = useState(false);
 
@@ -35,19 +36,13 @@ function RCharactersView() {
   }
 
   const handleFinish = () => {
-    dispatch(setCurrentStage(1));
-    const id_usuario = localStorage.getItem('id_usuario');
-    
-    api.get(`/historias/${id_usuario}`)
-      .then(res => {
-        const isNewStory = res.data.length === 1; // la primera historia que acaba de crear
-        
-        if(isNewStory)
-          navigate(`/map/${id_historia}`, { state: { isNewStory } })
-        else
-          navigate(`/map/${id_historia}`)
-      })
-      .catch(err => console.error('Error al cargar las historias del usuario:', err));    
+    dispatch(setCurrentStage(1));    
+      
+    const showTutorial = location.state?.showTutorial;
+    if(showTutorial)
+      navigate(`/map/${id_historia}`, { state: { showTutorial } })
+    else
+      navigate(`/map/${id_historia}`)
   }
 
   const popUp = () => {
@@ -59,13 +54,15 @@ function RCharactersView() {
       <BackgroundImage src='images/narratives-background.jpg' alt='narratives-background'/>
       <Opacity>
           <TopMenu popUp={popUp}/>
-          <Title>CREADOR DE PERSONAJES</Title>
-          <Subtitle>Conoce tus personajes creados, crea un nuevo personaje o avanza en la elección de la estructura narrativa de tu historia.</Subtitle>
+          <Title style={{paddingTop:'10px'}}>CREADOR DE PERSONAJES</Title>
+          <Subtitle style={{padding:'10px'}}>Conoce tus personajes creados, crea un nuevo personaje o avanza en la elección de la estructura narrativa de tu historia.</Subtitle>
       </Opacity>
       <Container>
+
+      <CardRowWrapper>
         <CardRow>
           <CardColumn>
-            <Card style={{ position: 'relative' }}>
+            <Card style={{ position: 'relative', backgroundImage:'url("images/card-dark.png")', height:'330px'}}>
               <Title style={{ textAlign: 'center' }}>Crear nuevo personaje</Title>
 
               <CardImage
@@ -80,27 +77,25 @@ function RCharactersView() {
                 }}
               />
             </Card>
+          </CardColumn>     
 
-          </CardColumn>
           { (id_historia 
               ? characters.filter(c => String(c.id_historia) === String(id_historia))
               : characters
             ).map((character, index) => (
             <CardColumn key={character.id_personaje}>
-              <Card>
-                <Title style={{fontSize:'18px'}}>{character.nombre + " " + character.apellido}</Title>
+              <Card image={`${personalities[index].imagen.replace('rectangle', 'square')}`}> {/*falta executive*/}
+                <Title>{character.nombre + " " + character.apellido}</Title>
                 <Subtitle>{personalities[index].nombre}</Subtitle>
-                <CardImage src={`${personalities[index].imagen.replace('square', 'avatar')}`} />
-                <Button 
-                  onClick={() => onClicked(character, index)}
-                  style={{ marginTop: 'auto', display: 'flex', justifyContent: 'center' }}
-                >Ver más</Button>
+                <ButtonSecondary onClick={() => onClicked(character, index)}>Ver más</ButtonSecondary>
               </Card>
             </CardColumn>
           ))}
         </CardRow>
+        </CardRowWrapper>
 
-        <Button onClick={handleFinish}>Finalizar</Button>
+        <ButtonPrimary onClick={handleFinish}>Finalizar</ButtonPrimary>
+
       </Container>
 
       <PopUp
@@ -125,10 +120,9 @@ const BackgroundImage = styled.img`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-repeat: repeat-y;
-  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
   z-index: -1;
 `;
 
@@ -142,19 +136,17 @@ const Opacity = styled.div`
 `;
 
 const Container = styled.div`
-  margin-top:10px;
-  align-items: center;
   display: flex;
-  justify-content: flex-start;
-  position: relative;
-  width: 100%;
-  height: 100%; 
-  box-sizing: border-box;
   flex-direction: column;
+  align-items: center;      
+  justify-content: flex-start; 
+  min-height: 100vh;
+  padding-top: 80px;
+  box-sizing: border-box;
 `;
 
 const Title = styled.h1`
-  font-size:20px;
+  font-size: 14px;
   font-weight: 800;
   color: white;
   text-align: center;
@@ -164,69 +156,113 @@ const Title = styled.h1`
 `;
 
 const Subtitle = styled.div`
-  font-size:15px;
+  font-size:12px;
   color: white;
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-bottom: 20px;
 `;
 
-const Button = styled.button`
-  position: relative;
+const ButtonPrimary = styled.button`
+  margin-top: 10px;
   padding: 10px 30px;
-  font-size: 16px;
-  color: #43474f;
+  font-size: 15px;
   border: none;
-  border-radius: 10px;
-  background-color: white;
+  border-radius: 6px;
+  background-color: #43474f;
+  color: white;
   cursor: pointer;
-  margin-top: 20px;
   transition: background-color 0.3s ease;
-  
+
   &:hover {
-    background-color:rgb(212, 218, 231);
+    background-color: gray;
   }
 `;
 
+const ButtonSecondary = styled.button`
+  position: absolute; 
+  top: 50%;           
+  right: 30px;        
+  transform: translateY(100%);
+
+  padding: 10px 15px;
+  font-size: 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: white;
+  color: #43474f;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: gray;
+    color: white;
+  }
+`;
+
+const CardRowWrapper = styled.div`
+  width: 100%;
+  max-width: 90vw;
+  height: 100%;              /* ocupa todo el alto disponible */
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  display: flex;
+  justify-content: center;   /* centra horizontal */
+  align-items: center;       /* centra vertical */
+
+  box-sizing: border-box;
+
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+  }
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 1) transparent;
+`;
+
 const CardRow = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  width: 90%;
-  max-width: 1200px;
-  margin: 0 auto;
-  justify-content: center;
+  display: flex;
+  align-items: center;
+  width: 100%;
 `;
 
 const CardColumn = styled.div`
   display: flex;
   justify-content: center;
   align-items: stretch;
-  height: 100%;
 `;
 
 const Card = styled.form`
-  padding: 20px 40px 30px 40px;
+  position: relative;
+  padding: 20px 40px 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-image: url('images/card-dark.png');
+  justify-content: flex-start; 
+  background-image: ${({ image }) => `url(${image})`};
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
   width: 300px;
-  height: 100%;
+  height: 350px;
   box-sizing: border-box;
-  margin-bottom: 10px;
 `;
 
+
 const CardImage = styled.img`
-  width: 100px;
-  height: 100px;
+  width: auto;
+  height: 110px;
   object-fit: contain;
-  margin: 10px 0;
 `;
 
 export default RCharactersView;

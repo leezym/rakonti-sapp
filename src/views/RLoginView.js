@@ -66,8 +66,11 @@ function RLoginView() {
   };
 
   return <div>
-    <BackgroundImage src='images/rakonti-background.jpg' alt='rakonti-background'/>
-    <MenuContainer>
+    <BackgroundImage src='images/rakonti-background.png'/>
+
+    <Container>
+      <Logo src="images/logo.png" alt="Logo" />
+
       <FormContainer>
         <Label>Correo</Label>
         <Input type='email'
@@ -91,27 +94,35 @@ function RLoginView() {
         <Button onClick={handleLogin}>Iniciar sesión</Button>
 
       </FormContainer>
-    </MenuContainer>
+    </Container>
   </div>;
 }
 
 const BackgroundImage = styled.img`
+  position: fixed;
+  top: 0;
+  left: 0;
   height: 100vh;
   width: 100vw;
   object-fit: cover;
-  vertical-align: middle;
-  horizontal-align: middle;
+  z-index: -1;
 `;
 
-const MenuContainer = styled.div`
-  align-items: center;
-  display: flex;
-  height: 10%;
-  justify-content: center;
-  position: absolute;
-  top:55%;
-  width: 100%;
+const Logo = styled.img`
+  width: 40%;
+  height: auto;
 `;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;      
+  justify-content: flex-start; 
+  min-height: 100vh;
+  padding-top: 80px;
+  box-sizing: border-box;
+`;
+
 
 const FormContainer = styled.div`
   display: flex;
@@ -130,6 +141,8 @@ const Label = styled.div`
   color: white;
   display: flex;
   align-items: center;
+  width: 150px;
+  justify-content:center;
 `;
   
 const Input = styled.input`
@@ -148,7 +161,7 @@ const Input = styled.input`
   
   const RegisterText = styled.p`
   color: #ffffff;
-  margin: 40px 40px;
+  margin: 20px;
   font-size: 14px;
 `;
 
@@ -163,6 +176,7 @@ const StyledLink = styled(Link)`
 `;
 
 const Button = styled.button`
+  margin-top: 10px;
   padding: 10px 30px;
   font-size: 15px;
   border: none;
@@ -171,13 +185,9 @@ const Button = styled.button`
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  
-  &:hover {
-    background-color: #5c5f66;
-  }
 
-  &:active {
-    transform: scale(0.98);
+  &:hover {
+    background-color: gray;
   }
 `;
 
