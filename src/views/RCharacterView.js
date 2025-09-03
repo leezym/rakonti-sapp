@@ -415,7 +415,7 @@ function StepSix({ narrative }) {
         <Title color='#43474f'><h1>¡Felicitaciones!</h1></Title>
         <p>Has desbloqueado tu primera estructura narrativa</p>
       </FormContainer>
-      <Image style={{width:'30%', marginTop:'15px'}} src={narrative.imagen}/>
+      <Image style={{width:'30%', marginTop:'15px'}} src={narrative.imagen} loading='lazy'/>
     </>
   );
 }
@@ -703,7 +703,7 @@ function RCharacterView() {
   };
 
   return <>
-    <BackgroundImage src='images/narratives-background.jpg'/>
+    <BackgroundImage src='images/narratives-background.jpg' loading='lazy'/>
     
     <Opacity>
       <TopMenu feature={feature} popUp={popUp}/>

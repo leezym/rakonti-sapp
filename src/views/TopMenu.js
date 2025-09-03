@@ -50,15 +50,15 @@ function TopMenu({ refsTutorial, showTutorial, feature, handleSave, handleFeatur
     <MenuContainer>
       <MenuSection ref={refsTutorial?.menu_left}>
         <IconButton onClick={() => handleClick('home')} disabled={showTutorial}>
-          <IconImage src="images/home-icon.png" alt="Home"/>
+          <IconImage src="images/home-icon.png" loading='lazy' alt="Home"/>
         </IconButton>
         {isMapRoute && (
           <IconButton onClick={handleSave} disabled={showTutorial}>
-            <IconImage src="images/save-icon.png" alt="Guardar"/>
+            <IconImage src="images/save-icon.png" loading='lazy' alt="Guardar"/>
           </IconButton>
         )}
         <IconButton onClick={() => popUp()} disabled={showTutorial}>
-          <IconImage src="images/folder-icon.png" alt="Cargar"/>
+          <IconImage src="images/folder-icon.png" loading='lazy' alt="Cargar"/>
         </IconButton>
       </MenuSection>
 
@@ -88,16 +88,16 @@ function TopMenu({ refsTutorial, showTutorial, feature, handleSave, handleFeatur
         {isMapRoute && (
         <>
           <IconButton onClick={handleFeature} disabled={showSteps || showTutorial}>
-            <IconImage src="images/structure-icon.png" alt="Pilares" />
+            <IconImage src="images/structure-icon.png" loading='lazy' alt="Pilares" />
           </IconButton>
           <IconButton onClick={handleCharacters} disabled={showSteps || showTutorial}>
-            <IconImage src="images/characters-icon.png" alt="Personajes" />
+            <IconImage src="images/characters-icon.png" loading='lazy' alt="Personajes" />
           </IconButton>
           <IconButton onClick={handleTips} disabled={showSteps || showTutorial}>
-            <IconImage src="images/tips-icon.png" alt="Tips" />
+            <IconImage src="images/tips-icon.png" loading='lazy' alt="Tips" />
           </IconButton>
           <IconButton onClick={handleToggleSteps} disabled={showTutorial}>
-            <IconImage src="images/view-icon.png" alt="Escritura" />
+            <IconImage src="images/view-icon.png" loading='lazy' alt="Escritura" />
           </IconButton>
         </>
         )}
@@ -110,8 +110,8 @@ const MenuContainer = styled.div`
   position: sticky;
   top: 0;
   z-index: 999;
-  background-image: url('images/top-bar.png');
   opacity: 1;
+  background-image: url('images/top-bar.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;

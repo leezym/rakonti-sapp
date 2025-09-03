@@ -43,7 +43,7 @@ function RNarrativesView() {
   };
 
   return <>
-    <BackgroundImage src='images/narratives-background.jpg' alt='narratives-background'/>
+    <BackgroundImage src='images/narratives-background.jpg' loading='lazy'/>
     <Opacity>
         <TopMenu popUp={popUp}/>
         <Title>ESTRUCTURA NARRATIVA</Title>
@@ -56,7 +56,7 @@ function RNarrativesView() {
             <Card>
               <Title>{estructura.nombre}</Title>
               <Subtitle>{estructura.escritor}</Subtitle>
-              <CardImage src={estructura.imagen}/>
+              <CardImage src={estructura.imagen} loading='lazy'/>
               <CardDescription>
                 { estructura.descripcion }
               </CardDescription>

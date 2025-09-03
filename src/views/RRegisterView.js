@@ -331,7 +331,7 @@ function RRegisterView() {
   };  
 
   return <div>
-    <BackgroundImage src='images/narratives-background.jpg'/>
+    <BackgroundImage src='images/narratives-background.jpg' loading='lazy'/>
 
     <Container>
       <Title>CREACIÓN DE CUENTA</Title>

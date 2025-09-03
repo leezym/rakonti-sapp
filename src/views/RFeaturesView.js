@@ -99,7 +99,7 @@ function StepOne({ data, setData, formData, setFormData }) {
         <DetailContainer>
           <Row>
           <DetailImage>
-            <Image src={data.genero_imagen}></Image>
+            <Image src={data.genero_imagen} loading='lazy'/>
           </DetailImage>
           <DetailDescription>
             <Subtitle>{data.genero}</Subtitle>
@@ -193,7 +193,7 @@ function StepTwo({ data, setData, formData, setFormData }) {
         <DetailContainer>
           <Row>
           <DetailImage>
-            <Image src={data.trama_imagen}></Image>
+            <Image src={data.trama_imagen} loading='lazy'/>
           </DetailImage>
           <DetailDescription>
             <Subtitle>{data.trama}</Subtitle>
@@ -286,7 +286,7 @@ function StepThree({ data, setData, formData, setFormData }) {
         <DetailContainer>
           <Row>
           <DetailImage>
-            <Image src={data.objeto_deseo_imagen}></Image>
+            <Image src={data.objeto_deseo_imagen} loading='lazy'/>
           </DetailImage>
           <DetailDescription>
             <Subtitle>{data.objeto_deseo}</Subtitle>
@@ -380,7 +380,7 @@ function StepFour({ data, setData, formData, setFormData }) {
         <DetailContainer>
           <Row>
           <DetailImage>
-            <Image src={data.tiempo_espacio_imagen}/>
+            <Image src={data.tiempo_espacio_imagen} loading='lazy'/>
           </DetailImage>
           <DetailDescription>
             <Subtitle>{data.tiempo_espacio}</Subtitle>
@@ -401,7 +401,7 @@ function StepFive({ data }) {
         <CardColumn>
           <Card>
             <Title style={{fontSize:'12px'}}>Género:<br/>{data.genero}</Title>
-            <CardImage  src={data.genero_imagen}/>
+            <CardImage  src={data.genero_imagen} loading='lazy'/>
             <CardDescription>
               <p style={{color:'white', fontSize:'12px'}} dangerouslySetInnerHTML={{ __html: data.genero_descripcion }} />
             </CardDescription>
@@ -411,7 +411,7 @@ function StepFive({ data }) {
         <CardColumn>
           <Card>
             <Title style={{fontSize:'12px'}}>Trama:<br/>{data.trama}</Title>
-            <CardImage  src={data.trama_imagen}/>
+            <CardImage  src={data.trama_imagen} loading='lazy'/>
             <CardDescription>
               <p style={{color:'white', fontSize:'12px'}} dangerouslySetInnerHTML={{ __html: data.trama_descripcion }} />
             </CardDescription>
@@ -421,7 +421,7 @@ function StepFive({ data }) {
         <CardColumn>
           <Card>
             <Title style={{fontSize:'12px'}}>Objeto del deseo:<br/>{data.objeto_deseo}</Title>
-            <CardImage  src={data.objeto_deseo_imagen}/>
+            <CardImage  src={data.objeto_deseo_imagen} loading='lazy'/>
             <CardDescription>
               <p style={{color:'white', fontSize:'12px'}} dangerouslySetInnerHTML={{ __html: data.objeto_deseo_descripcion }} />
             </CardDescription>
@@ -431,7 +431,7 @@ function StepFive({ data }) {
         <CardColumn>
           <Card>
             <Title style={{fontSize:'12px'}}>Tiempo y Espacio:<br/>{data.tiempo_espacio}</Title>
-            <CardImage  src={data.tiempo_espacio_imagen}/>
+            <CardImage  src={data.tiempo_espacio_imagen} loading='lazy'/>
             <CardDescription>
               <div style={{color:'white', fontSize:'12px'}} dangerouslySetInnerHTML={{ __html: data.tiempo_espacio_descripcion }} />
             </CardDescription>
@@ -450,7 +450,7 @@ function StepSix() {
         <Title color='#43474f'><h1>¡Felicitaciones!</h1></Title>
         <p>Has desbloqueado el generador de personajes</p>
       </FormContainer>
-      <Image style={{width:'20%', marginTop:'15px'}} src={'images/character-statue.png'}/>
+      <Image style={{width:'20%', marginTop:'15px'}} src={'images/character-statue.png'} loading='lazy'/>
     </>
   );
 }
@@ -584,7 +584,7 @@ function RFeaturesView() {
   };
 
   return <>
-    <BackgroundImage src='images/narratives-background.jpg'/>
+    <BackgroundImage src='images/narratives-background.jpg' loading='lazy'/>
     
     <Opacity>
       <TopMenu 

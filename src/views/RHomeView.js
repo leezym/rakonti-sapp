@@ -56,10 +56,10 @@ function RHomeView() {
   };
 
   return <>
-    <BackgroundImage src='images/rakonti-background.png'/>
+    <BackgroundImage src='images/rakonti-background.png' loading='lazy'/>
     
     <Container>
-        <Logo src="images/logo.png" alt="Logo" />
+        <Logo src="images/logo.png" loading='lazy'/>
 
         <Button onClick={newStory}>Nueva historia</Button>
         <Button onClick={() => popUp()}>Mis historias</Button>

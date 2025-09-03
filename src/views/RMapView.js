@@ -98,25 +98,25 @@ function Features({ genre, plot, desire, time }){
         <StepsContainer>
           <Card>
             <CardTitle>GÉNERO:<br/>{genre.nombre}</CardTitle>
-            <CardImage  src={genre.imagen}/>
+            <CardImage src={genre.imagen} loading='lazy'/>
             <CardDescription dangerouslySetInnerHTML={{ __html: genre.descripcion }} />
           </Card>
 
           <Card>
             <CardTitle>TRAMA:<br/>{plot.nombre}</CardTitle>
-            <CardImage  src={plot.imagen}/>
+            <CardImage src={plot.imagen} loading='lazy'/>
             <CardDescription dangerouslySetInnerHTML={{ __html: plot.descripcion }} />
           </Card>
 
           <Card>
             <CardTitle>OBJETO DEL DESEO:<br/>{desire.nombre}</CardTitle>
-            <CardImage  src={desire.imagen}/>
+            <CardImage src={desire.imagen} loading='lazy'/>
             <CardDescription dangerouslySetInnerHTML={{ __html: desire.descripcion }} />
           </Card>
 
           <Card>
             <CardTitle>TIEMPO Y ESPACIO:<br/>{time.nombre}</CardTitle>
-            <CardImage  src={time.imagen}/>
+            <CardImage src={time.imagen} loading='lazy'/>
             <CardDescription dangerouslySetInnerHTML={{ __html: time.descripcion }} />
           </Card>
         </StepsContainer>
@@ -137,7 +137,7 @@ function Characters({ characters, personalities, roles, handleEditCharacters }){
       </LeftColumn>
       <RightColumn>
         <StepsContainer>
-          <Card className="card-hover" style={{ width: '50%' }}>
+          <Card className="card-hover" style={{ width: '60%' }}>
             <CardTitle>SELECCIONE UN PERSONAJE:</CardTitle>
 
             <ScrollContainer>
@@ -157,11 +157,11 @@ function Characters({ characters, personalities, roles, handleEditCharacters }){
             </ScrollContainer>
           </Card>
           
-          <div style={{ width:'80%', height: '100%', display: 'flex', flexDirection: 'column'}}>
+          <div style={{ width:'60%', height: '100%', display: 'flex', flexDirection: 'column'}}>
             <Card>
               <CardTitle>PERFIL DEMOGRÁFICO:</CardTitle>
-              <CardDescription>Edad: {currentCharacter.edad}</CardDescription>
-              <CardDescription>Género: {currentCharacter.sexo}</CardDescription>
+              <CardDescription><b>Edad:</b> {currentCharacter.edad}</CardDescription>
+              <CardDescription><b>Género:</b> {currentCharacter.sexo}</CardDescription>
             </Card>
 
             <Card>
@@ -173,7 +173,7 @@ function Characters({ characters, personalities, roles, handleEditCharacters }){
           </div>
 
           <CardHorizontal 
-            style={{marginLeft:'-15px', display:'flex'}}
+            style={{marginLeft:'-10px', display:'flex'}}
             image={currentPersonality.imagen}
           >
             <CardTitle
@@ -249,7 +249,7 @@ function Tips({ feature, stages, currentStage }) {
           <LargeCard>
             <TipButtonContainer>
               <TipButton onClick={handlePrevious}>
-                <IconImage src="images/left-arrow.png" />
+                <IconImage src="images/left-arrow.png" loading='lazy'/>
               </TipButton>
             </TipButtonContainer>
 
@@ -265,7 +265,7 @@ function Tips({ feature, stages, currentStage }) {
 
             <TipButtonContainer>
               <TipButton onClick={handleNext}>
-                <IconImage src="images/right-arrow.png" />
+                <IconImage src="images/right-arrow.png" loading='lazy'/>
               </TipButton>
             </TipButtonContainer>
           </LargeCard>
@@ -394,12 +394,17 @@ function RMapView() {
   }, [feature, originalFeature]);
 
   useEffect(() => {
-    moveSpriteTo(currentStage);
-  }, [currentStage, stages]);
+    if (!showFeatures && !showCharacters && !showTips && showSteps) {
+      moveSpriteTo(currentStage);
+    }
+  }, [showFeatures, showCharacters, showTips, showSteps, currentStage]);
+
 
   const moveSpriteTo = (stepNumber) => {
+    if (!mapsContainerRef.current || !characterRef.current) return;
+
     const button = document.querySelector(`[data-step='${stepNumber}']`);
-    if (!button || !characterRef.current || !mapsContainerRef.current) return;
+    if (!button) return;
 
     const buttonRect = button.getBoundingClientRect();
     const containerRect = mapsContainerRef.current.getBoundingClientRect();
@@ -488,7 +493,9 @@ function RMapView() {
     }
 
     if (currentStage < totalSteps) {
-      dispatch(setCurrentStage(currentStage + 1));
+      const nextStage = currentStage + 1;
+      dispatch(setCurrentStage(nextStage));
+      moveSpriteTo(nextStage);
     } else if (currentStage === totalSteps) {
       handleSave();
       setShowFinalPopup(true);
@@ -504,6 +511,7 @@ function RMapView() {
     }
 
     dispatch(setCurrentStage(stepNumber));
+    moveSpriteTo(stepNumber);
   }
 
   const popUp = () => {
@@ -530,7 +538,7 @@ function RMapView() {
 
   return (
     <>
-      <BackgroundImage src='images/modes-background.jpg' alt='narratives-background' />
+      <BackgroundImage src='images/modes-background.jpg' loading='lazy'/>
       <TopMenu 
         showTutorial={showTutorial}
         feature={feature}
@@ -644,10 +652,7 @@ function RMapView() {
                         >
                           <PointButton
                             data-step={stepNumber}
-                            onClick={() => {
-                              handleStep(stepNumber);
-                              moveSpriteTo(stepNumber);
-                            }}
+                            onClick={() => handleStep(stepNumber)}
                             active={stepNumber <= currentStage}
                             disabled={stepNumber > currentStage + 1}
                           />
@@ -660,6 +665,7 @@ function RMapView() {
                   <img
                     ref={characterRef}
                     src="images/character-statue.png"
+                    loading='lazy'
                     style={{
                       position: "absolute",
                       width: "auto",
@@ -667,6 +673,7 @@ function RMapView() {
                       transition: "top 0.5s ease, left 0.5s ease",
                       pointerEvents: "none",
                       zIndex: 999,
+                      display: !showFeatures && !showCharacters && !showTips && showSteps ? "block" : "none"
                     }}
                   />
                 </MapsContainer>
@@ -871,7 +878,6 @@ const StepLabel = styled.div`
 
 const Map = styled.div`
   width: 100%;
-  //height: 80%;
   aspect-ratio: 1 / 1;
   background-image: ${({ narrative, active, step }) =>
     active
@@ -1093,7 +1099,7 @@ const ScrollContainer = styled.div`
   align-items: stretch;
 
   width: 100%;
-  max-height: 250px;
+  max-height: 200px;
   overflow-y: auto;
   padding-right: 5px;
   word-break: break-word;
@@ -1155,7 +1161,7 @@ const CardDescription = styled.div`
   text-align: left;
   width: 100%;
   flex: 1;
-  max-height: 250px;
+  max-height: 200px;
   overflow-y: auto;
   padding-right: 5px;
   word-break: break-word;
@@ -1272,7 +1278,7 @@ const CardHorizontalDescription = styled.div`
   overflow-y: auto;
   padding-right: 5px;
   flex: 1;
-  max-height: 240px;
+  max-height: 190px;
 
   ul {
     padding-left: 18px;

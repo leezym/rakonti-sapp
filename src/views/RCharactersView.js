@@ -51,7 +51,7 @@ function RCharactersView() {
   
   return (
     <>
-      <BackgroundImage src='images/narratives-background.jpg' alt='narratives-background'/>
+      <BackgroundImage src='images/narratives-background.jpg' loading='lazy'/>
       <Opacity>
           <TopMenu popUp={popUp}/>
           <Title style={{paddingTop:'10px'}}>CREADOR DE PERSONAJES</Title>
@@ -67,6 +67,7 @@ function RCharactersView() {
 
               <CardImage
                 src={'images/plus-icon.png'}
+                loading='lazy'
                 onClick={() => navigate('/character', { state: { id_historia } })}
                 style={{
                   position: 'absolute',

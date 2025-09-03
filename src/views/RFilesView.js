@@ -7,7 +7,6 @@ import styled from 'styled-components';
 import downloadWordDocument from './downloadWordDocument';
 
 function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usuario, setNarrative, setFeature, setGenre, setPlot, setDesire, setTime, setCharacters, setPersonalities, setRoles, setCurrentStage, closePopup }) {
-  const [estructuras, setEstructuras] = useState({});
   const [filaSeleccionada, setFilaSeleccionada] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -25,38 +24,9 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
     setLoading(true);
     api.get(`/historias/${id_usuario}`)
       .then(res => setHistorias(res.data))
-      .catch(err => console.error('Error al cargar las historias del usuario:', err));
-  }, []);
-
-  useEffect(() => {
-    if (historias.length === 0) return;
-
-    const fetchEstructuras = async () => {
-      setLoading(true);
-      try {
-        const peticiones = historias.map(historia =>
-          api.get(`/estructuras-narrativas/${historia.id_estructura}`)
-            .then(res => ({ id_historia: historia.id_historia, estructura: res.data }))
-            .catch(() => ({ id_historia: historia.id_historia, estructura: { nombre: 'Desconocida' } }))
-        );
-
-        const resultados = await axios.all(peticiones);
-        const mapEstructuras = {};
-
-        resultados.forEach(({ id_historia, estructura }) => {
-          mapEstructuras[id_historia] = estructura;
-        });
-
-        setEstructuras(mapEstructuras);
-      } catch (err) {
-        console.error("Error cargando estructuras:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEstructuras();
-  }, [historias]);
+      .catch(err => console.error('Error al cargar las historias del usuario:', err))
+      .finally(() => setLoading(false));
+  }, [id_usuario]);
 
   const formatearFecha = (fechaString) => {
     const fecha = new Date(fechaString);
@@ -77,53 +47,16 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
 
     setFilaSeleccionada(historia.id_historia);
 
-    const estructuraCompleta = estructuras[historia.id_historia];
-    if (!estructuraCompleta) {
-      console.warn('Estructura no encontrada para la historia:', historia.id_historia);
-      return;
-    }
-
     try {
-      const [
-        generosRes,
-        tramasRes,
-        objetosRes,
-        tiempoEspacioRes,
-        personajesRes
-      ] = await Promise.all([
-        api.get(`/generos/${historia.id_genero}`),
-        api.get(`/tramas/${historia.id_trama}`),
-        api.get(`/objetos-deseo/${historia.id_objeto}`),
-        api.get(`/tiempo-espacio/${historia.id_tiempo_espacio}`),
-        api.get(`/personajes/historia/${historia.id_historia}`)
-      ]);
-
-      const personajes = personajesRes.data || [];
-      if (!Array.isArray(personajes) || personajes.length === 0) {
-        console.warn('No se encontraron personajes para la historia:', historia.id_historia);
-      }
-
-      const [personalidadesRes, rolesRes] = await Promise.all([
-        Promise.all(personajes.map(p =>
-          api.get(`/personalidades/${p.id_personalidad}`)
-        )),
-        Promise.all(personajes.map(p =>
-          api.get(`/personaje-roles/${p.id_personaje}`)
-        ))
-      ]);
-
-      const personalidades = personalidadesRes.map(r => r.data);
-      const roles = rolesRes.map(r => r.data);
-
-      dispatch(setNarrative(estructuraCompleta));
+      dispatch(setNarrative(historia.estructuras_narrativas));
       dispatch(setFeature(historia));
-      dispatch(setGenre(generosRes.data));
-      dispatch(setPlot(tramasRes.data));
-      dispatch(setDesire(objetosRes.data));
-      dispatch(setTime(tiempoEspacioRes.data));
-      dispatch(setCharacters(personajes));
-      dispatch(setPersonalities(personalidades));
-      dispatch(setRoles(roles));
+      dispatch(setGenre(historia.generos));
+      dispatch(setPlot(historia.tramas));
+      dispatch(setDesire(historia.objetos_deseo));
+      dispatch(setTime(historia.tiempo_espacio));
+      dispatch(setCharacters(historia.personajes));
+      dispatch(setPersonalities(historia.personajes.map(p => p.personalidades)));
+      dispatch(setRoles(historia.personajes.map(p => p.roles)));
       dispatch(setCurrentStage(historia.paso_actual));
 
       closePopup();
@@ -181,7 +114,7 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
                   >
                     <TableCell selected={filaSeleccionada === historia.id_historia}>{historia.titulo}</TableCell>
                     <TableCell selected={filaSeleccionada === historia.id_historia}>{formatearFecha(historia.fecha_edicion)}</TableCell>
-                    <TableCell selected={filaSeleccionada === historia.id_historia}>{estructuras[historia.id_historia]?.nombre || 'Desconocida'}</TableCell>
+                    <TableCell selected={filaSeleccionada === historia.id_historia}>{historia.estructuras_narrativas.nombre}</TableCell>
                     <TableCell selected={filaSeleccionada === historia.id_historia}>
                       <button
                         onClick={async e => {

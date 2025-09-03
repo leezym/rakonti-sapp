@@ -66,10 +66,10 @@ function RLoginView() {
   };
 
   return <div>
-    <BackgroundImage src='images/rakonti-background.png'/>
+    <BackgroundImage src='images/rakonti-background.png' loading='lazy'/>
 
     <Container>
-      <Logo src="images/logo.png" alt="Logo" />
+      <Logo src="images/logo.png" loading='lazy'/>
 
       <FormContainer>
         <Label>Correo</Label>
