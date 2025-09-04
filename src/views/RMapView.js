@@ -19,10 +19,10 @@ import {
   setCurrentStage
 } from '../redux-store/reducers/storySlice';
 import downloadWordDocument from '../functions/downloadWordDocument';
-import Tutorial from "./Tutorial";
+import Tutorial from "./tutorial/Tutorial";
 import PopUp from './PopUp';
 
-function Edit({ stages, currentStage, quillRef, value, handleChange, modules, showSteps, stepContents, stepContextRef }) {
+function Edit({ stages, currentStage, quillRef, value, handleChange, modules, showSteps, stepContents, stepContextRef, refsTutorial }) {
   useEffect(() => {
     if (quillRef.current && stepContextRef.current) {
       const editorContainer = quillRef.current.editor.container;
@@ -50,7 +50,7 @@ function Edit({ stages, currentStage, quillRef, value, handleChange, modules, sh
         </Paragraph>
       )}
 
-      <FormContainer>
+      <FormContainer ref={refsTutorial?.writing}>
         <StepContextContainer ref={stepContextRef} showSteps={showSteps}>
           {orderedStepContents.slice(0, currentStage - 1).map((content, index) => (
             <>
@@ -297,7 +297,7 @@ function RMapView() {
   const [stages, setStages] = useState([]);
   const [value, setValue] = useState('');
   const [stepContents, setStepContents] = useState({});
-  const [showSteps, setShowSteps] = useState(true);
+  const [showSteps, setShowSteps] = useState(!location.state?.showTutorial);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [editedSteps, setEditedSteps] = useState({});
   const [showPopup, setShowPopup] = useState(false);
@@ -322,10 +322,10 @@ function RMapView() {
   const totalSteps = narrative.hitos_cantidad.reduce((a, b) => a + b, 0);
   const tutorialSteps = [
     { ref: null, text: "<h2><b>¡Te damos la bienvenida a Rakonti!</b></h2><br/><p>Para comenzar a crear tu primera historia, debes familiarizarte con el espacio de trabajo. Vamos a dar un tour rápido.</p><br/>" },
-    { ref: menu_left, text: "<h2><b>Comandos generales</b></h2><br/><p>En la esquina superior izquierda encuentras las siguientes funcionalidades generales:<ul><li>Volver al inicio</li><li>Guardar</li><li>Mis historias</li></ul><br/>" },
+    { ref: menu_left, text: "<h2><b>Comandos generales</b></h2><br/><p>En la esquina superior izquierda encuentras las siguientes funcionalidades generales:<ul><li>Volver al inicio</li><li>Guardar</li><li>Mis historias</li></ul></p><br/>" },
     { ref: title, text: "<h2><b>Nombre de tu historia</b></h2><br/><p>En la parte superior encuentras el nombre de tu historia. ¡Puedes editarlo en cualquier momento con solo hacer doble click!</p><br/>" },
-    { ref: menu_right, text: "<h2><b>Herramientas disponibles</b></h2><br/><p>En la esquina superior derecha encuentras un grupo de botones muy útiles con los que puedes activar o desactivar las siguientes funcionalidades:<ul><li>Resumen de los 4 pilares</li><li>Resumen de los personajes</li><li>Tips y consejos</li><li>Modo concentración. ¡Úsalo para ocultar todo menos el editor de texto!</li></ul><br/>" },
-    { ref: writing, text: "<h2><b>Zona de escritura</b></h2><br/><p>En esta sección encuentras la zona para escribir en cada paso tu historia. Podrás avanzar en ella con el botón <b>Siguiente paso<b/>.<br/>" },
+    { ref: menu_right, text: "<h2><b>Herramientas disponibles</b></h2><br/><p>En la esquina superior derecha encuentras un grupo de botones muy útiles con los que puedes activar o desactivar las siguientes funcionalidades:<ul><li>Resumen de los 4 pilares</li><li>Resumen de los personajes</li><li>Tips y consejos</li><li>Modo concentración. ¡Úsalo para ocultar todo menos el editor de texto!</li></ul></p><br/>" },
+    { ref: writing, text: "<h2><b>Zona de escritura</b></h2><br/><p>En esta sección encuentras la zona para escribir en cada paso tu historia. Podrás avanzar en ella con el botón <b>Siguiente paso<b/>.</p><br/>" },
     { ref: null, text: "<h2><b>¡Muy bien! Ya conoces tu espacio de trabajo</b></h2><br/><p>Ahora que ya conoces cómo se organiza tu espacio de trabajo, puedes sacar el mayor provecho de todas las funcionalidades y herramientas a tu disposición. Ahora si...</p><br/>" }
   ];
 
@@ -576,7 +576,10 @@ function RMapView() {
           rect={rect}
           onNext={() => setTutorialStep(tutorialStep + 1)}
           onPrev={() => setTutorialStep(tutorialStep - 1)}
-          onClose={() => setShowTutorial(false)}
+          onClose={() => {
+            setShowTutorial(false);
+            setShowSteps(true);
+          }}
         />
       )}
 
@@ -693,7 +696,8 @@ function RMapView() {
           modules={modules} 
           showSteps={showSteps} 
           stepContents={stepContents} 
-          stepContextRef={stepContextRef} />
+          stepContextRef={stepContextRef}
+          refsTutorial={{ writing }}/>
         <ButtonsContainer>
           { <Button type="button" onClick={handleNext}>{currentStage < totalSteps ? "Siguiente paso" : "Finalizar"}</Button> }
         </ButtonsContainer>

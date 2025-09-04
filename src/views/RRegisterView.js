@@ -210,8 +210,8 @@ function StepThree({ formData, handleChange }) {
 
 function StepFour() {
   return (
-    <FormContainer>
-      <Title>¡FELICITACIONES!<br/>TU CUENTA HA SIDO CREADA</Title>
+    <FormContainer image={'images/congrats-characters.png'}>
+      <Title style={{color:'#43474f'}}>¡FELICITACIONES!<br/>TU CUENTA HA SIDO CREADA</Title>
       <p>Todo está listo para empezar a crear tus propias hisotiras.</p>
     </FormContainer>
   );
@@ -500,7 +500,7 @@ const FormContainer = styled.form`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-image: url('images/section.png');
+  background-image: ${({ image }) => image ? `url(${image})` : 'url("images/section.png")'};
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
