@@ -92,7 +92,6 @@ function RLoginView() {
         </RegisterText>
 
         <Button onClick={handleLogin}>Iniciar sesión</Button>
-
       </FormContainer>
     </Container>
   </div>;

@@ -59,28 +59,27 @@ function RHomeView() {
     <BackgroundImage src='images/rakonti-background.png' loading='lazy'/>
     
     <Container>
-        <Logo src="images/logo.png" loading='lazy'/>
+      <Logo src="images/logo.png" loading='lazy'/>
 
-        <Button onClick={newStory}>Nueva historia</Button>
-        <Button onClick={() => popUp()}>Mis historias</Button>
-        <Button onClick={handleLogout}>Cerrar sesión</Button>
-        
+      <Button onClick={newStory}>Nueva historia</Button>
+      <Button onClick={() => popUp()}>Mis historias</Button>
+      <Button onClick={handleLogout}>Cerrar sesión</Button>
+      
+      <PopUp
+        setNarrative={setNarrative}
+        setFeature={setFeature}
+        setGenre={setGenre}
+        setPlot={setPlot}
+        setDesire={setDesire}
+        setTime={setTime}
+        setCharacters={setCharacters}
+        setPersonalities={setPersonalities}
+        setRoles={setRoles}
+        setCurrentStage={setCurrentStage}
+        showPopup={showPopup}
+        setShowPopup={setShowPopup}
+      />
     </Container>
-
-    <PopUp
-      setNarrative={setNarrative}
-      setFeature={setFeature}
-      setGenre={setGenre}
-      setPlot={setPlot}
-      setDesire={setDesire}
-      setTime={setTime}
-      setCharacters={setCharacters}
-      setPersonalities={setPersonalities}
-      setRoles={setRoles}
-      setCurrentStage={setCurrentStage}
-      showPopup={showPopup}
-      setShowPopup={setShowPopup}
-    />
   </>
 }
 

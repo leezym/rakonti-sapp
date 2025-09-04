@@ -6,7 +6,6 @@ import styled from 'styled-components';
 function StepOne({ formData, handleChange }) {
   return (
     <>
-      <br/>
       <FormContainer>
         <Subtitle>Sobre ti</Subtitle>
 
@@ -55,7 +54,7 @@ function StepOne({ formData, handleChange }) {
           </Column>
         </Row>
       </FormContainer>
-      <br/>
+
       <FormContainer>
         <Subtitle>Seguridad de tu cuenta</Subtitle>
 
@@ -111,15 +110,23 @@ function StepTwo({ formData, setFormData }) {
   }, []);
 
   return (
-    <>
-      <br/>
-      <FormContainer>
-        <Subtitle>¿Cuáles son tus tres (3) géneros favoritos?</Subtitle>
-        <br/>
-        <Row>
-          {dividirEnColumnas(generos, 2).map((columna, i) => (
-            <Column key={i}>
-              {columna.map(genero => (
+    <div style={{
+      padding: '25px 40px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '70%',
+      maxWidth: '1200px',
+      margin: 'auto', 
+      flex: '0'
+    }}>
+      <Paragraph>¿Cuáles son tus tres (3) géneros favoritos?</Paragraph>
+      <CardRow>
+        {dividirEnColumnas(generos, 3).map((columna, i) => (
+          <CardColumn key={i}>
+            {columna.map(genero => (
+              <Card image={'images/section-square.png'}>
                 <LabelCheckbox key={genero.id_genero}>
                   <InputCheckbox type="checkbox"
                         value={genero.id_genero}
@@ -148,57 +155,65 @@ function StepTwo({ formData, setFormData }) {
                   />
                   {genero.nombre}
                 </LabelCheckbox>
-              ))}
-            </Column>
-          ))}
-        </Row>
-      </FormContainer>
-    </>
+                <CardImage src={genero.imagen} loading='lazy'/>
+              </Card>
+            ))}
+          </CardColumn>
+        ))}
+      </CardRow>
+    </div>
   );
 }
 
 function StepThree({ formData, handleChange }) {
-  return (
-    <>
-      <br/>    
-      <FormContainer>
-        <Subtitle>¿Cuál es tu experiencia contando historias?</Subtitle>
-        <br/>
-        <Row>
-          <Column style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+  return (  
+    <FormContainer>
+      <Subtitle>¿Cuál es tu experiencia contando historias?</Subtitle>
+      <Row>
+        <Card image={'images/background-beginner.png'}>
+          <CardDetail image={'images/background-text-beginner.png'}>
+          <LabelRadioButton color={'white'} htmlFor="principiante">
             <InputRadio type="radio"
-                  id="principiante"
-                  name="experiencia"
-                  value="principiante"
-                  checked={formData.experiencia === 'principiante'}
-                  onChange={handleChange}
-              />
-            <LabelRadioButton htmlFor="principiante"><b>Principiante:</b> Es la primera vez que voy a escribir una historia siguiendo una estructura narrativa.</LabelRadioButton>
-          </Column>
-          <Column style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
-            <InputRadio type="radio"
-                  id="experto"
-                  name="experiencia"
-                  value="experto"
-                  checked={formData.experiencia === 'experto'}
-                  onChange={handleChange}
+              id="principiante"
+              name="experiencia"
+              value="principiante"
+              checked={formData.experiencia === 'principiante'}
+              onChange={handleChange}
             />
-            <LabelRadioButton htmlFor="experto"><b>Experto:</b> He escrito historias anteriormente y/o estoy familiarizado con el concepto de estructura narrativa.</LabelRadioButton>
-          </Column>
-        </Row>
-      </FormContainer>
-    </>
+            <b>Principiante:</b>
+          </LabelRadioButton>
+          <p style={{marginLeft:'30px', color:'white'}}>Es la primera vez que voy a escribir una historia siguiendo una estructura narrativa.</p>
+          </CardDetail>
+        </Card>
+      </Row>
+
+      <Row>
+        <Card image={'images/background-expert.png'}>
+          <CardDetail image={'images/background-text-expert.png'}>
+          <LabelRadioButton color={'#43474f'} htmlFor="experto">
+            <InputRadio type="radio"
+              id="experto"
+              name="experiencia"
+              value="experto"
+              checked={formData.experiencia === 'experto'}
+              onChange={handleChange}
+            />
+            <b>Experto:</b>
+          </LabelRadioButton>
+          <p style={{marginLeft:'30px', color:'#43474f'}}>He escrito historias anteriormente y/o estoy familiarizado con el concepto de estructura narrativa.</p>
+          </CardDetail>
+        </Card>
+      </Row>
+    </FormContainer>
   );
 }
 
 function StepFour() {
   return (
-    <>
-      <FormContainer>
-        <Title>¡FELICITACIONES!<br/>TU CUENTA HA SIDO CREADA</Title>
-        <p>Todo está listo para empezar a crear tus propias hisotiras.</p>
-      </FormContainer>
-    </>
+    <FormContainer>
+      <Title>¡FELICITACIONES!<br/>TU CUENTA HA SIDO CREADA</Title>
+      <p>Todo está listo para empezar a crear tus propias hisotiras.</p>
+    </FormContainer>
   );
 }
 
@@ -330,31 +345,35 @@ function RRegisterView() {
     }
   };  
 
-  return <div>
+  return <>
     <BackgroundImage src='images/narratives-background.jpg' loading='lazy'/>
 
     <Container>
-      <Title>CREACIÓN DE CUENTA</Title>
+      <Opacity>
+        <Title>CREACIÓN DE CUENTA</Title>
 
-      <StepsContainer>
-        <Step active={step === 1} step={1} align='left' padding="20px 40px 20px 30px">
-          <b>Datos personales</b>
-          <br />Información básica para crear tu cuenta
-        </Step>
-        <Step active={step === 2} step={2} align='center' padding="20px 40px 20px 80px">
-          <b>Géneros narrativos</b>
-          <br />¡Vamos a conocer tus gustos narrativos!
-        </Step>
-        <Step active={step === 3} step={3} align='right' padding="20px 30px 20px 60px">
-          <b>Experiencia</b>
-          <br />¿Qué tanto sabes de contar historias?
-        </Step>
-      </StepsContainer>
+        <StepsContainer>
+          <Step active={step === 1} step={1} align='left' padding="20px 40px 20px 30px">
+            <b>Datos personales</b>
+            <br />Información básica para crear tu cuenta
+          </Step>
+          <Step active={step === 2} step={2} align='center' padding="20px 40px 20px 80px">
+            <b>Géneros narrativos</b>
+            <br />¡Vamos a conocer tus gustos narrativos!
+          </Step>
+          <Step active={step === 3} step={3} align='right' padding="20px 30px 20px 60px">
+            <b>Experiencia</b>
+            <br />¿Qué tanto sabes de contar historias?
+          </Step>
+        </StepsContainer>
+      </Opacity>
 
-      {step === 1 && <StepOne formData={formData} handleChange={handleChange} />}
-      {step === 2 && <StepTwo formData={formData} setFormData={setFormData} />}
-      {step === 3 && <StepThree formData={formData} handleChange={handleChange} />}
-      {step === 4 && <StepFour />}
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, width: '100%' }}>
+        {step === 1 && <StepOne formData={formData} handleChange={handleChange} />}
+        {step === 2 && <StepTwo formData={formData} setFormData={setFormData} />}
+        {step === 3 && <StepThree formData={formData} handleChange={handleChange} />}
+        {step === 4 && <StepFour />}
+      </div>
 
       <ButtonsContainer>
         {step >= 1 && step <= 3 && <ButtonSecondary onClick={handleCancel}>Cancelar</ButtonSecondary>}
@@ -365,7 +384,7 @@ function RRegisterView() {
       </ButtonsContainer>
 
     </Container>
-  </div>
+  </>
 }
 
 const BackgroundImage = styled.img`
@@ -376,6 +395,15 @@ const BackgroundImage = styled.img`
   width: 100vw;
   object-fit: cover;
   z-index: -1;
+`;
+
+const Opacity = styled.div`
+  width: 100%;
+  flex-shrink: 0;
+  background-image: url('images/opacity.png');
+  background-size: fill;
+  background-repeat: no-repeat;
+  background-position: center;
 `;
 
 const Row = styled.div`
@@ -394,31 +422,30 @@ const Column = styled.div`
 `;
 
 const Container = styled.div`
-align-items: center;
-display: flex;
-justify-content: flex-start;
-position: absolute;
-margin-top:10px;
-width: 100%;
-height: 100%;
-box-sizing: border-box;
-flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
 `;
   
 const Title = styled.h1`
-  font-size:40x;
+  font-size:35x;
   font-weight: 800;
-  color: #43474f;
+  color:white;
   text-align: center;
-  margin-bottom: 20px;
+  margin: 10px;
 `;
 
 const StepsContainer = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
   flex-direction: row;
-  width: 70%;
+  width: 100%;
+  justify-content: center; /* centra los botones horizontalmente */
+  margin: 0px auto 10px auto; /* centra el contenedor horizontalmente y separa arriba */
+  max-width: 1200px; /* opcional: mismo máximo que FormContainer */
+  box-sizing: border-box;
 `;
 
 const Step = styled.div`
@@ -461,24 +488,105 @@ const Step = styled.div`
 `;
 
 const Subtitle = styled.div`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 800;
   color: #43474f;
   align-self: flex-start;
 `;
 
-const FormContainer = styled.form`
-  padding: 20px 40px 20px 40px;
+const FormContainer = styled.form` 
+  padding: 25px 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   background-image: url('images/section.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   width: 70%;
+  max-width: 1200px; /* limita ancho máximo en pantallas grandes */
   box-sizing: border-box;
-  border-radius: 45px;
+  border-radius: 40px;
+  margin: auto; /* esto centra vertical y horizontalmente */
+  flex: 0; /* no estira todo el espacio disponible */
+`;
+
+const Paragraph = styled.div`
+  font-size: 14px;
+  font-weight: 600;
+  color: #43474f;
+  align-self: center;
+  padding: 15px;
+  background-image: url('images/top-bar.png');
+  background-color: transparent;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  box-sizing: border-box;
+`;
+
+const CardRow = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+  gap: 10px;
+  align-items: stretch;
+  justify-items: center;
+
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  box-sizing: border-box;
+`;
+
+const CardColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+`;
+
+const Card = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;   /* 👈 importante: el contenido arranca arriba */
+  align-items: stretch;
+
+  padding: 20px 20px 20px 40px;
+  background-image: ${({ image }) => `url(${image})`};
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;  /* evita que se desborde */
+`;
+
+const CardDetail = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+
+  margin: 0 auto;
+  padding: 30px;
+  background-image: ${({ image }) => `url(${image})`};
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  width: 80%;
+  box-sizing: border-box;
+  overflow: hidden; 
+`;
+
+const CardImage = styled.img`
+  height: 100px;
+  width: auto;
+  object-fit: contain;
+  margin: 10px 0;
 `;
 
 const Label = styled.label`
@@ -491,10 +599,10 @@ const Label = styled.label`
 
 const LabelRadioButton = styled.label`
   font-size: 14px;
-  color: #43474f;
-  display: inline-block;
-  margin-left: 10px;
+  color: ${({ color }) => color};
   cursor: pointer;
+  display: flex;
+  align-items: center;  
 `;
 
 const LabelCheckbox = styled.label`
@@ -525,6 +633,8 @@ const Select = styled.select`
 const InputRadio = styled.input`
   width: 18px;
   height: 18px;
+  cursor: pointer;
+  margin-right: 10px;
 `;
 
 const InputCheckbox = styled.input`
@@ -532,10 +642,15 @@ const InputCheckbox = styled.input`
 `;
 
 const ButtonsContainer = styled.div`
-  margin-top: 10px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* centra los botones horizontalmente */
+  flex-wrap: wrap;         /* permite que los botones se acomoden en varias filas si no caben */
   gap: 20px;
+  margin: 0px auto 10px auto; /* centra el contenedor horizontalmente y separa arriba */
+  padding: 0;
+  width: ${({ width }) => width || '80%'}; /* mismo ancho que FormContainer */
+  max-width: 1200px; /* opcional: mismo máximo que FormContainer */
+  box-sizing: border-box;
 `;
 
 const ButtonPrimary = styled.button`

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import styled from 'styled-components';
-import downloadWordDocument from './downloadWordDocument';
+import downloadWordDocument from '../functions/downloadWordDocument';
 
 function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usuario, setNarrative, setFeature, setGenre, setPlot, setDesire, setTime, setCharacters, setPersonalities, setRoles, setCurrentStage, closePopup }) {
   const [filaSeleccionada, setFilaSeleccionada] = useState(null);

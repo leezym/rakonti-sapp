@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
-import RCharacterView from './views/RCharacterView';
-import RCharactersView from './views/RCharactersView';
+import RCharacterView from './views/characters/RCharacterView';
+import RCharactersView from './views/characters/RCharactersView';
 import RFeaturesView from './views/RFeaturesView';
 import RLoginView from './views/RLoginView';
 import RRegisterView from './views/RRegisterView';

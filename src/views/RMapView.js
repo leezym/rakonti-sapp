@@ -18,7 +18,7 @@ import {
   setRoles,
   setCurrentStage
 } from '../redux-store/reducers/storySlice';
-import downloadWordDocument from './downloadWordDocument';
+import downloadWordDocument from '../functions/downloadWordDocument';
 import Tutorial from "./Tutorial";
 import PopUp from './PopUp';
 

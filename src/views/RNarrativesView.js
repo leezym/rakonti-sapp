@@ -44,12 +44,13 @@ function RNarrativesView() {
 
   return <>
     <BackgroundImage src='images/narratives-background.jpg' loading='lazy'/>
-    <Opacity>
-        <TopMenu popUp={popUp}/>
-        <Title>ESTRUCTURA NARRATIVA</Title>
-        <Subtitle>Elige la estructura narativa que deseas usar para la creración de tu historia:</Subtitle>
-    </Opacity>
     <Container>
+      <Opacity>
+          <TopMenu popUp={popUp}/>
+          <Title>ESTRUCTURA NARRATIVA</Title>
+          <Subtitle>Elige la estructura narativa que deseas usar para la creración de tu historia:</Subtitle>
+      </Opacity>
+
       <CardRow>
         {estructuras.map(estructura => (
           <CardColumn>
@@ -60,27 +61,27 @@ function RNarrativesView() {
               <CardDescription>
                 { estructura.descripcion }
               </CardDescription>
-              <Button onClick={() => onClicked(estructura)}>Seleccionar</Button>
+              <ButtonSecondary onClick={() => onClicked(estructura)}>Seleccionar</ButtonSecondary>
             </Card>
           </CardColumn>
         ))}
       </CardRow>
-    </Container>
 
-    <PopUp
-      setNarrative={setNarrative}
-      setFeature={setFeature}
-      setGenre={setGenre}
-      setPlot={setPlot}
-      setDesire={setDesire}
-      setTime={setTime}
-      setCharacters={setCharacters}
-      setPersonalities={setPersonalities}
-      setRoles={setRoles}
-      setCurrentStage={setCurrentStage}
-      showPopup={showPopup}
-      setShowPopup={setShowPopup}
-    />
+      <PopUp
+        setNarrative={setNarrative}
+        setFeature={setFeature}
+        setGenre={setGenre}
+        setPlot={setPlot}
+        setDesire={setDesire}
+        setTime={setTime}
+        setCharacters={setCharacters}
+        setPersonalities={setPersonalities}
+        setRoles={setRoles}
+        setCurrentStage={setCurrentStage}
+        showPopup={showPopup}
+        setShowPopup={setShowPopup}
+      />
+    </Container>
   </>
 }
 
@@ -96,7 +97,7 @@ const BackgroundImage = styled.img`
 
 const Opacity = styled.div`
   width: 100%;
-  height: 20%;
+  flex-shrink: 0;
   background-image: url('images/opacity.png');
   background-size: fill;
   background-repeat: no-repeat;
@@ -104,18 +105,15 @@ const Opacity = styled.div`
 `;
 
 const Container = styled.div`
-  align-items: center;
   display: flex;
-  justify-content: flex-start;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
   flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 const Title = styled.h1`
-  font-size:20px;
+  font-size:16px;
   font-weight: 800;
   color: white;
   text-align: center;
@@ -125,7 +123,7 @@ const Title = styled.h1`
 `;
 
 const Subtitle = styled.div`
-  font-size:15px;
+  font-size:14px;
   color: white;
   text-align: center;
   display: flex;
@@ -134,68 +132,102 @@ const Subtitle = styled.div`
   padding-bottom: 20px;
 `;
 
-const Button = styled.button`
-  position: relative;
-  padding: 10px 30px;
-  font-size: 16px;
-  color: #43474f;
-  border: none;
-  border-radius: 10px;
-  background-color: white;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  
-  &:hover {
-    background-color:gray;
-  }
-`;
-
 const CardRow = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 100px;
-  width: 70%;
-  margin: 0 auto;
-  grid-auto-rows: 1fr; /*Esto fuerza igual altura en TODAS las filas */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+  gap: 50px;
+  align-items: stretch;
+  justify-items: center;
+  
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  box-sizing: border-box;
 `;
-
+  
 const CardColumn = styled.div`
   display: flex;
-  align-items: stretch;
+  flex-direction: column;
+  width: 100%;
   height: 100%;
-`;
-
-const CardImage = styled.img`
-  width: 400px;
-  object-fit: contain;
-  margin: 10px 0;
 `;
 
 const Card = styled.form`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 40px 30px 40px;
+  justify-content: flex-start;
+  align-items: stretch;
+
+  padding: 30px 50px;
   background-image: url('images/card-dark.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
+
   width: 100%;
-  height: 100%;
+  height: 500px;     
   box-sizing: border-box;
+  overflow: hidden;
+`;
+
+const CardImage = styled.img`
+  max-height: 200px;
+  object-fit: contain;
 `;
 
 const CardDescription = styled.div`
   color: white;
   font-size: 12px;
-  text-align: justify;
+  text-align: left;
   width: 100%;
-  flex: 1;
-  max-height: 250px;
+  margin:20px;
+
+  flex: 1;          
+  min-height: 0;    
   overflow-y: auto;
-  padding-right: 5px;
-  margin-bottom:30px;
+
+  word-break: break-word;
+  overflow-wrap: break-word;
+  
+  ul {
+    padding-left: 18px;
+    margin: 0 0 1em 0;
+    list-style-type: disc;
+  }
+
+  li {
+    margin-bottom: 0.5em;
+    list-style-position: outside;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+  }
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+`;
+
+const ButtonSecondary = styled.button`
+  align-self: center;     /* 🔑 centra el botón dentro de la card */
+  margin-top: auto;       /* 🔑 lo empuja al fondo de la card */
+
+  padding: 6px 16px;      /* 🔑 más compacto */
+  font-size: 13px;
+  border: none;
+  border-radius: 6px;
+  background-color: white;
+  color: #43474f;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: gray;
+    color: white;
+  }
 `;
 
 export default RNarrativesView;

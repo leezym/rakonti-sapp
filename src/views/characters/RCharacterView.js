@@ -1,10 +1,10 @@
-import api from "../api/axiosConfig";
+import api from "../../api/axiosConfig";
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import TopMenu from './TopMenu';
-import PopUp from './PopUp';
+import TopMenu from '../TopMenu';
+import PopUp from '../PopUp';
 import {
   setNarrative, 
   setFeature,
@@ -19,12 +19,11 @@ import {
   setRolesAtIndex,
   setRoles,
   setCurrentStage
-} from '../redux-store/reducers/storySlice';
+} from '../../redux-store/reducers/storySlice';
 
 function StepOne({ formData, handleChange }) {
   return (
     <>
-      <br/>
       <FormContainer>
         <Subtitle>Perfil demográfico</Subtitle>
 
@@ -73,11 +72,13 @@ function StepOne({ formData, handleChange }) {
           </Column>
         </Row>
       </FormContainer>
-      <br/>
+
       <FormContainer>
         <Subtitle style={{marginBottom:'8px'}}>Perfil psicológico</Subtitle>
-        <Label>¿El personaje prefiere seguir un plan detallado y organizado o improvisar y adaptarse según las circunstancias?</Label>
         <Row>
+          <Column style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+            <Label>¿El personaje prefiere seguir un plan detallado y organizado o improvisar y adaptarse según las circunstancias?</Label>
+          </Column>
           <Column style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
             <InputRadio type="radio"
                   id="organizado"
@@ -87,6 +88,7 @@ function StepOne({ formData, handleChange }) {
                   onChange={handleChange}
               />
             <LabelRadioButton htmlFor="organizado">Seguir un plan detallado y organizado</LabelRadioButton>
+            <Image style={{width:'70px'}} src={'images/executive-avatar.png'}/>
           </Column>
           <Column style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
             <InputRadio type="radio"
@@ -97,11 +99,14 @@ function StepOne({ formData, handleChange }) {
                   onChange={handleChange}
             />
             <LabelRadioButton htmlFor="improvisado">Improvisar y adaptarse según las circunstancias</LabelRadioButton>
+            <Image style={{width:'70px'}} src={'images/entertainer-avatar.png'}/>
           </Column>
         </Row>
 
-        <Label>¿El personaje toma decisiones basadas en hechos y lógica o se guía por sus ideas, intuiciones y emociones?</Label>
         <Row>
+          <Column style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+            <Label>¿El personaje toma decisiones basadas en hechos y lógica o se guía por sus ideas, intuiciones y emociones?</Label>
+          </Column>
           <Column style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
             <InputRadio type="radio"
                   id="logica"
@@ -111,6 +116,7 @@ function StepOne({ formData, handleChange }) {
                   onChange={handleChange}
               />
             <LabelRadioButton htmlFor="logica">Toma decisiones basadas en hechos y lógica</LabelRadioButton>
+            <Image style={{width:'70px'}} src={'images/logician-avatar.png'}/>
           </Column>
           <Column style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
             <InputRadio type="radio"
@@ -121,6 +127,7 @@ function StepOne({ formData, handleChange }) {
                   onChange={handleChange}
             />
             <LabelRadioButton htmlFor="intuicion">Se guía por sus ideas, intuiciones y emociones</LabelRadioButton>
+            <Image style={{width:'70px'}} src={'images/protagonist-avatar.png'}/>
           </Column>
         </Row>
       </FormContainer>
@@ -228,7 +235,6 @@ function StepThree({ data, setData }) {
 
   return (
     <>
-      <br/>
       <FormContainer>
         <p>Los <b>Roles actanciales</b> son elementos clave en la estructura narrativa de una historia. Ayudan a definir las relaciones entre los personajes y las fuerzas que impulsan la trama. Al identificar estos roles, se puede comprender mejor la motivación de los personajes y el significado de sus acciones. Para definir los roles actanciales ten en cuenta estos tres puntos:
           <ul>
@@ -239,7 +245,7 @@ function StepThree({ data, setData }) {
           <b>Selecciona qué rol(es) actancial(es) ocupa este personaje que estás creando:</b>
         </p>
         <Row>
-          {dividirEnColumnas(roles, 2).map((columna, i) => (
+          {dividirEnColumnas(roles, 3).map((columna, i) => (
             <Column key={i}>
               {columna.map(rol => (
                 <div key={rol.id_rol}>
@@ -362,20 +368,18 @@ function StepFive({ formData, data }) {
           <Card>
             <Title>Perfil demográfico</Title>
             <CardDescription>
-              <p style={{color:'white'}}>
-                <b>Nombre(s): </b>{formData.nombre}<br/><br/>
-                <b>Apellido(s): </b>{formData.apellido}<br/><br/>
-                <b>Edad: </b>{formData.edad}<br/><br/>
-                <b>Género: </b>{formData.sexo}<br/><br/>
-                <b>Roles:</b>
-                <ul>
-                  {data.roles.map((rol) => (
-                    <li>
-                      {rol.nombre}
-                    </li>
-                  ))}
-                </ul>                
-              </p>
+              <b>Nombre(s): </b>{formData.nombre}<br/><br/>
+              <b>Apellido(s): </b>{formData.apellido}<br/><br/>
+              <b>Edad: </b>{formData.edad}<br/><br/>
+              <b>Género: </b>{formData.sexo}<br/><br/>
+              <b>Roles:</b>
+              <ul>
+                {data.roles.map((rol) => (
+                  <li>
+                    {rol.nombre}
+                  </li>
+                ))}
+              </ul>
             </CardDescription>
           </Card>
         </CardColumn>
@@ -391,14 +395,12 @@ function StepFive({ formData, data }) {
           <Card>
             <Title>Características</Title>
             <CardDescription>
-              <p style={{color:'white'}}>
-                <b>Apariencia: </b>{formData.apariencia}<br/><br/>
-                <b>Ocupación/profesión: </b>{formData.ocupacion}<br/><br/>
-                <b>Intereses: </b>{formData.intereses}<br/><br/>
-                <b>Estatus social: </b>{formData.estatus_social}<br/><br/>
-                <b>Creencia(s): </b>{formData.creencias}<br/><br/>
-                <b>Antecedentes: </b>{formData.antecedentes}
-              </p>
+              <b>Apariencia: </b>{formData.apariencia}<br/><br/>
+              <b>Ocupación/profesión: </b>{formData.ocupacion}<br/><br/>
+              <b>Intereses: </b>{formData.intereses}<br/><br/>
+              <b>Estatus social: </b>{formData.estatus_social}<br/><br/>
+              <b>Creencia(s): </b>{formData.creencias}<br/><br/>
+              <b>Antecedentes: </b>{formData.antecedentes}
             </CardDescription>
           </Card>
         </CardColumn>
@@ -410,12 +412,11 @@ function StepFive({ formData, data }) {
 function StepSix({ narrative }) {
   return (
     <>
-      <br/>
-      <FormContainer width="50%">
+      <FormContainer image={'images/congrats-characters.png'} width="50%">
         <Title color='#43474f'><h1>¡Felicitaciones!</h1></Title>
         <p>Has desbloqueado tu primera estructura narrativa</p>
       </FormContainer>
-      <Image style={{width:'30%', marginTop:'15px'}} src={narrative.imagen} loading='lazy'/>
+      <Image style={{height:'300px', margin:'0 auto', paddingBottom:'30px'}} src={narrative.imagen} loading='lazy'/>
     </>
   );
 }
@@ -705,42 +706,44 @@ function RCharacterView() {
   return <>
     <BackgroundImage src='images/narratives-background.jpg' loading='lazy'/>
     
-    <Opacity>
-      <TopMenu feature={feature} popUp={popUp}/>
-
-      <StepsWrapper>
-        <LeftColumn>
-          <RotatedTitle>CREADOR DE<br/>PERSONAJES</RotatedTitle>
-        </LeftColumn>
-        <RightColumn>
-          <StepsContainer>
-            <Step active={step === 1} step={1} padding="20px 10px 20px 10px">
-              <b>Perfil</b>
-            </Step>
-            <Step active={step === 2} step={2} padding="20px 40px 20px 40px">
-              <b>Personalidad</b>
-            </Step>
-            <Step active={step === 3} step={3} padding="20px 40px 20px 40px">
-              <b>Rol</b>
-            </Step>
-            <Step active={step === 4} step={4} padding="20px 40px 20px 40px">
-              <b>Características</b>
-            </Step>
-            <Step active={step === 5} step={5} padding="20px 40px 20px 40px">
-              <b>Resumen</b>
-            </Step>
-          </StepsContainer>
-        </RightColumn>
-      </StepsWrapper>
-    </Opacity>
-
     <Container>
-      {step === 1 && <StepOne formData={formData} handleChange={handleChange} />}
-      {step === 2 && <StepTwo formData={formData} setFormData={setFormData} data={data} setData={setData} />}
-      {step === 3 && <StepThree data={data} setData={setData} />}
-      {step === 4 && <StepFour formData={formData} handleChange={handleChange }/>}
-      {step === 5 && <StepFive formData={formData} data={data} />}
-      {step === 6 && <StepSix narrative={narrative}/>}
+      <Opacity>
+        <TopMenu feature={feature} popUp={popUp}/>
+
+        <StepsWrapper>
+          <LeftColumn>
+            <RotatedTitle>CREA TU<br/>PERSONAJE</RotatedTitle>
+          </LeftColumn>
+          <RightColumn>
+            <StepsContainer>
+              <Step active={step === 1} step={1} padding="20px 10px 20px 10px">
+                <b>Perfil</b>
+              </Step>
+              <Step active={step === 2} step={2} padding="20px 40px 20px 40px">
+                <b>Personalidad</b>
+              </Step>
+              <Step active={step === 3} step={3} padding="20px 40px 20px 40px">
+                <b>Rol</b>
+              </Step>
+              <Step active={step === 4} step={4} padding="20px 40px 20px 40px">
+                <b>Características</b>
+              </Step>
+              <Step active={step === 5} step={5} padding="20px 40px 20px 40px">
+                <b>Resumen</b>
+              </Step>
+            </StepsContainer>
+          </RightColumn>
+        </StepsWrapper>
+      </Opacity>
+
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, width: '100%' }}>
+        {step === 1 && <StepOne formData={formData} handleChange={handleChange} />}
+        {step === 2 && <StepTwo formData={formData} setFormData={setFormData} data={data} setData={setData} />}
+        {step === 3 && <StepThree data={data} setData={setData} />}
+        {step === 4 && <StepFour formData={formData} handleChange={handleChange }/>}
+        {step === 5 && <StepFive formData={formData} data={data} />}
+        {step === 6 && <StepSix narrative={narrative}/>}
+      </div>
 
       <ButtonsContainer>
         {step >= 1 && step <= 5 && <ButtonSecondary onClick={handleCancel}>Cancelar</ButtonSecondary>}
@@ -756,21 +759,20 @@ function RCharacterView() {
         }}>Mis personajes</ButtonPrimary>}
       </ButtonsContainer>
 
+      <PopUp
+        setNarrative={setNarrative}
+        setFeature={setFeature}
+        setGenre={setGenre}
+        setPlot={setPlot}
+        setDesire={setDesire}
+        setTime={setTime}
+        setCharacters={setCharacters}
+        setPersonalities={setPersonalities}
+        setCurrentStage={setCurrentStage}
+        showPopup={showPopup}
+        setShowPopup={setShowPopup}
+      />
     </Container>
-
-    <PopUp
-      setNarrative={setNarrative}
-      setFeature={setFeature}
-      setGenre={setGenre}
-      setPlot={setPlot}
-      setDesire={setDesire}
-      setTime={setTime}
-      setCharacters={setCharacters}
-      setPersonalities={setPersonalities}
-      setCurrentStage={setCurrentStage}
-      showPopup={showPopup}
-      setShowPopup={setShowPopup}
-    />
   </>
 }
 
@@ -785,14 +787,11 @@ const BackgroundImage = styled.img`
 `;
 
 const Container = styled.div`
-  align-items: center;
   display: flex;
-  justify-content: flex-start;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
   flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 const Row = styled.div`
@@ -801,12 +800,10 @@ const Row = styled.div`
   justify-content: center;
   gap: 40px;
   width: 100%;
-  padding: 8px 0px 8px 0px;
 `;
 
 const Column = styled.div`
   flex: 1;
-  max-width: 48%;
   box-sizing: border-box;
 `;
 
@@ -838,7 +835,7 @@ const RotatedTitle = styled.div`
 `;
 
 const Subtitle = styled.div`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 800;
   color: #43474f;
   align-self: flex-start;
@@ -864,12 +861,12 @@ const Label = styled.label`
   font-size: 14px;
   font-weight: 600;
   color: #43474f;
+  margin: 5px;
 `;
 
 const LabelRadioButton = styled.label`
-  font-size: 14px;
+  font-size: 12px;
   color: #43474f;
-  display: inline-block;
   margin-left: 10px;
   cursor: pointer;
 `;
@@ -924,11 +921,12 @@ const Select = styled.select`
 const InputRadio = styled.input`
   width: 18px;
   height: 18px;
+  cursor:pointer;
 `;
 
 const Opacity = styled.div`
   width: 100%;
-  height: 20%;
+  flex-shrink: 0;
   background-image: url('images/opacity.png');
   background-size: fill;
   background-repeat: no-repeat;
@@ -941,7 +939,7 @@ const StepsWrapper = styled.div`
   width: 98%;
   margin: 0 auto;
   height: auto; 
-  min-height: 135px;  
+  min-height: 125px;  
 `;
 
 const LeftColumn = styled.div`
@@ -997,31 +995,42 @@ const Step = styled.div`
   white-space: normal;
 `;
 
-const FormContainer = styled.form`
-  padding: 20px 40px 20px 40px;
+const FormContainer = styled.form` 
+  padding: 20px 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-image: url('images/section.png');
+  justify-content: center;
+  background-image: ${({ image }) => image ? `url(${image})` : 'url("images/section.png")'};
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  width: 70%;
+  width: ${({ width }) => width || '80%'};
+  max-width: 1200px; /* limita ancho máximo en pantallas grandes */
   box-sizing: border-box;
-  border-radius: 45px;
+  border-radius: 40px;
+  margin: auto; /* esto centra vertical y horizontalmente */
+  flex: 0; /* no estira todo el espacio disponible */
 `;
 
 const Image = styled.img`
+  display: block;       /* hace que margin auto funcione */
+  margin: 0 auto;       /* centra horizontalmente */
   max-width: 90%;
   max-height: 90%;
   object-fit: contain;
 `;
 
 const ButtonsContainer = styled.div`
-  margin-top: 10px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* centra los botones horizontalmente */
+  flex-wrap: wrap;         /* permite que los botones se acomoden en varias filas si no caben */
   gap: 20px;
+  margin: 0px auto 10px auto; /* centra el contenedor horizontalmente y separa arriba */
+  padding: 0;
+  width: ${({ width }) => width || '80%'}; /* mismo ancho que FormContainer */
+  max-width: 1200px; /* opcional: mismo máximo que FormContainer */
+  box-sizing: border-box;
 `;
 
 const ButtonPrimary = styled.button`
@@ -1057,32 +1066,40 @@ const ButtonSecondary = styled.button`
 
 const CardRow = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
   gap: 20px;
-  width: 70%;
-  margin: 0 auto;
-  grid-auto-rows: 1fr; /*Esto fuerza igual altura en TODAS las filas */
+  align-items: stretch;
+  justify-items: center;
+
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  box-sizing: border-box;
 `;
 
 const CardColumn = styled.div`
   display: flex;
-  align-items: stretch;
+  flex-direction: column;
+  width: 100%;
   height: 100%;
 `;
 
 const Card = styled.form`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: flex-start;   /* 👈 importante: el contenido arranca arriba */
+  align-items: stretch;
+
   padding: 20px 40px 30px 40px;
   background-image: url('images/card-dark.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
+
   width: 100%;
-  height: 100%;
+  height: 400px;     /* 🔑 altura controlada de la tarjeta */
   box-sizing: border-box;
+  overflow: hidden;  /* evita que se desborde */
 `;
 
 const CardDescription = styled.div`
@@ -1090,10 +1107,12 @@ const CardDescription = styled.div`
   font-size: 12px;
   text-align: left;
   width: 100%;
-  flex: 1;
-  max-height: 250px;
-  overflow-y: auto;
+
+  flex: 1;          /* ocupa el espacio sobrante dentro del Card */
+  min-height: 0;    /* 👈 truco para que funcione bien el scroll en flexbox */
+  overflow-y: auto; /* ahora sí el scroll aparece */
   padding-right: 5px;
+
   word-break: break-word;
   overflow-wrap: break-word;
 
@@ -1108,21 +1127,17 @@ const CardDescription = styled.div`
     list-style-position: outside;
   }
 
-  /* WebKit (Chrome, Safari, Edge) */
   &::-webkit-scrollbar {
     width: 6px;
   }
-
   &::-webkit-scrollbar-track {
     background: transparent;
   }
-
   &::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.3); /* blanco translúcido */
+    background-color: rgba(255, 255, 255, 0.3);
     border-radius: 3px;
   }
 
-  /* Firefox */
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 `;
@@ -1139,7 +1154,7 @@ const CardHorizontal = styled.form`
   background-repeat: no-repeat;
   background-position: center;
   height: 175px;
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
   box-sizing: border-box;
   text-align: right;
@@ -1196,7 +1211,7 @@ const LabelCheckbox = styled.label`
   display: flex;
   align-items: center;
   margin-bottom: 8px;
-  font-size: 14px;
+  font-size: 12px;
   color: #43474f;
 `;
 
