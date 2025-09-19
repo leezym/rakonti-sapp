@@ -13,7 +13,7 @@ function createWindow() {
     resizable: false,     // bloquea bordes/flechas
     fullscreenable: false,// bloquea F11
     maximizable: false,   // quita botón maximizar/restaurar
-    movable: true,        // necesario para evitar bug de Inputs
+    movable: false,       // deshabilitar movimiento para evitar conflictos
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -32,42 +32,27 @@ function createWindow() {
 
   // Mostrar siempre maximizado y asegurar focus
   mainWindow.once("ready-to-show", () => {
-    console.log("Electron: Window ready-to-show, maximizing and showing");
     mainWindow.maximize();
     mainWindow.show();
 
-    // Forzar recalculo de tamaño para Chromium
-    const bounds = mainWindow.getBounds();
-    console.log("Electron: Current bounds before setBounds:", bounds);
-    mainWindow.setBounds(bounds);
-    console.log("Electron: Bounds after setBounds:", mainWindow.getBounds());
-
-    // Forzar focus de la ventana
-    mainWindow.webContents.focus();
-    console.log("Electron: Forced focus on webContents");
+    // Asegurar focus de la ventana después de un breve delay
+    setTimeout(() => {
+      mainWindow.webContents.focus();
+    }, 100);
   });
 
-  // Evitar que se mueva aunque movable=true
-  mainWindow.on("will-move", (e) => {
-    console.log("Electron: will-move event triggered, preventing move");
-    e.preventDefault();
-  });
+  // Window movement is now disabled via movable: false
 
   // Si alguien intenta restaurar, volver a maximizar
   mainWindow.on("unmaximize", () => {
-    console.log("Electron: unmaximize event, maximizing again");
     mainWindow.maximize();
   });
 
   mainWindow.on("closed", () => (mainWindow = null));
 
-  // Add focus and blur logging
+  // Ensure webContents gets focus when window gains focus
   mainWindow.on("focus", () => {
-    console.log("Electron: Window gained focus");
-  });
-
-  mainWindow.on("blur", () => {
-    console.log("Electron: Window lost focus");
+    mainWindow.webContents.focus();
   });
 }
 
