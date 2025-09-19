@@ -28,7 +28,10 @@ function RNarrativesView() {
   useEffect(() => {
     api.get('/estructuras-narrativas')
       .then(res => setEstructuras(res.data))
-      .catch(err => console.error('Error al cargar las estructuras narrativas:', err));
+      .catch (error => {
+        const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al cargar las estructuras narrativas';
+        console.error(errorMsg, error);
+      });
   }, []);
 
   const onClicked = (estructura) => {
@@ -180,25 +183,13 @@ const CardDescription = styled.div`
   font-size: 12px;
   text-align: left;
   width: 100%;
-  margin:20px;
+  margin: 20px 10px 15px 0px;
 
   flex: 1;          
   min-height: 0;    
   overflow-y: auto;
-
   word-break: break-word;
   overflow-wrap: break-word;
-  
-  ul {
-    padding-left: 18px;
-    margin: 0 0 1em 0;
-    list-style-type: disc;
-  }
-
-  li {
-    margin-bottom: 0.5em;
-    list-style-position: outside;
-  }
 
   &::-webkit-scrollbar {
     width: 6px;

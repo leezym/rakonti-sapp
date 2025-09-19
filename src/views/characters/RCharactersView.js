@@ -85,7 +85,7 @@ function RCharactersView() {
                 : characters
               ).map((character, index) => (
               <CardColumn key={character.id_personaje}>
-                <Card image={`${personalities[index].imagen.replace('rectangle', 'square')}`}> {/*falta executive*/}
+                <Card image={`${personalities[index].imagen.replace('rectangle', 'square')}`}>
                   <CardHeader>
                     <Title>{character.nombre + " " + character.apellido}</Title>
                     <Subtitle>{personalities[index].nombre}</Subtitle>

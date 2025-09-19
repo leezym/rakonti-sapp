@@ -24,7 +24,10 @@ function StepOne({ data, setData, formData, setFormData }) {
   useEffect(() => {
     api.get('/generos')
       .then(res => setGeneros(res.data))
-      .catch(err => console.error('Error al cargar los géneros:', err));
+      .catch (error => {
+        const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al cargar los géneros';
+        alert(errorMsg);
+      });
   }, []);
 
   useEffect(() => {
@@ -116,7 +119,10 @@ function StepTwo({ data, setData, formData, setFormData }) {
   useEffect(() => {
     api.get('/tramas')
       .then(res => setTramas(res.data))
-      .catch(err => console.error('Error al cargar las tramas:', err));
+      .catch (error => {
+        const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al cargar las tramas';
+        alert(errorMsg);
+      });
   }, []);
 
   useEffect(() => {
@@ -208,7 +214,10 @@ function StepThree({ data, setData, formData, setFormData }) {
   useEffect(() => {
     api.get('/objetos-deseo')
       .then(res => setObjetos(res.data))
-      .catch(err => console.error('Error al cargar los objetos del deseo:', err));
+      .catch (error => {
+        const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al cargar los objetos del deseo';
+        alert(errorMsg);
+      });
   }, []);
 
   useEffect(() => {
@@ -299,7 +308,10 @@ function StepFour({ data, setData, formData, setFormData }) {
   useEffect(() => {
     api.get('/tiempo-espacio')
       .then(res => setTiemposEspacios(res.data))
-      .catch(err => console.error('Error al cargar los tiempos-espacios:', err));
+      .catch (error => {
+        const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al cargar los tiempos-espacios';
+        alert(errorMsg);
+      });
   }, []);
 
   useEffect(() => {
@@ -433,7 +445,7 @@ function StepSix() {
         <Title color='#43474f'><h1>¡Felicitaciones!</h1></Title>
         <p>Has desbloqueado el generador de personajes</p>
       </FormContainer>
-      <Image style={{height:'300px', margin:'0 auto', paddingBottom:'30px'}} src={'images/character-statue.png'} loading='lazy'/>
+      <Image style={{height:'300px', margin:'auto', paddingBottom:'30px'}} src={'images/character-statue.png'} loading='lazy'/>
     </>
   );
 }

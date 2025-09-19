@@ -24,7 +24,10 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
     setLoading(true);
     api.get(`/historias/${id_usuario}`)
       .then(res => setHistorias(res.data))
-      .catch(err => console.error('Error al cargar las historias del usuario:', err))
+      .catch (error => {
+        const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al cargar las historias del usuario';
+        alert(errorMsg);
+      })
       .finally(() => setLoading(false));
   }, [id_usuario]);
 
@@ -63,7 +66,8 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
       navigate(`/map/${historia.id_historia}`);
 
     } catch (error) {
-      console.error('Error al cargar datos de la historia:', error.response?.data || error.message);
+      const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al cargar datos de la historia';
+      alert(errorMsg);
     }
   };
 
@@ -139,8 +143,8 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
                             downloadWordDocument(historia.titulo, stages, stepContents);
 
                           } catch (error) {
-                            console.error("Error al descargar documento Word:", error);
-                            alert("Error al descargar el documento Word.");
+                            const errorMsg = error.response?.data?.error || error.response?.data?.detalle || "Error al descargar el documento Word.";
+                            alert(errorMsg);
                           }
                         }}
                         style={{ cursor: "pointer", padding: "6px 12px", fontSize: "12px" }}

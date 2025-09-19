@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import TopMenu from '../TopMenu';
 import PopUp from '../PopUp';
 import {
-  setNarrative, 
+  setNarrative,
   setFeature,
   setGenre,
   setPlot,
@@ -14,14 +14,14 @@ import {
   setTime,
   setCharacter,
   setCharacters,
-  setPersonality,
   setPersonalities,
   setRolesAtIndex,
+  setPersonalitiesAtIndex,
   setRoles,
   setCurrentStage
 } from '../../redux-store/reducers/storySlice';
 
-function StepOne({ formData, handleChange }) {
+function StepOne({ data, setData, formData, setFormData, handleChange }) {
   return (
     <>
       <FormContainer>
@@ -81,22 +81,42 @@ function StepOne({ formData, handleChange }) {
           </Column>
           <Column style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
             <InputRadio type="radio"
-                  id="organizado"
-                  name="plan"
-                  value="organizado"
-                  checked={formData.plan === 'organizado'}
-                  onChange={handleChange}
+                id="organizado"
+                name="plan"
+                value="organizado"
+                checked={formData.plan === 'organizado'}
+                onChange={(e) => {
+                  const { name, value } = e.target;
+                  setFormData(prev => ({ ...prev, [name]: value, id_personalidad: '' }));
+
+                  setData({
+                    ...data,
+                    personalidad: '',
+                    personalidad_descripcion: '',
+                    personalidad_imagen: ''
+                  });
+                }}
               />
             <LabelRadioButton htmlFor="organizado">Seguir un plan detallado y organizado</LabelRadioButton>
             <Image style={{width:'70px'}} src={'images/executive-avatar.png'}/>
           </Column>
           <Column style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
             <InputRadio type="radio"
-                  id="improvisado"
-                  name="plan"
-                  value="improvisado"
-                  checked={formData.plan === 'improvisado'}
-                  onChange={handleChange}
+              id="improvisado"
+              name="plan"
+              value="improvisado"
+              checked={formData.plan === 'improvisado'}
+              onChange={(e) => {
+                const { name, value } = e.target;
+                setFormData(prev => ({ ...prev, [name]: value, id_personalidad: '' }));
+
+                setData({
+                  ...data,
+                  personalidad: '',
+                  personalidad_descripcion: '',
+                  personalidad_imagen: ''
+                });
+              }}
             />
             <LabelRadioButton htmlFor="improvisado">Improvisar y adaptarse según las circunstancias</LabelRadioButton>
             <Image style={{width:'70px'}} src={'images/entertainer-avatar.png'}/>
@@ -109,22 +129,42 @@ function StepOne({ formData, handleChange }) {
           </Column>
           <Column style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
             <InputRadio type="radio"
-                  id="logica"
-                  name="decision"
-                  value="logica"
-                  checked={formData.decision === 'logica'}
-                  onChange={handleChange}
+                id="logica"
+                name="decision"
+                value="logica"
+                checked={formData.decision === 'logica'}
+                onChange={(e) => {
+                  const { name, value } = e.target;
+                  setFormData(prev => ({ ...prev, [name]: value, id_personalidad: '' }));
+
+                  setData({
+                    ...data,
+                    personalidad: '',
+                    personalidad_descripcion: '',
+                    personalidad_imagen: ''
+                  });
+                }}
               />
             <LabelRadioButton htmlFor="logica">Toma decisiones basadas en hechos y lógica</LabelRadioButton>
             <Image style={{width:'70px'}} src={'images/logician-avatar.png'}/>
           </Column>
           <Column style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
             <InputRadio type="radio"
-                  id="intuicion"
-                  name="decision"
-                  value="intuicion"
-                  checked={formData.decision === 'intuicion'}
-                  onChange={handleChange}
+              id="intuicion"
+              name="decision"
+              value="intuicion"
+              checked={formData.decision === 'intuicion'}
+              onChange={(e) => {
+                const { name, value } = e.target;
+                setFormData(prev => ({ ...prev, [name]: value, id_personalidad: '' }));
+
+                setData({
+                  ...data,
+                  personalidad: '',
+                  personalidad_descripcion: '',
+                  personalidad_imagen: ''
+                });
+              }}
             />
             <LabelRadioButton htmlFor="intuicion">Se guía por sus ideas, intuiciones y emociones</LabelRadioButton>
             <Image style={{width:'70px'}} src={'images/protagonist-avatar.png'}/>
@@ -141,7 +181,10 @@ function StepTwo({ formData, setFormData, data, setData }) {
   useEffect(() => {
     api.get('/personalidades')
       .then(res => setPersonalidades(res.data))
-      .catch(err => console.error('Error al cargar las personalidades:', err));
+      .catch (error => {
+        const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al cargar las personalidades';
+        alert(errorMsg);
+      });
   }, []);
 
   let nombresFiltrados = [];
@@ -160,46 +203,17 @@ function StepTwo({ formData, setFormData, data, setData }) {
     nombresFiltrados.includes(p.nombre)
   );
 
-  const primerasDos = personalidadesFiltradas.slice(0, 2);
-  const ultimasDos = personalidadesFiltradas.slice(2, 4);
-
   return (
     <>
       <Paragraph>De acuerdo al perfil psicológico elegido te proponemos usar una de las siguientes personalidades:</Paragraph>
-      <Row>
-        {primerasDos.map(personalidad => (
-          <Column key={personalidad.id_personalidad}>
+      <div style={{ margin: 'auto', width: '100%', maxWidth: '1200px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '40px' }}>
+          {personalidadesFiltradas.map(personalidad => (
             <CardHorizontal
-              image={personalidad.imagen}
-              id={personalidad.id_personalidad}
-              selected={formData.id_personalidad === personalidad.id_personalidad}
-              onClick={() => {
-                setData({
-                  ...data,
-                  personalidad: personalidad ? personalidad.nombre : '',
-                  personalidad_descripcion: personalidad ? personalidad.descripcion : '',
-                  personalidad_imagen: personalidad ? personalidad.imagen : ''
-                });
-
-                setFormData({
-                  ...formData,
-                  id_personalidad: personalidad ? personalidad.id_personalidad : ''
-                });
-              }}>
-              <Title style={{fontSize:'13px'}} align="right">{personalidad.nombre}</Title>
-              <CardHorizontalDescription dangerouslySetInnerHTML={{ __html: personalidad.descripcion }} />
-            </CardHorizontal>
-          </Column>
-        ))}
-      </Row>
-
-      <Row>
-        {ultimasDos.map(personalidad => (
-          <Column key={personalidad.id_personalidad}>
-            <CardHorizontal
-              image={personalidad.imagen}
               key={personalidad.id_personalidad}
+              image={personalidad.imagen}
               selected={formData.id_personalidad === personalidad.id_personalidad}
+              style={{ margin: 0, width: '100%' }}
               onClick={() => {
                 setData({
                   ...data,
@@ -207,7 +221,7 @@ function StepTwo({ formData, setFormData, data, setData }) {
                   personalidad_descripcion: personalidad ? personalidad.descripcion : '',
                   personalidad_imagen: personalidad ? personalidad.imagen : ''
                 });
-
+                
                 setFormData({
                   ...formData,
                   id_personalidad: personalidad ? personalidad.id_personalidad : ''
@@ -216,13 +230,12 @@ function StepTwo({ formData, setFormData, data, setData }) {
               <Title style={{fontSize:'13px'}} align="right">{personalidad.nombre}</Title>
               <CardHorizontalDescription dangerouslySetInnerHTML={{ __html: personalidad.descripcion }} />
             </CardHorizontal>
-          </Column>
-        ))}
-      </Row>
+          ))}
+        </div>
+      </div>
     </>
   );
 }
-
 
 function StepThree({ data, setData }) {
   const [roles, setRoles] = useState([]);
@@ -230,7 +243,10 @@ function StepThree({ data, setData }) {
   useEffect(() => {
     api.get('/roles')
       .then(res => setRoles(res.data))
-      .catch(err => console.error('Error al cargar los roles:', err));
+      .catch (error => {
+        const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al cargar los roles';
+        alert(errorMsg);
+      });
   }, []);
 
   return (
@@ -416,7 +432,7 @@ function StepSix({ narrative }) {
         <Title color='#43474f'><h1>¡Felicitaciones!</h1></Title>
         <p>Has desbloqueado tu primera estructura narrativa</p>
       </FormContainer>
-      <Image style={{height:'300px', margin:'0 auto', paddingBottom:'30px'}} src={narrative.imagen} loading='lazy'/>
+      <Image style={{height:'300px', margin:'auto', paddingBottom:'30px'}} src={narrative.imagen} loading='lazy'/>
     </>
   );
 }
@@ -529,9 +545,8 @@ function RCharacterView() {
     const rolesParaAgregar = rolesNuevos.filter(r => !rolesOriginalesIds.includes(r.id_rol));
     const rolesParaEliminar = rolesOriginales.filter(r => !rolesNuevosIds.includes(r.id_rol));
 
+    let mensajesExito = [];
     try {
-      let mensajesExito = [];
-
       // Caso 1: Editar personaje existente en historia existente
       if (id_personaje && id_historia) {
         // Actualizar personaje
@@ -539,14 +554,14 @@ function RCharacterView() {
           `/personajes/${id_personaje}`,
           formData
         );
-        mensajesExito.push("Personaje actualizado con éxito.");
+        mensajesExito.push(personajeResponse.data?.message || "Personaje actualizado con éxito.");
 
         // Actualizar historia
         const historiaResponse = await api.put(
           `/historias/${id_historia}`,
           feature
         );
-        mensajesExito.push("Historia actualizada con éxito.");
+        mensajesExito.push(historiaResponse.data?.message || "Historia actualizada con éxito.");
 
         // Actualizar roles en DB
         for (const rol of rolesParaAgregar) {
@@ -564,11 +579,14 @@ function RCharacterView() {
 
         dispatch(setFeature(historiaResponse.data));
         dispatch(setCharacter(personajeResponse.data));
-        dispatch(setPersonality({
-          id_personalidad: formData.id_personalidad,
-          nombre: data.personalidad,
-          descripcion: data.personalidad_descripcion,
-          imagen: data.personalidad_imagen
+        dispatch(setPersonalitiesAtIndex({
+          index,
+          personality: {
+            id_personalidad: formData.id_personalidad,
+            nombre: data.personalidad,
+            descripcion: data.personalidad_descripcion,
+            imagen: data.personalidad_imagen
+          }
         }));
         dispatch(setRolesAtIndex({
           index,
@@ -587,7 +605,10 @@ function RCharacterView() {
         .then(res => {
           setShowTutorial(res.data.length === 0);
         })
-        .catch(err => console.error('Error al cargar las historias del usuario:', err));
+        .catch (error => {
+          const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al cargar las historias del usuario';
+          alert(errorMsg);
+        });
 
         // Crear historia
         const historiaResponse = await api.post(
@@ -595,7 +616,7 @@ function RCharacterView() {
           feature
         );
         const nuevaIdHistoria = historiaResponse.data.id_historia;
-        mensajesExito.push("Historia creada con éxito.");
+        mensajesExito.push(historiaResponse.data?.message || "Historia creada con éxito.");
 
         // Crear personaje vinculado a la historia
         const personajeResponse = await api.post(
@@ -603,7 +624,7 @@ function RCharacterView() {
           { ...formData, id_historia: nuevaIdHistoria }
         );
         const nuevoIdPersonaje = personajeResponse.data.id_personaje;
-        mensajesExito.push("Personaje creado con éxito.");
+        mensajesExito.push(personajeResponse.data?.message || "Personaje creado con éxito.");
 
          // Crear roles
         for (const rol of rolesNuevos) {
@@ -638,14 +659,14 @@ function RCharacterView() {
           { ...formData, id_historia }
         );
         const nuevoIdPersonaje = personajeResponse.data.id_personaje;
-        mensajesExito.push("Personaje creado con éxito.");
+        mensajesExito.push(personajeResponse.data?.message || "Personaje creado con éxito.");
 
         // Actualizar historia existente
         const historiaResponse = await api.put(
           `/historias/${id_historia}`,
           feature
         );
-        mensajesExito.push("Historia actualizada con éxito.");
+        mensajesExito.push(historiaResponse.data?.message || "Historia actualizada con éxito.");
 
         // Crear roles
         for (const rol of rolesNuevos) {
@@ -674,18 +695,8 @@ function RCharacterView() {
         window.history.back();
       }
     } catch (error) {
-      if (error.response?.status === 409) {
-        const mensaje = error.response.data?.error || '';
-        if (mensaje.includes('historia')) {
-          alert('Ya existe una historia con ese título. Por favor elige otro.');
-        } else if (mensaje.includes('personaje')) {
-          alert('Ya existe un personaje con ese nombre y apellido. Por favor elige otro.');
-        } else {
-          alert(`Conflicto: ${mensaje}`);
-        }
-      } else {
-        alert(`Error inesperado: ${error.message}`);
-      }
+      const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al guardar';
+      alert(errorMsg);
     }
   };
   
@@ -737,7 +748,7 @@ function RCharacterView() {
       </Opacity>
 
       <div style={{ display: 'flex', flexDirection: 'column', flex: 1, width: '100%' }}>
-        {step === 1 && <StepOne formData={formData} handleChange={handleChange} />}
+        {step === 1 && <StepOne data={data} setData={setData} formData={formData} setFormData={setFormData} handleChange={handleChange} />}
         {step === 2 && <StepTwo formData={formData} setFormData={setFormData} data={data} setData={setData} />}
         {step === 3 && <StepThree data={data} setData={setData} />}
         {step === 4 && <StepFour formData={formData} handleChange={handleChange }/>}
@@ -1154,7 +1165,7 @@ const CardHorizontal = styled.form`
   background-repeat: no-repeat;
   background-position: center;
   height: 175px;
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
   text-align: right;

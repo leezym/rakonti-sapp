@@ -72,13 +72,12 @@ export const storySlice = createSlice({
       }
     },
 
-    setPersonality: (state, action) => {
-      const index = state.personalities.findIndex(
-        c => c.id_personalidad === action.payload.id_personalidad
-      );
-      if (index !== -1) {
-        state.personalities[index] = action.payload;
+    setPersonalitiesAtIndex: (state, action) => {
+      const { index, personality } = action.payload;
+      if (!Array.isArray(state.personalities)) {
+        state.personalities = [];
       }
+      state.personalities[index] = personality;
     },
 
     setRoles: (state, action) => {
@@ -109,7 +108,7 @@ export const {
   setCharacters,
   setCharacter,
   setPersonalities,
-  setPersonality,
+  setPersonalitiesAtIndex,
   setRoles,
   setRolesAtIndex,
   setCurrentStage

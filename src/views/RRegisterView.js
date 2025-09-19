@@ -106,7 +106,10 @@ function StepTwo({ formData, setFormData }) {
   useEffect(() => {
     api.get('/generos')
       .then(res => setGeneros(res.data))
-      .catch(err => console.error('Error al cargar los géneros:', err));
+      .catch (error => {
+        const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al cargar los géneros';
+        console.error(errorMsg, error);
+      });
   }, []);
 
   return (
@@ -265,7 +268,7 @@ function RRegisterView() {
         return;
       }
 
-      if (formData.correo !== formData.confirmar_correo) {
+      if (formData.correo.toLowerCase() !== formData.confirmar_correo.toLowerCase()) {
         alert('Los correos no coinciden.');
         return;
       }
@@ -297,8 +300,8 @@ function RRegisterView() {
     }  
   
     try {
-      const response = await api.post('/usuarios/registro', formData);
-      console.log('Usuario creado:', response.data);
+      const response = await api.post('/usuarios/registro', { ...formData, correo: formData.correo.toLowerCase() });
+      alert(response.data?.message || 'Usuario creado correctamente.');
       
       const id_usuario = response.data.id_usuario;
 
@@ -312,7 +315,8 @@ function RRegisterView() {
       setStep(step + 1);
     } catch (error) {
       console.error(error);
-      alert('Ocurrió un error al crear el usuario.');
+      const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Ocurrió un error al crear el usuario.';
+      alert(errorMsg);
     }
   }; 
   
@@ -328,7 +332,7 @@ function RRegisterView() {
 
     try {
       const loginResponse = await api.post('/usuarios/login/', {
-        correo: formData.correo,
+        correo: formData.correo.toLowerCase(),
         contrasena: formData.contrasena
       });
 
@@ -341,7 +345,8 @@ function RRegisterView() {
 
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
-      alert('Ocurrió un error. Revisa los datos e intenta de nuevo.');
+      const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Ocurrió un error. Revisa los datos e intenta de nuevo.';
+      alert(errorMsg);
     }
   };  
 
@@ -611,6 +616,7 @@ const LabelCheckbox = styled.label`
   margin-bottom: 8px;
   font-size: 16px;
   color: #43474f;
+  cursor:pointer;
 `;
 
 const Input = styled.input`

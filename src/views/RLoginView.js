@@ -51,8 +51,8 @@ function RLoginView() {
       return;
     }
 
-    try {      
-      const response = await api.post('/usuarios/login', loginData);
+    try {
+      const response = await api.post('/usuarios/login', { ...loginData, correo: loginData.correo.toLowerCase() });
       const { token, id_usuario } = response.data;
       
       localStorage.setItem('token', token);
@@ -60,7 +60,7 @@ function RLoginView() {
 
       navigate('/home');
     } catch (error) {
-      const errorMsg = error.response?.data?.error || 'Error al iniciar sesión.';
+      const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al iniciar sesión.';
       alert(errorMsg);
     }
   };

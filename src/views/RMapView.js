@@ -90,7 +90,7 @@ function Edit({ stages, currentStage, quillRef, value, handleChange, modules, sh
 
 function Features({ genre, plot, desire, time }){
   return (
-    <StepsWrapper>
+    <>
       <LeftColumn>
         <RotatedTitle>4 PILARES</RotatedTitle>
       </LeftColumn>
@@ -121,7 +121,7 @@ function Features({ genre, plot, desire, time }){
           </Card>
         </StepsContainer>
       </RightColumn>
-  </StepsWrapper>
+    </>
   );
 }
 
@@ -225,7 +225,10 @@ function Tips({ feature, stages, currentStage }) {
         setTips(res.data);
         setCurrentTipIndex(0);
       })
-      .catch(err => console.error('Error al cargar los tips del paso:', err));
+      .catch (error => {
+        const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al cargar los tips del paso';
+        alert(errorMsg);
+      });
   }, [feature.id_estructura, stages, currentStage]);
 
   const handlePrevious = () => {
@@ -316,8 +319,6 @@ function RMapView() {
   const writing = useRef(null);
   const quillRef = useRef();
   const stepContextRef = useRef(null);
-  const characterRef = useRef(null);
-  const mapsContainerRef = useRef(null);
 
   const totalSteps = narrative.hitos_cantidad.reduce((a, b) => a + b, 0);
   const tutorialSteps = [
@@ -351,7 +352,10 @@ function RMapView() {
         const pasosOrdenados = res.data.sort((a, b) => a.numero_paso - b.numero_paso);
         setStages(pasosOrdenados);
       })
-      .catch(err => console.error('Error al cargar los pasos de la estructura:', err));
+      .catch (error => {
+        const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al cargar los pasos de la estructura';
+        alert(errorMsg);
+      });
     }
     
     api.get(`/pasos-estructura-narrativa-historia/historia/${id_historia}`)
@@ -362,7 +366,10 @@ function RMapView() {
         });
         setStepContents(contents);
       })
-      .catch((err) => console.error('Error al cargar contenidos previos:', err));
+      .catch((error) => {
+        const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al cargar contenidos previos';
+        alert(errorMsg);
+      });
   }, [feature, id_historia]);
 
   useEffect(() => {
@@ -393,28 +400,8 @@ function RMapView() {
     }
   }, [feature, originalFeature]);
 
-  useEffect(() => {
-    if (!showFeatures && !showCharacters && !showTips && showSteps) {
-      moveSpriteTo(currentStage);
-    }
-  }, [showFeatures, showCharacters, showTips, showSteps, currentStage]);
 
 
-  const moveSpriteTo = (stepNumber) => {
-    if (!mapsContainerRef.current || !characterRef.current) return;
-
-    const button = document.querySelector(`[data-step='${stepNumber}']`);
-    if (!button) return;
-
-    const buttonRect = button.getBoundingClientRect();
-    const containerRect = mapsContainerRef.current.getBoundingClientRect();
-
-    const top = buttonRect.top - containerRect.top - characterRef.current.offsetHeight / 2;
-    const left = (buttonRect.left - containerRect.left - characterRef.current.offsetWidth / 2) + 10;
-
-    characterRef.current.style.top = `${top}px`;
-    characterRef.current.style.left = `${left}px`;
-  };
 
   const handleChange = (content) => {
     setValue(content);
@@ -449,7 +436,7 @@ function RMapView() {
   const handleSave = async () => {
     if(!hasUnsavedChanges) return;
     setHasUnsavedChanges(false);
-    
+
     try {
       const saveRequests = Object.entries(editedSteps).map(([id_paso_estructura, contenido]) =>
         api.post('/pasos-estructura-narrativa-historia', {
@@ -458,20 +445,40 @@ function RMapView() {
           contenido
         })
       );
-      
-      await Promise.all(saveRequests);
-      
-      await api.put(`/historias/${id_historia}`, {
-        titulo: feature.titulo,
+
+      const saveResponses = await Promise.all(saveRequests);
+
+      const historiaResponse = await api.put(`/historias/${id_historia}`, {
+        ...feature,
         paso_actual: currentStage,
         fecha_edicion: new Date()
       });
-      
-      alert('Progreso guardado correctamente.');
+
+      // Collect success messages from all responses
+      const successMessages = [];
+
+      // Add messages from step saves
+      saveResponses.forEach(response => {
+        if (response.data?.message) {
+          successMessages.push(response.data.message);
+        }
+      });
+
+      // Add message from story update
+      if (historiaResponse.data?.message) {
+        successMessages.push(historiaResponse.data.message);
+      }
+
+      // If no specific messages, use default
+      if (successMessages.length === 0) {
+        successMessages.push('Progreso guardado correctamente.');
+      }
+
+      alert(successMessages.join('\n'));
       setEditedSteps({});
-    } catch (err) {
-      console.error(err);
-      alert('Error al guardar los pasos.');
+    } catch (error) {
+      const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al guardar.';
+      alert(errorMsg);
     }
   };
 
@@ -495,7 +502,6 @@ function RMapView() {
     if (currentStage < totalSteps) {
       const nextStage = currentStage + 1;
       dispatch(setCurrentStage(nextStage));
-      moveSpriteTo(nextStage);
     } else if (currentStage === totalSteps) {
       handleSave();
       setShowFinalPopup(true);
@@ -511,7 +517,6 @@ function RMapView() {
     }
 
     dispatch(setCurrentStage(stepNumber));
-    moveSpriteTo(stepNumber);
   }
 
   const popUp = () => {
@@ -584,7 +589,7 @@ function RMapView() {
       )}
 
       {showSteps && (
-        <>
+        <StepsWrapper>
           {showFeatures && (
             <Features
               genre={genre}
@@ -595,28 +600,24 @@ function RMapView() {
           )}
 
           {showCharacters && (
-            <StepsWrapper>
-              <Characters
-                characters={characters}
-                personalities={personalities}
-                roles={roles}
-                handleEditCharacters={handleEditCharacters}
-              />
-            </StepsWrapper>
+            <Characters
+              characters={characters}
+              personalities={personalities}
+              roles={roles}
+              handleEditCharacters={handleEditCharacters}
+            />
           )}
 
           {showTips && (
-            <StepsWrapper>
-              <Tips
-                feature={feature}
-                stages={stages}
-                currentStage={currentStage}
-              />
-            </StepsWrapper>
+            <Tips
+              feature={feature}
+              stages={stages}
+              currentStage={currentStage}
+            />
           )}
 
           {!showFeatures && !showCharacters && !showTips && (
-            <StepsWrapper>
+            <>
               <LeftColumn>
                 <RotatedTitle>{narrative.nombre}</RotatedTitle>
               </LeftColumn>
@@ -640,7 +641,7 @@ function RMapView() {
                   })}
                 </StepsContainer>
 
-                <MapsContainer ref={mapsContainerRef} className="maps-container">
+                <MapsContainer className="maps-container">
                   {Array.from({ length: totalSteps }, (_, index) => {
                     const stepNumber = index + 1;
 
@@ -659,31 +660,33 @@ function RMapView() {
                             active={stepNumber <= currentStage}
                             disabled={stepNumber > currentStage + 1}
                           />
+                          {stepNumber === currentStage && (
+                            <img
+                              src="images/character-statue.png"
+                              loading='lazy'
+                              style={{
+                                position: "absolute",
+                                top: "50%",
+                                left: "45%",
+                                transform: "translate(-50%, -50%)",
+                                width: "auto",
+                                height: "50px",
+                                pointerEvents: "none",
+                                zIndex: 999
+                              }}
+                            />
+                          )}
                         </Map>
                         <StepLabel>{stages[stepNumber - 1]?.nombre_paso}</StepLabel>
                       </MapWrapper>
                     );
                   })}
 
-                  <img
-                    ref={characterRef}
-                    src="images/character-statue.png"
-                    loading='lazy'
-                    style={{
-                      position: "absolute",
-                      width: "auto",
-                      height: "50px",
-                      transition: "top 0.5s ease, left 0.5s ease",
-                      pointerEvents: "none",
-                      zIndex: 999,
-                      display: !showFeatures && !showCharacters && !showTips && showSteps ? "block" : "none"
-                    }}
-                  />
                 </MapsContainer>
               </RightColumn>
-            </StepsWrapper>
+            </>
           )}
-        </>
+        </StepsWrapper>
       )}
 
       <Container>
@@ -822,7 +825,7 @@ const RightColumn = styled.div`
   
 const StepsContainer = styled.div`
   display: flex;
-  width: 95%;
+  width: 100%;
   align-items: stretch;
 `;
 
@@ -831,8 +834,7 @@ const CenteredButtonContainer = styled.div`
   align-items: center;
   justify-content: center;
   height: 100%;
-  margin-left: 20px;
-  width:5%;
+  margin: 0px 5px 0px 5px;
 `;
 
 const MapsContainer = styled.div`
@@ -890,6 +892,7 @@ const Map = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+  position: relative;
 
   /* solapamiento */
   margin-left: ${({ index }) => (index > 0 ? "-20%" : "0")};
