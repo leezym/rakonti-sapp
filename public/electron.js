@@ -1,6 +1,9 @@
+// electron.js (versión debug para empaquetar temporalmente)
 const { app, BrowserWindow } = require("electron");
 const isDev = require("electron-is-dev");
 const path = require("path");
+
+app.disableHardwareAcceleration(); // call early
 
 let mainWindow;
 
@@ -8,56 +11,56 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1260,
     height: 800,
-    backgroundColor: "white",
-    show: false,          // oculto hasta estar listo
-    resizable: false,     // bloquea bordes/flechas
-    fullscreenable: false,// bloquea F11
-    maximizable: false,   // quita botón maximizar/restaurar
-    movable: false,       // deshabilitar movimiento para evitar conflictos
+    backgroundColor: "#ffffff",
+    show: false,
+    resizable: false,
+    fullscreenable: false,
+    maximizable: true,
+    movable: false,
+    focusable: true,
     webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true,
-    },
+      nodeIntegration: true,
+      contextIsolation: false,
+      webSecurity: false
+    }
   });
 
-  // Quitar menú
   mainWindow.setMenu(null);
 
-  // Cargar URL según entorno
   const startURL = isDev
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "../build/index.html")}`;
 
   mainWindow.loadURL(startURL);
 
-  // Mostrar siempre maximizado y asegurar focus
+  mainWindow.on('blur', () => {
+    mainWindow.focus();
+  });
+
+  // Logs de foco / blur
+  mainWindow.on("focus", () => {
+    try { mainWindow.focus(); } catch(e) { console.warn(e); } // window.focus (preferible a webContents.focus)
+  });
+
   mainWindow.once("ready-to-show", () => {
+    // mostrar y asegurar que la ventana tenga el foco de SO
     mainWindow.maximize();
     mainWindow.show();
-
-    // Asegurar focus de la ventana después de un breve delay
-    setTimeout(() => {
-      mainWindow.webContents.focus();
-    }, 100);
+    mainWindow.focus(); // intentar con window.focus() en vez de webContents.focus()
+    // Abrir DevTools si pasaste --debug al exe
+    if (process.argv.includes("--debug")) {
+      mainWindow.webContents.openDevTools({ mode: "right" });
+    }
   });
 
-  // Window movement is now disabled via movable: false
-
-  // Si alguien intenta restaurar, volver a maximizar
-  mainWindow.on("unmaximize", () => {
-    mainWindow.maximize();
-  });
-
-  mainWindow.on("closed", () => (mainWindow = null));
-
-  // Ensure webContents gets focus when window gains focus
-  mainWindow.on("focus", () => {
-    mainWindow.webContents.focus();
+  mainWindow.on("closed", () => {
+    mainWindow = null;
   });
 }
 
-// App lifecycle
-app.on("ready", createWindow);
+app.on("ready", () => {
+  createWindow();
+});
 
 app.on("activate", () => {
   if (mainWindow === null) createWindow();

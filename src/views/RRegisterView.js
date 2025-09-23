@@ -320,8 +320,8 @@ function RRegisterView() {
     }
   }; 
   
-  const handleCancel = () => {
-    const confirmar = window.confirm("¿Estás seguro de que quieres salir?");
+  const handleCancel = async () => {
+    const confirmar = await window.confirm("¿Estás seguro de que quieres salir?");
     if (!confirmar) return;
 
     window.history.back();
