@@ -1,4 +1,3 @@
-// electron.js (versión debug para empaquetar temporalmente)
 const { app, BrowserWindow } = require("electron");
 const isDev = require("electron-is-dev");
 const path = require("path");
@@ -11,11 +10,11 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1260,
     height: 800,
-    backgroundColor: "#ffffff",
+    backgroundColor: "white",
     show: false,
     resizable: false,
     fullscreenable: false,
-    maximizable: true,
+    maximizable: false,
     movable: false,
     focusable: true,
     webPreferences: {
@@ -27,30 +26,17 @@ function createWindow() {
 
   mainWindow.setMenu(null);
 
-  const startURL = isDev
+  const startURL = isDev.default
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "../build/index.html")}`;
 
   mainWindow.loadURL(startURL);
 
-  mainWindow.on('blur', () => {
-    mainWindow.focus();
-  });
-
-  // Logs de foco / blur
-  mainWindow.on("focus", () => {
-    try { mainWindow.focus(); } catch(e) { console.warn(e); } // window.focus (preferible a webContents.focus)
-  });
-
   mainWindow.once("ready-to-show", () => {
-    // mostrar y asegurar que la ventana tenga el foco de SO
     mainWindow.maximize();
     mainWindow.show();
-    mainWindow.focus(); // intentar con window.focus() en vez de webContents.focus()
-    // Abrir DevTools si pasaste --debug al exe
-    if (process.argv.includes("--debug")) {
-      mainWindow.webContents.openDevTools({ mode: "right" });
-    }
+    mainWindow.setBounds(mainWindow.getBounds());
+    mainWindow.webContents.focus();
   });
 
   mainWindow.on("closed", () => {

@@ -44,6 +44,29 @@
     "electron:build": "npm run build && electron-packager . Rakonti --platform=win32 --arch=x64 --out=dist --overwrite",
     "electron:package": "electron-packager . Rakonti --platform=win32 --arch=x64 --out=dist --overwrite"
   },
+  "build": {
+    "appId": "com.rakonti.sapp",
+    "productName": "Rakonti",
+    "files": [
+      "build/**/*",
+      "public/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    }
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -66,7 +89,7 @@
     "concurrently": "^7.3.0",
     "cross-env": "^7.0.3",
     "electron": "^38.1.2",
-    "electron-builder": "^24.13.3",
+    "electron-builder": "^26.0.12",
     "electron-is-dev": "^3.0.1",
     "electron-packager": "^17.1.2",
     "wait-on": "^8.0.4"
