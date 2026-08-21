@@ -24,12 +24,12 @@ jobs:
 
       - name: Install dependencies (Windows)
         if: matrix.os == 'windows-latest'
-        run: npm install --legacy-peer-deps
+        run: npm ci --legacy-peer-deps    # antes: npm install --legacy-peer-deps
         shell: pwsh
 
       - name: Install dependencies (Mac)
         if: matrix.os == 'macos-latest'
-        run: npm install
+        run: npm ci --legacy-peer-deps    # antes: npm install
         shell: bash
 
       - name: Build app
