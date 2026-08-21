@@ -5,7 +5,7 @@
   "license": "MIT",
   "description": "Rakonti: Sistema Interactivo Para Crear Narrativas",
   "private": true,
-  "main": "electron/main.js",
+  "main": "build/electron.js",
   "homepage": "./",
   "engines": {
     "node": "20.x"
@@ -48,7 +48,6 @@
     "productName": "Rakonti",
     "files": [
       "build/**/*",
-      "electron/**/*",
       "node_modules/**/*",
       "package.json"
     ],
