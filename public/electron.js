@@ -2,6 +2,8 @@ const { app, BrowserWindow } = require("electron");
 const isDev = require("electron-is-dev");
 const path = require("path");
 
+app.disableHardwareAcceleration(); // call early
+
 let mainWindow;
 
 function createWindow() {
@@ -9,50 +11,42 @@ function createWindow() {
     width: 1260,
     height: 800,
     backgroundColor: "white",
-    show: false,          // oculto hasta estar listo
-    resizable: false,     // bloquea bordes/flechas
-    fullscreenable: false,// bloquea F11
-    maximizable: false,   // quita botón maximizar/restaurar
-    movable: true,        // necesario para evitar bug de Inputs
+    show: false,
+    resizable: false,
+    fullscreenable: false,
+    maximizable: false,
+    movable: false,
+    focusable: true,
     webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true,
-    },
+      nodeIntegration: true,
+      contextIsolation: false,
+      webSecurity: false
+    }
   });
 
-  // Quitar menú
   mainWindow.setMenu(null);
 
-  // Cargar URL según entorno
-  const startURL = isDev
+  const startURL = isDev.default
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "../build/index.html")}`;
 
   mainWindow.loadURL(startURL);
 
-  // Mostrar siempre maximizado y asegurar focus
   mainWindow.once("ready-to-show", () => {
     mainWindow.maximize();
     mainWindow.show();
-
-    // Forzar recalculo de tamaño para Chromium
     mainWindow.setBounds(mainWindow.getBounds());
-
-    // Forzar focus de la ventana
     mainWindow.webContents.focus();
   });
 
-  // Evitar que se mueva aunque movable=true
-  mainWindow.on("will-move", (e) => e.preventDefault());
-
-  // Si alguien intenta restaurar, volver a maximizar
-  mainWindow.on("unmaximize", () => mainWindow.maximize());
-
-  mainWindow.on("closed", () => (mainWindow = null));
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+  });
 }
 
-// App lifecycle
-app.on("ready", createWindow);
+app.on("ready", () => {
+  createWindow();
+});
 
 app.on("activate", () => {
   if (mainWindow === null) createWindow();

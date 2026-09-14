@@ -44,8 +44,8 @@ function RHomeView() {
     navigate('/narratives')
   };
 
-  const handleLogout = () => {
-    const confirmar = window.confirm("¿Seguro de que quieres cerrar sesión?");
+  const handleLogout = async () => {
+    const confirmar = await window.confirm("¿Seguro de que quieres cerrar sesión?");
     if (!confirmar) return;
 
     persistor.purge();

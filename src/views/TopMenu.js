@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setFeature } from '../redux-store/reducers/storySlice';
@@ -10,17 +10,27 @@ function TopMenu({ refsTutorial, showTutorial, feature, handleSave, handleFeatur
   const location = useLocation();
 
   const isMapRoute = location.pathname.startsWith('/map/');
-  
+
   const [isEditing, setIsEditing] = useState(false);
+  const [titulo, setTitulo] = useState(feature?.titulo || '');
   const inputRef = useRef(null);
 
+  useEffect(() => {
+    setTitulo(feature?.titulo || '');
+  }, [feature?.titulo]);
+
   const handleDoubleClick = () => {
+    setTitulo(feature?.titulo || '');
     setIsEditing(true);
     setTimeout(() => inputRef.current?.focus(), 0);
   };
 
   const handleBlur = () => {
     setIsEditing(false);
+    dispatch(setFeature({
+      ...feature,
+      titulo: titulo
+    }));
   };
 
   const handleKeyDown = (e) => {
@@ -31,18 +41,15 @@ function TopMenu({ refsTutorial, showTutorial, feature, handleSave, handleFeatur
   };
 
   const handleChange = (e) => {
-    dispatch(setFeature({
-      ...feature,
-      titulo: e.target.value
-    }));
+    setTitulo(e.target.value);
   };
 
-  const handleClick = (label) => {
+  const handleClick = async (label) => {
     if (hasUnsavedChanges) {
-      const confirm = window.confirm("Tienes cambios sin guardar. ¿Estás seguro de continuar?");
+      const confirm = await window.confirm("Tienes cambios sin guardar. ¿Estás seguro de continuar?");
       if (!confirm) return;
     }
-    
+
     navigate(`/${label}`);
   };
 
@@ -67,7 +74,7 @@ function TopMenu({ refsTutorial, showTutorial, feature, handleSave, handleFeatur
           {isEditing ? (
             <Input
               ref={inputRef}
-              value={feature.titulo}
+              value={titulo}
               onChange={handleChange}
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
@@ -76,9 +83,9 @@ function TopMenu({ refsTutorial, showTutorial, feature, handleSave, handleFeatur
           ) : (
             <TitleText
               onDoubleClick={handleDoubleClick}
-              isPlaceholder={!feature.titulo || feature.titulo.trim() === ''}
+              isPlaceholder={!titulo || titulo.trim() === ''}
             >
-              {feature.titulo?.trim() || 'Haz doble clic para editar'}
+              {titulo?.trim() || 'Haz doble clic para editar'}
             </TitleText>
           )}
         </TitleWrapper>

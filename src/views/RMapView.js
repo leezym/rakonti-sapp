@@ -63,9 +63,10 @@ function Edit({ stages, currentStage, quillRef, value, handleChange, modules, sh
           ))}
           <Separator opacity={'1'} color={'black'}/>
           <StyledEditor
+            key={currentStage}
             ref={quillRef}
             showSteps={showSteps}
-            value={value}
+            defaultValue={value}
             onChange={handleChange}
             modules={modules}
             placeholder={'Escribe aquí...'}
@@ -379,17 +380,26 @@ function RMapView() {
     } else {
       setValue('');
     }
-  }, [currentStage, stages, stepContents]);
+  }, [currentStage, stages]);
   
   useEffect(() => {
     const undoButton = document.querySelector('.ql-undo');
     const redoButton = document.querySelector('.ql-redo');
     const customButton = document.querySelector('.ql-next');
-    
+
     if (undoButton) undoButton.innerHTML = '↩';
     if (redoButton) redoButton.innerHTML = '↪';
     if (customButton && !customButton.innerHTML.includes('Siguiente')) {
       customButton.innerHTML = 'Siguiente paso';
+    }
+  }, [value]);
+
+  useEffect(() => {
+    if (quillRef.current) {
+      const editor = quillRef.current.getEditor();
+      if (editor) {
+        editor.root.innerHTML = value;
+      }
     }
   }, [value]);
 
@@ -404,33 +414,8 @@ function RMapView() {
 
 
   const handleChange = (content) => {
-    setValue(content);
-    const idPasoActual = stages[currentStage - 1]?.id_paso_estructura;
-    
-    if (idPasoActual) {
-      setStepContents((prev) => ({
-        ...prev,
-        [idPasoActual]: content,
-      }));
-
-      const original = stepContents[idPasoActual] || '';
-      const changed = original !== content;
-      setHasUnsavedChanges(changed);
-
-      if (changed) {
-        setEditedSteps(prev => ({
-          ...prev,
-          [idPasoActual]: content,
-        }));
-      } else {
-        // Si lo dejó igual que antes, lo quitamos de editedSteps
-        setEditedSteps(prev => {
-          const newSteps = { ...prev };
-          delete newSteps[idPasoActual];
-          return newSteps;
-        });
-      }
-    }
+    // For uncontrolled editor, just mark as changed
+    setHasUnsavedChanges(true);
   };
   
   const handleSave = async () => {
@@ -438,13 +423,19 @@ function RMapView() {
     setHasUnsavedChanges(false);
 
     try {
-      const saveRequests = Object.entries(editedSteps).map(([id_paso_estructura, contenido]) =>
-        api.post('/pasos-estructura-narrativa-historia', {
-          id_historia,
-          id_paso_estructura: Number(id_paso_estructura),
-          contenido
-        })
-      );
+      const idPasoActual = stages[currentStage - 1]?.id_paso_estructura;
+      const content = quillRef.current.getEditor().root.innerHTML;
+
+      const saveRequests = [];
+      if (idPasoActual) {
+        saveRequests.push(
+          api.post('/pasos-estructura-narrativa-historia', {
+            id_historia,
+            id_paso_estructura: Number(idPasoActual),
+            contenido: content
+          })
+        );
+      }
 
       const saveResponses = await Promise.all(saveRequests);
 
@@ -475,7 +466,13 @@ function RMapView() {
       }
 
       alert(successMessages.join('\n'));
-      setEditedSteps({});
+      // Update stepContents
+      if (idPasoActual) {
+        setStepContents((prev) => ({
+          ...prev,
+          [idPasoActual]: content,
+        }));
+      }
     } catch (error) {
       const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al guardar.';
       alert(errorMsg);
@@ -492,7 +489,7 @@ function RMapView() {
   }
 
   const handleNext = () => {
-    const content = value?.replace(/<(.|\n)*?>/g, '').trim(); // Elimina etiquetas HTML y espacios
+    const content = quillRef.current.getEditor().root.innerHTML.replace(/<(.|\n)*?>/g, '').trim(); // Elimina etiquetas HTML y espacios
 
     if (!content) {
       alert('Debes completar este paso antes de continuar.');
@@ -509,7 +506,7 @@ function RMapView() {
   };
 
   const handleStep = (stepNumber) => {
-    const content = value?.replace(/<(.|\n)*?>/g, '').trim(); // Elimina etiquetas HTML y espacios
+    const content = quillRef.current.getEditor().root.innerHTML.replace(/<(.|\n)*?>/g, '').trim(); // Elimina etiquetas HTML y espacios
 
     if (!content && stepNumber >= currentStage) {
       alert('Debes completar este paso antes de continuar.');

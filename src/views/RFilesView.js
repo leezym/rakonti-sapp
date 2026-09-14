@@ -2,7 +2,6 @@ import api from "../api/axiosConfig";
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
 import styled from 'styled-components';
 import downloadWordDocument from '../functions/downloadWordDocument';
 
@@ -46,7 +45,8 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
   };
 
   const handleSeleccionarFila = async (historia) => {
-    if (!window.confirm("¿Estás seguro de cargar esta historia?")) return;
+    const confirm = await window.confirm("¿Estás seguro de cargar esta historia?");
+    if (!confirm) return;
 
     setFilaSeleccionada(historia.id_historia);
 
