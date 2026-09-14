@@ -1,5 +1,4 @@
 const { app, BrowserWindow } = require("electron");
-const isDev = require("electron-is-dev");
 const path = require("path");
 
 app.disableHardwareAcceleration(); // call early
@@ -26,7 +25,7 @@ function createWindow() {
 
   mainWindow.setMenu(null);
 
-  const startURL = isDev.default
+  const startURL = !app.isPackaged
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "../build/index.html")}`;
 
