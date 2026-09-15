@@ -127,9 +127,16 @@ function Features({ genre, plot, desire, time }){
 }
 
 function Characters({ characters, personalities, roles, handleEditCharacters }){
+  // personalities/roles son mapas { [id_personaje]: valor } (ver
+  // storySlice.js), no arrays paralelos por posición — se leen por
+  // id_personaje para no depender del orden de "characters".
   const [currentCharacter, setCurrentCharacter] = useState(characters[0]);
-  const [currentPersonality, setCurrentPersonality] = useState(personalities[0]);
-  const [currentRol, setCurrentRol] = useState(roles[0]);
+  const [currentPersonality, setCurrentPersonality] = useState(
+    characters[0] ? personalities[characters[0].id_personaje] : undefined
+  );
+  const [currentRol, setCurrentRol] = useState(
+    characters[0] ? roles[characters[0].id_personaje] : undefined
+  );
 
   return (
     <>
@@ -142,14 +149,14 @@ function Characters({ characters, personalities, roles, handleEditCharacters }){
             <CardTitle>SELECCIONE UN PERSONAJE:</CardTitle>
 
             <ScrollContainer>
-              {characters.map((character, index) => (
+              {characters.map((character) => (
                 <CardSelect
                   key={character.id_personaje}
                   selected={currentCharacter.id_personaje === character.id_personaje}
                   onClick={() => {
                     setCurrentCharacter(character);
-                    setCurrentPersonality(personalities[index]);
-                    setCurrentRol(roles[index]);
+                    setCurrentPersonality(personalities[character.id_personaje]);
+                    setCurrentRol(roles[character.id_personaje]);
                   }}
                 >
                   {character.nombre + " " + character.apellido}
@@ -167,9 +174,9 @@ function Characters({ characters, personalities, roles, handleEditCharacters }){
 
             <Card>
               <CardTitle>ROL:</CardTitle>
-              {currentRol.map((rol) => (
+              {(currentRol || []).map((rol) => (
                 <CardDescription>{rol.nombre}</CardDescription>
-              ))}              
+              ))}
             </Card>
           </div>
 
@@ -417,11 +424,20 @@ function RMapView() {
     // For uncontrolled editor, just mark as changed
     setHasUnsavedChanges(true);
   };
-  
-  const handleSave = async () => {
-    if(!hasUnsavedChanges) return;
-    setHasUnsavedChanges(false);
 
+  // Guarda el contenido del paso ACTUAL (el que está abierto en el editor
+  // en este momento) tanto en memoria (stepContents, para que se siga
+  // mostrando/editando sin perderse al cambiar de paso) como en el backend.
+  //
+  // Antes, "Siguiente paso" (handleNext) solo hacía dispatch(setCurrentStage(...))
+  // y nunca llamaba a esto: el texto escrito en un paso intermedio no se
+  // guardaba en stepContents ni en el backend, así que al llegar al final
+  // (o recargar la app) ese contenido ya no existía en ningún lado — se
+  // perdía en silencio. Con este helper, tanto "Guardar" como "Siguiente
+  // paso" reutilizan la misma lógica de persistencia; showAlert controla si
+  // se muestra el mensaje de éxito (sí en "Guardar", no en cada "Siguiente
+  // paso" intermedio, para no interrumpir el flujo de escritura).
+  const saveCurrentStep = async (showAlert) => {
     try {
       const idPasoActual = stages[currentStage - 1]?.id_paso_estructura;
       const content = quillRef.current.getEditor().root.innerHTML;
@@ -445,38 +461,51 @@ function RMapView() {
         fecha_edicion: new Date()
       });
 
-      // Collect success messages from all responses
-      const successMessages = [];
-
-      // Add messages from step saves
-      saveResponses.forEach(response => {
-        if (response.data?.message) {
-          successMessages.push(response.data.message);
-        }
-      });
-
-      // Add message from story update
-      if (historiaResponse.data?.message) {
-        successMessages.push(historiaResponse.data.message);
-      }
-
-      // If no specific messages, use default
-      if (successMessages.length === 0) {
-        successMessages.push('Progreso guardado correctamente.');
-      }
-
-      alert(successMessages.join('\n'));
-      // Update stepContents
+      // Update stepContents primero que nada, para que el paso quede
+      // guardado en memoria aunque el usuario avance rápido entre pasos.
       if (idPasoActual) {
         setStepContents((prev) => ({
           ...prev,
           [idPasoActual]: content,
         }));
       }
+
+      if (showAlert) {
+        // Collect success messages from all responses
+        const successMessages = [];
+
+        // Add messages from step saves
+        saveResponses.forEach(response => {
+          if (response.data?.message) {
+            successMessages.push(response.data.message);
+          }
+        });
+
+        // Add message from story update
+        if (historiaResponse.data?.message) {
+          successMessages.push(historiaResponse.data.message);
+        }
+
+        // If no specific messages, use default
+        if (successMessages.length === 0) {
+          successMessages.push('Progreso guardado correctamente.');
+        }
+
+        alert(successMessages.join('\n'));
+      }
+
+      return true;
     } catch (error) {
       const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al guardar.';
       alert(errorMsg);
+      return false;
     }
+  };
+
+  const handleSave = async () => {
+    if(!hasUnsavedChanges) return;
+    setHasUnsavedChanges(false);
+    await saveCurrentStep(true);
   };
 
   const handleEditCharacters = () => {
@@ -488,7 +517,7 @@ function RMapView() {
     navigate(`/characters/${feature.id_historia}`);
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
     const content = quillRef.current.getEditor().root.innerHTML.replace(/<(.|\n)*?>/g, '').trim(); // Elimina etiquetas HTML y espacios
 
     if (!content) {
@@ -496,21 +525,39 @@ function RMapView() {
       return;
     }
 
+    // Antes, "Siguiente paso" solo avanzaba el estado (dispatch(setCurrentStage))
+    // sin guardar nada de lo escrito, así que el contenido del paso actual se
+    // perdía apenas se cambiaba de paso (ver saveCurrentStep más arriba para el
+    // detalle). Ahora se guarda primero (en memoria y en el backend) y solo se
+    // avanza si el guardado fue exitoso, para no perder el aviso de "cambios sin
+    // guardar" si hubo un error de red.
+    const saved = await saveCurrentStep(false);
+    if (!saved) return;
+
+    setHasUnsavedChanges(false);
+
     if (currentStage < totalSteps) {
       const nextStage = currentStage + 1;
       dispatch(setCurrentStage(nextStage));
     } else if (currentStage === totalSteps) {
-      handleSave();
       setShowFinalPopup(true);
     }
   };
 
-  const handleStep = (stepNumber) => {
+  const handleStep = async (stepNumber) => {
     const content = quillRef.current.getEditor().root.innerHTML.replace(/<(.|\n)*?>/g, '').trim(); // Elimina etiquetas HTML y espacios
 
     if (!content && stepNumber >= currentStage) {
       alert('Debes completar este paso antes de continuar.');
       return;
+    }
+
+    // Mismo motivo que en handleNext: hay que persistir el paso actual antes
+    // de saltar a otro, o el texto escrito se pierde silenciosamente.
+    if (content) {
+      const saved = await saveCurrentStep(false);
+      if (!saved) return;
+      setHasUnsavedChanges(false);
     }
 
     dispatch(setCurrentStage(stepNumber));

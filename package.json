@@ -20,14 +20,14 @@
     "file-saver": "2.0.5",
     "html-to-text": "9.0.5",
     "jszip": "3.10.1",
-    "quill": "^1.3.7",
+    "quill": "^2.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-modal": "^3.16.3",
     "react-quill": "^2.0.0",
     "react-redux": "8.0.2",
-    "react-router-dom": "6.3.0",
-    "react-scripts": "5.0.0",
+    "react-router-dom": "^6.30.6",
+    "react-scripts": "^5.0.0",
     "redux-persist": "6.0.0",
     "safe-regex-test": "1.1.0",
     "styled-components": "5.3.5",
@@ -38,9 +38,9 @@
     "frontend-local:backend-prod": "cross-env REACT_APP_API_URL=http://cards-transfer.gl.at.ply.gg:55303/rakonti react-scripts start",
     "frontend-prod:backend-prod": "react-scripts build",
     "electron:dev": "concurrently -k \"cross-env BROWSER=none npm run frontend-local:backend-local\" \"npm run electron:start\"",
+    "preelectron:start": "node -e \"const fs=require('fs');fs.mkdirSync('build',{recursive:true});fs.copyFileSync('public/electron.js','build/electron.js')\"",
     "electron:start": "wait-on tcp:3000 && electron .",
-    "electron:build": "npm run frontend-prod:backend-prod && electron-packager . Rakonti --platform=win32 --arch=x64 --out=dist --overwrite",
-    "electron:package": "electron-packager . Rakonti --platform=win32 --arch=x64 --out=dist --overwrite"
+    "electron:build": "npm run frontend-prod:backend-prod && electron-builder --win nsis"
   },
   "build": {
     "appId": "com.rakonti.sapp",
@@ -53,6 +53,23 @@
     "directories": {
       "buildResources": "assets"
     },
+    "extraResources": [
+      {
+        "from": "../rakonti-api",
+        "to": "backend",
+        "filter": [
+          "**/*",
+          "!node_modules",
+          "!.env.local",
+          "!.env.remote",
+          "!.git",
+          "!.gitignore",
+          "!db/*.sql",
+          "!db/*.png"
+        ]
+      }
+    ],
+    "afterPack": "./scripts/afterPack.js",
     "mac": {
       "target": [
         "dmg"
@@ -85,9 +102,12 @@
   "devDependencies": {
     "concurrently": "^7.6.0",
     "cross-env": "^7.0.3",
-    "electron": "^38.8.6",
+    "electron": "^44.3.0",
     "electron-builder": "^26.15.3",
-    "electron-packager": "^17.1.2",
     "wait-on": "^8.0.5"
+  },
+  "allowScripts": {
+    "electron-winstaller@5.4.0": true,
+    "styled-components@5.3.5": true
   }
 }

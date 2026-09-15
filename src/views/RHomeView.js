@@ -31,8 +31,8 @@ function RHomeView() {
     dispatch(setDesire(null));
     dispatch(setTime(null));
     dispatch(setCharacters([]));
-    dispatch(setPersonalities([]));
-    dispatch(setRoles([]));
+    dispatch(setPersonalities({})); // mapa { [id_personaje]: personalidad }, ver storySlice.js
+    dispatch(setRoles({}));
     dispatch(setCurrentStage(0));
   }, [dispatch]);
 

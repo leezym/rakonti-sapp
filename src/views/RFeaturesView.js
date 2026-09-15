@@ -461,6 +461,9 @@ function RFeaturesView() {
   
   const [step, setStep] = useState(1);
   const [showPopup, setShowPopup] = useState(false);
+  // id_historia de la historia ya creada en el backend al terminar el paso 5
+  // (ver handleSubmit) — se usa para vincular el primer personaje a ella.
+  const [idHistoriaCreada, setIdHistoriaCreada] = useState(null);
   const [data, setData] = useState({
     genero: '',
     genero_descripcion: '',
@@ -537,34 +540,54 @@ function RFeaturesView() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Crear historia temporalmente
-    dispatch(setFeature({
+
+    const featureCompleto = {
       ...formData,
       titulo: feature.titulo
-    }));
-    dispatch(setGenre({
-      nombre: data.genero,
-      descripcion: data.genero_descripcion,
-      imagen: data.genero_imagen
-    }));
-    dispatch(setPlot({
-      nombre: data.trama,
-      descripcion: data.trama_descripcion,
-      imagen: data.trama_imagen
-    }));
-    dispatch(setDesire({
-      nombre: data.objeto_deseo,
-      descripcion: data.objeto_deseo_descripcion,
-      imagen: data.objeto_deseo_imagen
-    }));
-    dispatch(setTime({
-      nombre: data.tiempo_espacio,
-      descripcion: data.tiempo_espacio_descripcion,
-      imagen: data.tiempo_espacio_imagen
-    }));
-    
-    setStep(step + 1);
+    };
+
+    // Antes la historia solo se creaba en el backend hasta que el usuario
+    // terminaba también de crear su primer personaje (en RCharacterView.js).
+    // Si cerraba la app, perdía la conexión, o simplemente no llegaba a
+    // crear el personaje, TODO el trabajo de este wizard (género, trama,
+    // objeto del deseo, tiempo/espacio) se perdía sin ningún aviso, porque
+    // nunca había existido nada guardado en el backend.
+    // Ahora la historia se crea aquí mismo, apenas se confirman los 4
+    // pilares — así que si el usuario se detiene antes de crear un
+    // personaje, la historia ya quedó guardada y puede retomarla luego
+    // desde "Cargar historia" (aunque todavía sin personajes).
+    try {
+      const historiaResponse = await api.post('/historias', featureCompleto);
+      const historiaCreada = historiaResponse.data?.data;
+
+      dispatch(setFeature(historiaCreada));
+      dispatch(setGenre({
+        nombre: data.genero,
+        descripcion: data.genero_descripcion,
+        imagen: data.genero_imagen
+      }));
+      dispatch(setPlot({
+        nombre: data.trama,
+        descripcion: data.trama_descripcion,
+        imagen: data.trama_imagen
+      }));
+      dispatch(setDesire({
+        nombre: data.objeto_deseo,
+        descripcion: data.objeto_deseo_descripcion,
+        imagen: data.objeto_deseo_imagen
+      }));
+      dispatch(setTime({
+        nombre: data.tiempo_espacio,
+        descripcion: data.tiempo_espacio_descripcion,
+        imagen: data.tiempo_espacio_imagen
+      }));
+
+      setIdHistoriaCreada(historiaCreada?.id_historia);
+      setStep(step + 1);
+    } catch (error) {
+      const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al crear la historia';
+      alert(errorMsg);
+    }
   };
 
   const handleCancel = () => {
@@ -632,7 +655,7 @@ function RFeaturesView() {
         {step > 1 && step < 6 && <ButtonSecondary onClick={() => setStep(step - 1)}>Anterior</ButtonSecondary>}
         {step < 5 && <ButtonPrimary onClick={handleNextStep}>Siguiente</ButtonPrimary>}
         {step === 5 && <ButtonPrimary onClick={handleSubmit} type="submit">Enviar</ButtonPrimary>}
-        {step === 6 && <ButtonPrimary onClick={() => navigate('/character')}>Crear nuevo personaje</ButtonPrimary>}
+        {step === 6 && <ButtonPrimary onClick={() => navigate('/character', { state: { id_historia: idHistoriaCreada } })}>Crear nuevo personaje</ButtonPrimary>}
       </ButtonsContainer>
 
       <PopUp

@@ -1,5 +1,5 @@
 import api from "../../api/axiosConfig";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -15,8 +15,8 @@ import {
   setCharacter,
   setCharacters,
   setPersonalities,
-  setRolesAtIndex,
-  setPersonalitiesAtIndex,
+  setRolesForCharacter,
+  setPersonalityForCharacter,
   setRoles,
   setCurrentStage
 } from '../../redux-store/reducers/storySlice';
@@ -425,7 +425,21 @@ function StepFive({ formData, data }) {
   );
 }
 
-function StepSix({ narrative }) {
+function StepSix({ narrative, esPrimerPersonaje = true }) {
+  // El mensaje de "desbloqueaste tu primera estructura narrativa" +
+  // imagen de la narrativa solo tiene sentido para el primer personaje
+  // que se crea en toda la cuenta (Caso 2 de handleSubmit, historia +
+  // personaje juntos desde cero). Para agregar un personaje adicional a
+  // una historia que ya tenía otros (Caso 3), se muestra un mensaje
+  // neutral en su lugar.
+  if (!esPrimerPersonaje) {
+    return (
+      <FormContainer width="50%">
+        <Title color='#43474f'><h1>¡Personaje creado con éxito!</h1></Title>
+      </FormContainer>
+    );
+  }
+
   return (
     <>
       <FormContainer image={'images/congrats-characters.png'} width="50%">
@@ -445,17 +459,34 @@ function RCharacterView() {
   const location = useLocation();
 
   const id_historia = location.state?.id_historia;
-  const index = location.state?.index;
 
-  const { narrative, 
+  const { narrative,
     feature,
     characters,
     personalities,
     roles } = useSelector(state => state.story);
+
+  // personalities/roles son mapas { [id_personaje]: valor } (ver
+  // storySlice.js) — se leen por id_personaje, nunca por posición, para no
+  // depender de en qué orden/subconjunto venga "characters".
+  const character = id_personaje
+    ? characters.find(c => String(c.id_personaje) === String(id_personaje))
+    : null;
+  const personalidadActual = id_personaje ? personalities[id_personaje] : null;
+  const rolesActuales = id_personaje ? roles[id_personaje] : null;
   
   const [step, setStep] = useState(1);
   const [showPopup, setShowPopup] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
+  // Capturado UNA sola vez al montar (antes de crear nada): si al llegar a
+  // esta pantalla la historia ya tenía personajes, este NO es el primer
+  // personaje. Se congela con useRef (no se recalcula desde "characters" en
+  // cada render) porque handleSubmit hace dispatch(setCharacters(...)) al
+  // crear el personaje, y eso agregaría el nuevo personaje a "characters"
+  // antes de que StepSix se renderice — dando un falso "sí es el primero".
+  const esPrimerPersonajeDeLaHistoriaRef = useRef(
+    !id_historia || characters.filter(c => String(c.id_historia) === String(id_historia)).length === 0
+  );
   const [data, setData] = useState({
     personalidad: '',
     personalidad_descripcion: '',
@@ -480,17 +511,42 @@ function RCharacterView() {
   });
 
   useEffect(() => {
-    if (id_personaje) {
-      setFormData(characters[index]);
+    if (id_personaje && character) {
+      setFormData(character);
 
       setData({
-        personalidad: personalities[index]?.nombre,
-        personalidad_descripcion: personalities[index]?.descripcion ,
-        personalidad_imagen: personalities[index]?.imagen,
-        roles: roles[index]
+        personalidad: personalidadActual?.nombre,
+        personalidad_descripcion: personalidadActual?.descripcion,
+        personalidad_imagen: personalidadActual?.imagen,
+        roles: rolesActuales
       });
     }
-  }, [id_personaje, characters, personalities, roles, index]);
+  }, [id_personaje, character, personalidadActual, rolesActuales]);
+
+  // Al crear un personaje NUEVO en una historia YA EXISTENTE (Caso 3 de
+  // handleSubmit), el envío también hace un PUT a /historias/:id_historia
+  // con el objeto "feature" tal como esté en Redux en ese momento. Pero
+  // Redux solo se actualiza cuando se guarda una historia (dispatch(setFeature)
+  // ocurre dentro del propio handleSubmit) — así que si la última historia
+  // que se editó/guardó en esta sesión fue OTRA distinta a la actual,
+  // "feature" seguía trayendo esos datos viejos. Al mandarlos en el PUT,
+  // el backend comparaba el título de esa otra historia contra las
+  // historias del usuario, encontraba la propia (con un id_historia
+  // distinto al que se estaba excluyendo) y respondía "Ya tienes una
+  // historia con ese título" — aunque la historia que se veía en pantalla
+  // tuviera un título distinto. Para evitarlo, si vamos a crear un
+  // personaje en una historia existente y "feature" no es esa historia,
+  // la recargamos desde el backend antes de que el usuario pueda enviar.
+  useEffect(() => {
+    if (!id_personaje && id_historia && String(feature?.id_historia) !== String(id_historia)) {
+      api.get(`/historias/detalle/${id_historia}`)
+        .then(res => dispatch(setFeature(res.data)))
+        .catch(error => {
+          const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al cargar la historia actual';
+          alert(errorMsg);
+        });
+    }
+  }, [id_personaje, id_historia, feature, dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -535,7 +591,7 @@ function RCharacterView() {
     e.preventDefault();
 
     // Obtenemos el array de roles del personaje actual
-    const rolesOriginales = roles[index] || [];
+    const rolesOriginales = rolesActuales || [];
     const rolesNuevos = data.roles || [];
 
     // Detectar cambios en roles para enviar a DB
@@ -577,10 +633,15 @@ function RCharacterView() {
         const rolesFinalResponse = await api.get(`/personaje-roles/${id_personaje}`);
         const rolesFinales = rolesFinalResponse.data;
 
-        dispatch(setFeature(historiaResponse.data));
-        dispatch(setCharacter(personajeResponse.data));
-        dispatch(setPersonalitiesAtIndex({
-          index,
+        // personajeResponse.data e historiaResponse.data son ambos
+        // { message, data: <objeto> } (ver controllers/personajes.js y
+        // controllers/historias.js) — el objeto real está en ".data".
+        const personajeActualizado = personajeResponse.data?.data;
+
+        dispatch(setFeature(historiaResponse.data?.data));
+        dispatch(setCharacter(personajeActualizado));
+        dispatch(setPersonalityForCharacter({
+          id_personaje,
           personality: {
             id_personalidad: formData.id_personalidad,
             nombre: data.personalidad,
@@ -588,8 +649,8 @@ function RCharacterView() {
             imagen: data.personalidad_imagen
           }
         }));
-        dispatch(setRolesAtIndex({
-          index,
+        dispatch(setRolesForCharacter({
+          id_personaje,
           roles: rolesFinales
         }));
 
@@ -597,10 +658,18 @@ function RCharacterView() {
         window.history.back();
 
       }
-      // Caso 2: Crear historia y primer personaje (cuando no existe historia)
+      // Caso 2 (fallback): crear historia y primer personaje juntos, para
+      // cuando se llega aquí sin id_historia. En el flujo normal esto ya NO
+      // debería pasar: desde la corrección del punto "pérdida de progreso
+      // en los 4 pilares", RFeaturesView.js crea la historia en el backend
+      // apenas se confirman los 4 pilares (antes de llegar aquí) y siempre
+      // navega pasando su id_historia — así que si el usuario cierra la app
+      // antes de crear un personaje, la historia ya queda guardada. Se deja
+      // este caso como red de seguridad por si se navega directo a
+      // /character sin ese state.
       else if (!id_personaje && !id_historia) {
         const id_usuario = localStorage.getItem('id_usuario');
-    
+
         api.get(`/historias/${id_usuario}`)
         .then(res => {
           setShowTutorial(res.data.length === 0);
@@ -615,7 +684,12 @@ function RCharacterView() {
           '/historias',
           feature
         );
-        const nuevaIdHistoria = historiaResponse.data.id_historia;
+        // historiaResponse.data es { message, data: <historia> } (ver
+        // controllers/historias.js) — antes se leía historiaResponse.data.id_historia
+        // directamente, que siempre era undefined, así que el personaje se
+        // creaba con id_historia: undefined.
+        const historiaCreada = historiaResponse.data?.data;
+        const nuevaIdHistoria = historiaCreada?.id_historia;
         mensajesExito.push(historiaResponse.data?.message || "Historia creada con éxito.");
 
         // Crear personaje vinculado a la historia
@@ -623,7 +697,9 @@ function RCharacterView() {
           '/personajes',
           { ...formData, id_historia: nuevaIdHistoria }
         );
-        const nuevoIdPersonaje = personajeResponse.data.id_personaje;
+        // Igual que con historiaResponse: el personaje real está en ".data".
+        const personajeCreado = personajeResponse.data?.data;
+        const nuevoIdPersonaje = personajeCreado?.id_personaje;
         mensajesExito.push(personajeResponse.data?.message || "Personaje creado con éxito.");
 
          // Crear roles
@@ -638,19 +714,25 @@ function RCharacterView() {
         );
         const rolesFinales = rolesFinalResponse.data;
 
-        dispatch(setFeature(historiaResponse.data));
-        dispatch(setCharacters(personajeResponse.data));
-        dispatch(setPersonalities({
-          id_personalidad: formData.id_personalidad,
-          nombre: data.personalidad,
-          descripcion: data.personalidad_descripcion,
-          imagen: data.personalidad_imagen
+        dispatch(setFeature(historiaCreada));
+        dispatch(setCharacters(personajeCreado));
+        dispatch(setPersonalityForCharacter({
+          id_personaje: nuevoIdPersonaje,
+          personality: {
+            id_personalidad: formData.id_personalidad,
+            nombre: data.personalidad,
+            descripcion: data.personalidad_descripcion,
+            imagen: data.personalidad_imagen
+          }
         }));
-        dispatch(setRoles([rolesFinales])); 
+        dispatch(setRolesForCharacter({
+          id_personaje: nuevoIdPersonaje,
+          roles: rolesFinales
+        }));
 
         alert(mensajesExito.join("\n"));
         setStep(step + 1);
-      }      
+      }
       // Caso 3: Crear nuevo personaje en historia existente
       else if (!id_personaje && id_historia) {
         // Crear personaje vinculado a la historia
@@ -658,7 +740,17 @@ function RCharacterView() {
           '/personajes',
           { ...formData, id_historia }
         );
-        const nuevoIdPersonaje = personajeResponse.data.id_personaje;
+        // personajeResponse.data es { message, data: <personaje> } (ver
+        // controllers/personajes.js) — igual que en los otros dos casos de
+        // este mismo handleSubmit. Aquí faltaba aplicar el mismo fix: antes
+        // se leía personajeResponse.data.id_personaje directamente, que
+        // siempre era undefined, así que los roles se creaban/consultaban
+        // con id_personaje: undefined y la personalidad/roles del personaje
+        // recién creado quedaban guardados bajo la llave "undefined" del
+        // mapa en vez de la del personaje real (no se veían en
+        // RCharactersView.js).
+        const personajeCreado = personajeResponse.data?.data;
+        const nuevoIdPersonaje = personajeCreado?.id_personaje;
         mensajesExito.push(personajeResponse.data?.message || "Personaje creado con éxito.");
 
         // Actualizar historia existente
@@ -679,20 +771,42 @@ function RCharacterView() {
           `/personaje-roles/${nuevoIdPersonaje}`
         );
         const rolesFinales = rolesFinalResponse.data;
-        
-        dispatch(setFeature(historiaResponse.data));
-        dispatch(setCharacters(personajeResponse.data));
-        dispatch(setPersonalities({
-          id_personalidad: formData.id_personalidad,
-          nombre: data.personalidad,
-          descripcion: data.personalidad_descripcion,
-          imagen: data.personalidad_imagen
+
+        // Igual que arriba: la historia real está en .data.data.
+        dispatch(setFeature(historiaResponse.data?.data));
+        dispatch(setCharacters(personajeCreado));
+        dispatch(setPersonalityForCharacter({
+          id_personaje: nuevoIdPersonaje,
+          personality: {
+            id_personalidad: formData.id_personalidad,
+            nombre: data.personalidad,
+            descripcion: data.personalidad_descripcion,
+            imagen: data.personalidad_imagen
+          }
         }));
-        dispatch(setRoles([...roles, rolesFinales]));
+        dispatch(setRolesForCharacter({
+          id_personaje: nuevoIdPersonaje,
+          roles: rolesFinales
+        }));
 
         // Mostrar mensajes juntos
         alert(mensajesExito.join("\n"));
-        window.history.back();
+
+        // Antes esto hacía window.history.back(), que asumía que se había
+        // llegado aquí navegando desde el listado de personajes (RCharactersView).
+        // Pero también se llega a este mismo Caso 3 al crear el primer
+        // personaje justo después del wizard de "4 pilares" (RFeaturesView.js),
+        // donde toda la secuencia previa (los 4 pilares) es un solo cambio de
+        // "step" interno, sin navegación real de router — la única entrada de
+        // historial antes de esta pantalla es la que llevó a /features. En ese
+        // caso, history.back() devolvía al wizard reiniciado (step 1 de la
+        // creación de la historia) en vez de llevar al listado de personajes.
+        // Ahora, en vez de depender del historial del navegador, se avanza al
+        // paso 6 de este mismo componente (como en el Caso 2), que muestra un
+        // mensaje de éxito y un botón "Mis personajes" que navega explícitamente
+        // a /characters/:id_historia — funciona igual sin importar desde dónde
+        // se haya llegado a crear el personaje.
+        setStep(step + 1);
       }
     } catch (error) {
       const errorMsg = error.response?.data?.error || error.response?.data?.detalle || 'Error al guardar';
@@ -753,7 +867,7 @@ function RCharacterView() {
         {step === 3 && <StepThree data={data} setData={setData} />}
         {step === 4 && <StepFour formData={formData} handleChange={handleChange }/>}
         {step === 5 && <StepFive formData={formData} data={data} />}
-        {step === 6 && <StepSix narrative={narrative}/>}
+        {step === 6 && <StepSix narrative={narrative} esPrimerPersonaje={esPrimerPersonajeDeLaHistoriaRef.current}/>}
       </div>
 
       <ButtonsContainer>
@@ -779,6 +893,7 @@ function RCharacterView() {
         setTime={setTime}
         setCharacters={setCharacters}
         setPersonalities={setPersonalities}
+        setRoles={setRoles}
         setCurrentStage={setCurrentStage}
         showPopup={showPopup}
         setShowPopup={setShowPopup}

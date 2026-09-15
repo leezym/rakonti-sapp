@@ -58,8 +58,15 @@ function LoadStory({ currentPage, itemsPerPage, historias, setHistorias, id_usua
       dispatch(setDesire(historia.objetos_deseo));
       dispatch(setTime(historia.tiempo_espacio));
       dispatch(setCharacters(historia.personajes));
-      dispatch(setPersonalities(historia.personajes.map(p => p.personalidades)));
-      dispatch(setRoles(historia.personajes.map(p => p.roles)));
+      // personalities y roles ahora son mapas { [id_personaje]: valor } en
+      // vez de arrays paralelos por posición (ver storySlice.js) — así no
+      // dependen de que el orden/tamaño de "personajes" se mantenga igual.
+      dispatch(setPersonalities(
+        Object.fromEntries(historia.personajes.map(p => [p.id_personaje, p.personalidades]))
+      ));
+      dispatch(setRoles(
+        Object.fromEntries(historia.personajes.map(p => [p.id_personaje, p.roles]))
+      ));
       dispatch(setCurrentStage(historia.paso_actual));
 
       closePopup();

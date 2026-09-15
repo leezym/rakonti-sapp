@@ -8,8 +8,16 @@ const initialState = {
   desire: null,
   time: null,
   characters: [],
-  personalities: [],
-  roles: [],
+  // personalities y roles eran arrays "paralelos" a characters, indexados
+  // por POSICIÓN. Eso se rompía en cuanto characters se filtraba (p.ej. en
+  // RCharactersView, por id_historia) o el arreglo quedaba en un orden
+  // distinto al esperado: el índice usado para leer personalities[index]/
+  // roles[index] ya no correspondía al mismo personaje que characters[index],
+  // mostrando o editando la personalidad/roles de OTRO personaje. Ahora son
+  // mapas { [id_personaje]: valor }, así que siempre se accede por la llave
+  // real del personaje en vez de por posición.
+  personalities: {},
+  roles: {},
   currentStage: 0
 };
 
@@ -48,6 +56,10 @@ export const storySlice = createSlice({
         if (!Array.isArray(state.characters)) {
           state.characters = [];
         }
+        // OJO: action.payload debe ser el personaje real (con id_personaje),
+        // nunca la respuesta cruda de axios/el backend (que trae
+        // {message, data}) — quien despache esta acción es responsable de
+        // pasar solo el objeto del personaje.
         state.characters.push(action.payload);
       }
     },
@@ -61,35 +73,49 @@ export const storySlice = createSlice({
       }
     },
 
+    // personalities es ahora un mapa { [id_personaje]: personalidad }.
+    // action.payload puede ser:
+    //   - un mapa completo (para reemplazar todo, p.ej. al cargar una historia)
+    //   - { id_personaje, ...personalidad } (para fijar/actualizar una sola entrada)
     setPersonalities: (state, action) => {
-      if (Array.isArray(action.payload)) {
-        state.personalities = action.payload;
+      const payload = action.payload;
+      if (!payload || typeof payload !== 'object') return;
+
+      if (!state.personalities || Array.isArray(state.personalities)) {
+        state.personalities = {};
+      }
+
+      if ('id_personaje' in payload) {
+        const { id_personaje, ...personalidad } = payload;
+        state.personalities[id_personaje] = personalidad;
       } else {
-        if (!Array.isArray(state.personalities)) {
-          state.personalities = [];
-        }
-        state.personalities.push(action.payload);
+        // Mapa completo (reemplaza todo).
+        state.personalities = payload;
       }
     },
 
-    setPersonalitiesAtIndex: (state, action) => {
-      const { index, personality } = action.payload;
-      if (!Array.isArray(state.personalities)) {
-        state.personalities = [];
+    setPersonalityForCharacter: (state, action) => {
+      const { id_personaje, personality } = action.payload;
+      if (!state.personalities || Array.isArray(state.personalities)) {
+        state.personalities = {};
       }
-      state.personalities[index] = personality;
+      state.personalities[id_personaje] = personality;
     },
 
+    // roles es ahora un mapa { [id_personaje]: rolesDelPersonaje }.
     setRoles: (state, action) => {
-      state.roles = action.payload;
+      const payload = action.payload;
+      state.roles = (payload && typeof payload === 'object' && !Array.isArray(payload))
+        ? payload
+        : {};
     },
 
-    setRolesAtIndex: (state, action) => {
-      const { index, roles } = action.payload;
-      if (!Array.isArray(state.roles)) {
-        state.roles = [];
+    setRolesForCharacter: (state, action) => {
+      const { id_personaje, roles } = action.payload;
+      if (!state.roles || Array.isArray(state.roles)) {
+        state.roles = {};
       }
-      state.roles[index] = roles;
+      state.roles[id_personaje] = roles;
     },
 
     setCurrentStage: (state, action) => {
@@ -108,9 +134,9 @@ export const {
   setCharacters,
   setCharacter,
   setPersonalities,
-  setPersonalitiesAtIndex,
+  setPersonalityForCharacter,
   setRoles,
-  setRolesAtIndex,
+  setRolesForCharacter,
   setCurrentStage
 } = storySlice.actions;
 

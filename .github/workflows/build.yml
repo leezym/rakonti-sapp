@@ -14,8 +14,25 @@ jobs:
         os: [windows-latest, macos-latest]
 
     steps:
-      - name: Checkout repo
+      # Checkout de rakonti-sapp (frontend), en la ruta por defecto del job.
+      - name: Checkout rakonti-sapp
         uses: actions/checkout@v3
+        with:
+          path: rakonti-sapp
+
+      # La config de electron-builder (build.extraResources en package.json)
+      # espera encontrar el backend en "../rakonti-api", como carpeta hermana
+      # de rakonti-sapp — igual que en el entorno local (JAVERIANA/rakonti-sapp
+      # y JAVERIANA/rakonti-api uno al lado del otro). Como viven en repos
+      # separados, hay que clonar rakonti-api aparte, en esa misma posición
+      # relativa dentro del workspace del runner. Antes este workflow solo
+      # clonaba rakonti-sapp, así que el build.extraResources (y por lo tanto
+      # el backend embebido) nunca se armaba en CI, aunque el job "pasara".
+      - name: Checkout rakonti-api
+        uses: actions/checkout@v3
+        with:
+          repository: leezym/rakonti-api
+          path: rakonti-api
 
       - name: Use Node.js
         uses: actions/setup-node@v3
@@ -26,24 +43,43 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: npm ci --legacy-peer-deps    # antes: npm install --legacy-peer-deps
         shell: pwsh
+        working-directory: rakonti-sapp
 
       - name: Install dependencies (Mac)
         if: matrix.os == 'macos-latest'
         run: npm ci --legacy-peer-deps    # antes: npm install
         shell: bash
+        working-directory: rakonti-sapp
+
+      # Instala las dependencias del backend embebido DENTRO de cada runner,
+      # no solo en el checkout. Esto es indispensable para el módulo nativo
+      # bcrypt: su binario compilado depende del sistema operativo, así que
+      # copiar un node_modules instalado en Windows a un paquete Mac (o
+      # viceversa) rompería el backend embebido en tiempo de ejecución. Al
+      # correr "npm ci" aquí, cada runner compila bcrypt para su propio SO
+      # antes de que afterPack.js copie ese node_modules al paquete final.
+      - name: Install backend dependencies (rakonti-api)
+        run: npm ci
+        shell: bash
+        working-directory: rakonti-api
 
       - name: Build app
         run: npm run frontend-prod:backend-prod
         shell: bash
+        working-directory: rakonti-sapp
         env:
           CI: false
 
       - name: Package Electron app
         run: npx electron-builder --${{ matrix.os == 'windows-latest' && 'win' || 'mac' }} --publish never
         shell: bash
+        working-directory: rakonti-sapp
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}
-          path: dist/*
+          # antes: "dist/*" (relativo a la raíz del workspace). Con el checkout
+          # de rakonti-sapp movido a su propia subcarpeta (path: rakonti-sapp),
+          # el dist/ que genera electron-builder queda dentro de rakonti-sapp/.
+          path: rakonti-sapp/dist/*

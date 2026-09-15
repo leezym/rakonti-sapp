@@ -27,10 +27,10 @@ function RCharactersView() {
   const [showPopup, setShowPopup] = useState(false);
 
   const characters = useSelector(state => state.story.characters) || [];
-  const personalities = useSelector(state => state.story.personalities) || [];
+  const personalities = useSelector(state => state.story.personalities) || {};
 
-  const onClicked = (character, index) => {
-    navigate(`/character/${character.id_personaje}`, { state: { index, id_historia } });
+  const onClicked = (character) => {
+    navigate(`/character/${character.id_personaje}`, { state: { id_historia } });
   }
 
   const handleFinish = () => {
@@ -80,21 +80,30 @@ function RCharactersView() {
               </Card>
             </CardColumn>     
 
-            { (id_historia 
+            { (id_historia
                 ? characters.filter(c => String(c.id_historia) === String(id_historia))
                 : characters
-              ).map((character, index) => (
-              <CardColumn key={character.id_personaje}>
-                <Card image={`${personalities[index].imagen.replace('rectangle', 'square')}`}>
-                  <CardHeader>
-                    <Title>{character.nombre + " " + character.apellido}</Title>
-                    <Subtitle>{personalities[index].nombre}</Subtitle>
-                  </CardHeader>
+              ).map((character) => {
+                // personalities es un mapa { [id_personaje]: personalidad },
+                // ya no un array paralelo por posición: así no importa que
+                // "characters" esté filtrado por historia ni en qué orden
+                // vengan los personajes (ver storySlice.js).
+                const personality = personalities[character.id_personaje];
+                if (!personality) return null; // aún no se cargó su personalidad
 
-                  <ButtonSecondary onClick={() => onClicked(character, index)}>Ver más</ButtonSecondary>
-                </Card>
-              </CardColumn>
-            ))}
+                return (
+                  <CardColumn key={character.id_personaje}>
+                    <Card image={`${personality.imagen?.replace('rectangle', 'square')}`}>
+                      <CardHeader>
+                        <Title>{character.nombre + " " + character.apellido}</Title>
+                        <Subtitle>{personality.nombre}</Subtitle>
+                      </CardHeader>
+
+                      <ButtonSecondary onClick={() => onClicked(character)}>Ver más</ButtonSecondary>
+                    </Card>
+                  </CardColumn>
+                );
+              })}
           </CardRow>
         </CardRowWrapper>
 
