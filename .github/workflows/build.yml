@@ -33,6 +33,14 @@ jobs:
         with:
           repository: leezym/rakonti-api
           path: rakonti-api
+          # IMPORTANTE: sin "ref", este checkout siempre trae la rama por
+          # defecto de rakonti-api (main), sin importar desde qué rama se
+          # dispare este workflow en rakonti-sapp (aunque se corra manualmente
+          # eligiendo "local" en "Use workflow from"). Se fija "local" porque
+          # hoy es la rama de trabajo real en ambos repos. Cuando el trabajo
+          # de esta sesión se mergee a main en los dos repos, cambiar esto de
+          # vuelta a "main" (o quitar la línea, que es el default).
+          ref: local
 
       - name: Use Node.js
         uses: actions/setup-node@v3
