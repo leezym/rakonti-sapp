@@ -34,13 +34,12 @@
     "web-vitals": "2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "electron:dev": "concurrently -k \"cross-env BROWSER=none npm start\" \"npm run electron:start\"",
+    "frontend-local:backend-local": "react-scripts start",
+    "frontend-local:backend-prod": "cross-env REACT_APP_API_URL=http://cards-transfer.gl.at.ply.gg:55303/rakonti react-scripts start",
+    "frontend-prod:backend-prod": "react-scripts build",
+    "electron:dev": "concurrently -k \"cross-env BROWSER=none npm run frontend-local:backend-local\" \"npm run electron:start\"",
     "electron:start": "wait-on tcp:3000 && electron .",
-    "electron:build": "npm run build && electron-packager . Rakonti --platform=win32 --arch=x64 --out=dist --overwrite",
+    "electron:build": "npm run frontend-prod:backend-prod && electron-packager . Rakonti --platform=win32 --arch=x64 --out=dist --overwrite",
     "electron:package": "electron-packager . Rakonti --platform=win32 --arch=x64 --out=dist --overwrite"
   },
   "build": {
@@ -84,11 +83,11 @@
     ]
   },
   "devDependencies": {
-    "concurrently": "^7.3.0",
+    "concurrently": "^7.6.0",
     "cross-env": "^7.0.3",
-    "electron": "^38.1.2",
-    "electron-builder": "^26.0.12",
+    "electron": "^38.8.6",
+    "electron-builder": "^26.15.3",
     "electron-packager": "^17.1.2",
-    "wait-on": "^8.0.4"
+    "wait-on": "^8.0.5"
   }
 }
