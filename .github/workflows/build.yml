@@ -33,7 +33,7 @@ jobs:
         shell: bash
 
       - name: Build app
-        run: npm run build
+        run: npm run frontend-prod:backend-prod
         shell: bash
         env:
           CI: false
