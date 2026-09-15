@@ -25,4 +25,8 @@ build/
 
 # Otros
 *.tgz
-package-lock.json
+# package-lock.json SÍ se versiona a propósito (no se ignora): el workflow de
+# CI (.github/workflows/build.yml) corre "npm ci" para instalar dependencias
+# de forma reproducible, y "npm ci" requiere que package-lock.json exista en
+# el repo remoto. Sin esto, el checkout de CI nunca lo trae y "npm ci" falla
+# con EUSAGE.
